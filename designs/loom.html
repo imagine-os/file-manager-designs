@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" data-slug="loom">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loom · File Manager Design Portfolio</title>
+<meta name="description" content="Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%238b7cf6%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- Loom: CSS used only by this screen ---- */
+.thread{position:absolute;left:150px;right:0;height:2px;background:var(--c);opacity:.6}
+.tlabel{position:absolute;left:16px;display:flex;align-items:center;gap:10px;transform:translateY(-50%);font-weight:500}
+.tlabel .ico{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c)}
+.tlabel small{display:block;font-weight:400;color:var(--dim);font-size:11px}
+.bead{position:absolute;transform:translate(-50%,-50%)}
+.month{position:absolute;top:18px;transform:translateX(-50%);font-size:11.5px;color:var(--dim);font-weight:500}
+.month::after{content:"";position:absolute;left:50%;top:22px;height:790px;border-left:1px dashed rgba(255,255,255,.06)}
+</style>
+</head>
+<body class="design" style="--ac:#f5b544">
+<!-- Icon sprite (identical copy of assets/icons.svg, inlined so <use href="#i-…"> works over file://) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h10"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2.5 3.5h11l-4.3 5v4l-2.4 1v-5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c0-2.4 1.9-3.8 4.2-3.8s4.2 1.4 4.2 3.8M10.5 9.4c2 0 3.7 1.3 3.7 3.6M10 3.4a2.2 2.2 0 0 1 0 4.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 16 16"><path d="M4 14V7a4 4 0 0 1 8 0v7M2.5 14h11"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><path d="M2.5 2.5h5.5l5.5 5.5-5.5 5.5-5.5-5.5z"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 16 16"><path d="m11.5 2.5 2 2-8 8-3 1 1-3z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 2.5 13 7.5 8.7 8.7 7.5 13z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M3 5.5h9l-2.5-2.5M13 10.5H4l2.5 2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 13.5a1.5 1.5 0 0 0 3 0"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><ellipse cx="8" cy="8" rx="6.5" ry="3.2" transform="rotate(-30 8 8)"/></symbol>
+    <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4H6.5a2 2 0 0 1 0-4H11"/></symbol>
+    <symbol id="cursor" viewBox="0 0 20 24"><path d="M3 2v17l4.6-4.2L10.8 22l2.6-1.1-3.2-7.2H17z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Shared nav bar. Static hrefs are filled in so the page works without JS;
+     assets/nav.js re-derives them (and the Jump-to menu) from designs/manifest.json. -->
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="true">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="false">Classic</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <a class="pn" data-nav="prev" rel="prev" href="prism.html" title="Previous: Prism"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span class="lbl">Prev</span><span class="pn-name">Prism</span></a>
+  <span class="pos" aria-label="Position in collection"><b>3</b> / 10</span>
+  <a class="pn" data-nav="next" rel="next" href="facet.html" title="Next: Facet"><span class="lbl">Next</span><span class="pn-name">Facet</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></a>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">←</span><span class="key">→</span></dt><dd>Previous / next design</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="design-head">
+    <span class="num">03</span>
+    <h1>Loom</h1>
+    <span class="coll-tag">Innovative</span>
+  </header>
+  <p class="tag">Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.</p>
+
+  <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
+       and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css
+       plus the per-design classes in the <style> block above. -->
+  <div class="frame"><div class="device">
+    <div class="winbar"><i></i><i></i><i></i><span class="url">northwind.loom.app/weave/2026</span></div>
+    <div class="viewport"><div class="screen" style="--ac:#f5b544">
+      <aside class="sb">
+        <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Jump to a bead<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-list"/></svg>Weave</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">7</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Today</a><a><svg class="ic"><use href="#i-star"/></svg>Pinned</a></nav>
+        <div class="nav-h">Threads<svg class="ic plus"><use href="#i-plus"/></svg></div>
+        <nav class="nav">
+          <a class="on"><span class="dot" style="--c:#f5b544"></span>Atlas<span class="cnt">5</span></a>
+          <a class="on"><span class="dot" style="--c:#22d3ee"></span>Website<span class="cnt">4</span></a>
+          <a class="on"><span class="dot" style="--c:#e879f9"></span>Legal<span class="cnt">4</span></a>
+          <a class="on"><span class="dot" style="--c:#34d399"></span>Board<span class="cnt">3</span></a>
+          <a style="opacity:.6"><span class="dot" style="--c:#60a5fa"></span>Hiring<span class="cnt">hidden</span></a>
+          <a style="opacity:.6"><span class="dot" style="--c:#fb7185"></span>Brand<span class="cnt">hidden</span></a>
+        </nav>
+        <div class="nav-h">Bundles</div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-layers"/></svg>Everything Acme</a><a><svg class="ic"><use href="#i-layers"/></svg>Priya's threads</a></nav>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+      </aside>
+      <main class="mn">
+        <header class="tb">
+          <div class="crumbs"><span>Weave</span><span class="sep">/</span><b>2026</b><span class="sep">/</span><span>Apr – Sep</span></div>
+          <div class="tb-r">
+            <div class="seg"><span>Quarter</span><span class="on">Month</span><span>Week</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-clock"/></svg>Today</span>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#10b981">AK</span><span class="av" style="--c:#ec4899">LM</span></div>
+            <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>New thread</span>
+          </div>
+        </header>
+        <div class="stage">
+          <span class="month" style="left:160px">APR</span><span class="month" style="left:300px">MAY</span><span class="month" style="left:440px">JUN</span><span class="month" style="left:580px">JUL</span><span class="month" style="left:720px">AUG</span><span class="month" style="left:860px">SEP</span>
+          <div class="thread" style="--c:#f5b544;top:140px"></div>
+          <div class="thread" style="--c:#22d3ee;top:260px"></div>
+          <div class="thread" style="--c:#e879f9;top:380px"></div>
+          <div class="thread" style="--c:#34d399;top:500px"></div>
+          <div class="tlabel" style="--c:#f5b544;top:140px"><span class="ico"><svg class="ic"><use href="#i-layers"/></svg></span><span>Atlas<small>5 beads</small></span></div>
+          <div class="tlabel" style="--c:#22d3ee;top:260px"><span class="ico"><svg class="ic"><use href="#i-grid"/></svg></span><span>Website<small>4 beads</small></span></div>
+          <div class="tlabel" style="--c:#e879f9;top:380px"><span class="ico"><svg class="ic"><use href="#i-tag"/></svg></span><span>Legal<small>4 beads</small></span></div>
+          <div class="tlabel" style="--c:#34d399;top:500px"><span class="ico"><svg class="ic"><use href="#i-users"/></svg></span><span>Board<small>3 beads</small></span></div>
+          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
+            <line x1="480" y1="140" x2="480" y2="380" stroke="#f5b544" stroke-width="2" stroke-dasharray="3 4"/>
+            <line x1="620" y1="140" x2="620" y2="500" stroke="#f5b544" stroke-width="2" stroke-dasharray="3 4"/>
+            <line x1="400" y1="272" x2="400" y2="368" stroke="#e8e9ee" stroke-width="1.5" stroke-dasharray="3 4" opacity=".7"/>
+            <line x1="530" y1="10" x2="530" y2="800" stroke="#f5b544" stroke-width="1.5"/>
+          </svg>
+          <div class="bead chip" style="left:180px;top:140px"><span class="th md"></span>kickoff.md</div>
+          <div class="bead chip" style="left:320px;top:140px"><span class="th md"></span>Atlas roadmap.md</div>
+          <div class="bead chip sel" style="left:480px;top:140px"><span class="th sheet"></span>pricing-model.xlsx</div>
+          <div class="bead chip sel" style="left:620px;top:140px"><span class="th deck"></span>launch-plan.key</div>
+          <div class="bead chip" style="left:800px;top:140px"><span class="th md"></span>retro.md</div>
+          <div class="bead chip" style="left:250px;top:260px"><span class="th fig"></span>home.fig</div>
+          <div class="bead chip" style="left:400px;top:260px;opacity:.5"><span class="th img"></span>hero-02.png</div>
+          <div class="bead chip sel" style="left:620px;top:260px"><span class="th deck"></span>launch-plan.key</div>
+          <div class="bead chip" style="left:760px;top:260px"><span class="th doc"></span>copy-deck.docx</div>
+          <div class="bead chip" style="left:230px;top:380px"><span class="th doc"></span>Acme NDA.pdf</div>
+          <div class="bead chip sel" style="left:480px;top:380px"><span class="th sheet"></span>pricing-model.xlsx</div>
+          <div class="bead chip" style="left:665px;top:380px"><span class="th doc"></span>Acme MSA v4.pdf</div>
+          <div class="bead chip" style="left:800px;top:380px"><span class="th doc"></span>DPA — Acme.pdf</div>
+          <div class="bead chip" style="left:220px;top:500px"><span class="th deck"></span>Q2 board deck.key</div>
+          <div class="bead chip sel" style="left:620px;top:500px"><span class="th deck"></span>launch-plan.key</div>
+          <div class="bead chip" style="left:790px;top:500px"><span class="th deck"></span>Q3 board deck.key</div>
+          <!-- ghost bead being dragged -->
+          <div class="bead chip" style="left:400px;top:340px;border-color:var(--ac);box-shadow:0 14px 30px rgba(0,0,0,.6);transform:translate(-50%,-50%) rotate(-2deg)"><span class="th img"></span>hero-02.png</div>
+          <svg class="cur" style="left:418px;top:346px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:250px;top:420px"><svg class="ic" style="color:var(--ac)"><use href="#i-plus"/></svg>Release to string on <b>Legal</b> too<small>stays on Website</small></div>
+          <!-- playhead -->
+          <div class="abs" style="left:530px;top:6px;transform:translateX(-50%)"><span class="pill ac" style="background:#2a2212;font-weight:600">Jun 18</span></div>
+          <div class="abs" style="left:610px;top:556px;font-size:11px;color:var(--ac)">one bead, three threads</div>
+          <div class="glass abs" style="left:20px;bottom:20px;padding:10px 12px;display:flex;gap:12px;align-items:center;font-size:12px;color:var(--muted)"><svg class="ic"><use href="#i-clock"/></svg>Scrub the playhead to see what was live on any day<span class="kbd" style="margin:0">←</span><span class="kbd" style="margin:0">→</span></div>
+          <div class="tip" style="right:20px;bottom:20px"><small>Dashed stitches join the same bead across threads</small></div>
+        </div>
+      </main>
+      <aside class="insp">
+        <div class="ih"><svg class="ic"><use href="#i-layers"/></svg>Bead<svg class="ic x"><use href="#i-x"/></svg></div>
+        <div class="prev th deck"></div>
+        <h3>launch-plan.key<span class="pill ac">3 threads</span></h3>
+        <div class="meta"><span>Type</span><b>Keynote · 18 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#0ea5e9;width:16px;height:16px;font-size:7px">JM</span>Justin Massion</b><span>Placed</span><b>Jul 2, 2026</b><span>Modified</span><b>Yesterday, 18:20</b></div>
+        <div class="sec-h">Threads<span class="cnt">3</span><span class="act">Reorder</span></div>
+        <div class="homes">
+          <div class="home"><span class="dot" style="--c:#f5b544"></span>Atlas<small>since Jul 2</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home"><span class="dot" style="--c:#22d3ee"></span>Website<small>since Jul 9</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home"><span class="dot" style="--c:#34d399"></span>Board<small>since Aug 1</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>String on another thread</div>
+        </div>
+        <div class="sec-h">On this day</div>
+        <div class="act-list"><div><span>On <b>Jun 18</b> this bead did not exist yet. It was placed 14 days later.</span></div></div>
+      </aside>
+    </div></div>
+  </div></div>
+
+  <section class="body" aria-label="About this design">
+      <p>The loom is a timeline turned into a filing system. Each project is a thread running through the months; each file is a bead placed at the moment it was created or last changed, and the amber playhead scrubs to any day to show what was live then. Drag a bead up or down and it never leaves its thread: a dashed stitch appears and the bead now rides both, which is what is happening to hero-02.png in the mock. Threads can be hidden, bundled and reordered so the weave stays readable as the year fills in.</p>
+      <dl class="homes-note"><dt>How multi-home shows up</dt><dd>A file on several threads is drawn once per thread at the same x-position, joined by a stitch. The stitch is the membership; the inspector lists each thread with the date it was strung on, and cutting one removes it there only.</dd></dl>
+  </section>
+
+  <nav class="pager" aria-label="Previous and next design">
+    <a class="prev" data-nav="prev" rel="prev" href="prism.html"><small>Previous</small><b>Prism</b></a>
+    <a class="next" data-nav="next" rel="next" href="facet.html"><small>Next</small><b>Facet</b></a>
+    <p class="gallery">3 of 10 in the Innovative collection · <a href="../index.html#innovative">Back to the gallery</a></p>
+  </nav>
+</main>
+
+<!-- Inline copy of designs/manifest.json so navigation works over file://.
+     Regenerate with `node tools/sync-manifest.mjs` after editing the manifest. -->
+<script type="application/json" id="manifest">
+[
+  {
+    "slug": "constellation",
+    "number": "01",
+    "name": "Constellation",
+    "collection": "innovative",
+    "accent": "#8b7cf6",
+    "summary": "Files are stars. A collection is the shape you draw between them, and one star can sit in as many shapes as you like.",
+    "shot": "shots/constellation.png"
+  },
+  {
+    "slug": "prism",
+    "number": "02",
+    "name": "Prism",
+    "collection": "innovative",
+    "accent": "#22d3ee",
+    "summary": "Every tag is a translucent lens. Stack them and the files you want are where the colors overlap.",
+    "shot": "shots/prism.png"
+  },
+  {
+    "slug": "loom",
+    "number": "03",
+    "name": "Loom",
+    "collection": "innovative",
+    "accent": "#f5b544",
+    "summary": "Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.",
+    "shot": "shots/loom.png"
+  },
+  {
+    "slug": "facet",
+    "number": "04",
+    "name": "Facet",
+    "collection": "innovative",
+    "accent": "#34d399",
+    "summary": "One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.",
+    "shot": "shots/facet.png"
+  },
+  {
+    "slug": "rooms",
+    "number": "05",
+    "name": "Rooms and Portals",
+    "collection": "innovative",
+    "accent": "#fb7185",
+    "summary": "An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.",
+    "shot": "shots/rooms.png"
+  },
+  {
+    "slug": "shelves",
+    "number": "06",
+    "name": "Shelves",
+    "collection": "innovative",
+    "accent": "#60a5fa",
+    "summary": "Finish a sentence and it becomes a shelf. Files keep landing on every shelf whose sentence is true of them.",
+    "shot": "shots/shelves.png"
+  },
+  {
+    "slug": "transit",
+    "number": "07",
+    "name": "Transit",
+    "collection": "innovative",
+    "accent": "#fb923c",
+    "summary": "Collections are colored lines, files are stations, and a file in several collections is where you change trains.",
+    "shot": "shots/transit.png"
+  },
+  {
+    "slug": "columns",
+    "number": "08",
+    "name": "Columns of Context",
+    "collection": "innovative",
+    "accent": "#a3e635",
+    "summary": "A board where every column is a context, and moving a card never removes it from where it already was.",
+    "shot": "shots/columns.png"
+  },
+  {
+    "slug": "gravity",
+    "number": "09",
+    "name": "Gravity",
+    "collection": "innovative",
+    "accent": "#e879f9",
+    "summary": "Collections pull. Files settle where the pulls on them balance, and how far they sit from a well is how strongly they belong.",
+    "shot": "shots/gravity.png"
+  },
+  {
+    "slug": "orbit",
+    "number": "10",
+    "name": "Orbit",
+    "collection": "innovative",
+    "accent": "#2dd4bf",
+    "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
+    "shot": "shots/orbit.png"
+  }
+]
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

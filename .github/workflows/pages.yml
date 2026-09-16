@@ -1,0 +1,45 @@
+# Publish the static site to the gh-pages branch on every push to main.
+# Plain git only (no third-party actions): the site root minus .github/ and
+# tools/ becomes the single commit on gh-pages, force-pushed with GITHUB_TOKEN.
+# Enable Pages once in the repo settings: Source = "Deploy from a branch",
+# branch gh-pages, folder / (root).
+name: Publish to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble site tree
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/site" && mkdir -p "$RUNNER_TEMP/site"
+          tar --exclude=./.git --exclude=./.github --exclude=./tools -cf - . | tar -xf - -C "$RUNNER_TEMP/site"
+          touch "$RUNNER_TEMP/site/.nojekyll"
+          ls -la "$RUNNER_TEMP/site"
+
+      - name: Force-push gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/site"
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish site from ${GITHUB_SHA}"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
