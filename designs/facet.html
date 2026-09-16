@@ -11,18 +11,29 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 /* ---- Facet: CSS used only by this screen ---- */
-.cube-wrap{position:absolute;inset:0;perspective:1800px;perspective-origin:50% 40%}
-.cube{position:absolute;left:50%;top:50%;width:340px;height:340px;transform-style:preserve-3d;transform:translate(-50%,-46%) rotateX(-24deg) rotateY(-38deg)}
-.face{position:absolute;inset:0;background:rgba(22,23,31,.92);border:1px solid var(--line2);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
-.face.front{transform:translateZ(170px)}
-.face.right{transform:rotateY(90deg) translateZ(170px);background:rgba(18,19,26,.96)}
-.face.top{transform:rotateX(90deg) translateZ(170px);background:rgba(28,29,38,.94)}
-.face .fh{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-bottom:4px}
-.face .grp{font-size:12px;font-weight:600;color:var(--fg);margin-top:4px;display:flex;align-items:center;gap:6px}
+.cube-wrap{position:absolute;inset:0;perspective:2400px;perspective-origin:50% 42%}
+.floor{position:absolute;left:50%;top:84%;width:600px;height:100px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent)}
+.cube{position:absolute;left:50%;top:50%;width:430px;height:430px;transform-style:preserve-3d;transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-42deg)}
+.face{position:absolute;inset:0;background:rgba(22,23,31,.94);border:1px solid var(--line2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+.face.front{transform:translateZ(215px)}
+.face.right{transform:rotateY(90deg) translateZ(215px);background:rgba(18,19,26,.97)}
+.face.top{transform:rotateX(90deg) translateZ(215px);background:rgba(28,29,38,.96);gap:10px}
+.face .fh{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.face .fh .cnt{margin-left:auto;letter-spacing:0;color:var(--dim);font-weight:500}
+.face .grp{font-size:12.5px;font-weight:600;color:var(--fg);margin-top:2px;display:flex;align-items:center;gap:6px}
 .face .grp small{color:var(--dim);font-weight:400}
-.face .row{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;font-size:11.5px;color:var(--muted)}
+.face .row{display:flex;align-items:center;gap:7px;padding:3px 6px;border-radius:6px;font-size:12.5px;color:var(--muted)}
 .face .row .th{width:16px;height:16px;border-radius:3px;flex:none}
 .face .row.hl{background:color-mix(in srgb,var(--ac) 20%,transparent);color:var(--fg);outline:1px solid color-mix(in srgb,var(--ac) 55%,transparent)}
+.face .row.hov{background:var(--glass2);color:var(--fg)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1;min-height:0}
+.tile{border:1px solid var(--line);border-radius:10px;padding:12px 12px 10px;display:flex;flex-direction:column;justify-content:space-between;background:rgba(255,255,255,.03)}
+.tile b{font-size:24px;font-weight:600;color:var(--fg);line-height:1.1;display:block}
+.tile small{font-size:20px;color:var(--muted);font-weight:500;display:block;margin-top:4px}
+.tile .ths{display:flex;gap:4px;margin-top:8px}
+.tile .ths .th{width:22px;height:22px;border-radius:4px}
+.tile.hl{border-color:color-mix(in srgb,var(--ac) 60%,transparent);background:color-mix(in srgb,var(--ac) 16%,transparent)}
+.tile.hl .ths .th:first-child{outline:2px solid var(--ac);outline-offset:1px}
 </style>
 </head>
 <body class="design" style="--ac:#34d399">
@@ -103,7 +114,7 @@
       <aside class="sb">
         <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
         <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search any axis<span class="kbd">⌘K</span></div>
-        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-grid"/></svg>Cube</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">1</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-grid"/></svg>Cube</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">Axes<svg class="ic plus"><use href="#i-plus"/></svg></div>
         <nav class="nav">
           <a class="on"><span class="dot" style="--c:#34d399"></span>Project<span class="cnt">front</span></a>
@@ -119,11 +130,12 @@
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Cube</span><span class="sep">/</span><b>Project · Client · Type</b></div>
+          <div class="crumbs"><span>Cube</span><span class="sep">/</span><b>Project · Client · Type</b><span class="pill">11 files</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on">Cube</span><span>Flat</span></div>
             <span class="btn"><svg class="ic"><use href="#i-filter"/></svg>Filter</span>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#f97316">RD</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
             <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>Upload</span>
           </div>
         </header>
@@ -135,44 +147,57 @@
             <span class="pill" style="padding:4px 10px;font-size:12px">Quarter</span><span class="pill" style="padding:4px 10px;font-size:12px">Person</span><span class="pill" style="padding:4px 10px;font-size:12px">Status</span>
             <span class="pill" style="margin-left:auto;padding:4px 10px;font-size:12px;color:var(--muted)"><svg class="ic" style="width:12px;height:12px"><use href="#i-hand"/></svg>Drag to rotate</span>
           </div>
+          <div class="floor"></div>
           <div class="cube-wrap"><div class="cube">
             <div class="face front">
-              <div class="fh">By project</div>
+              <div class="fh">By project<span class="cnt">4 groups</span></div>
               <div class="grp">Atlas <small>4</small></div>
-              <div class="row hl"><span class="th doc"></span>Acme SOW Q3.pdf</div>
+              <div class="row hl"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
               <div class="row"><span class="th md"></span>Atlas roadmap.md</div>
               <div class="row"><span class="th sheet"></span>Launch budget.xlsx</div>
+              <div class="row"><span class="th md"></span>kickoff.md</div>
               <div class="grp">Website <small>3</small></div>
-              <div class="row"><span class="th fig"></span>home.fig</div>
+              <div class="row"><span class="th fig2"></span>home.fig</div>
               <div class="row"><span class="th img"></span>Hero render 02.png</div>
+              <div class="row"><span class="th doc"></span>copy-deck.docx</div>
               <div class="grp">Legal <small>2</small></div>
               <div class="row"><span class="th doc"></span>DPA — Acme.pdf</div>
+              <div class="row"><span class="th doc"></span>Acme NDA.pdf</div>
+              <div class="grp">Globex <small>2</small></div>
+              <div class="row"><span class="th deck"></span>GX deck.key</div>
+              <div class="row"><span class="th doc sig"></span>Globex SOW.pdf</div>
             </div>
             <div class="face right">
-              <div class="fh">By client</div>
+              <div class="fh">By client<span class="cnt">3 groups</span></div>
               <div class="grp">Acme <small>3</small></div>
-              <div class="row hl"><span class="th doc"></span>Acme SOW Q3.pdf</div>
+              <div class="row hl hov"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
               <div class="row"><span class="th doc"></span>Acme NDA.pdf</div>
               <div class="row"><span class="th doc"></span>DPA — Acme.pdf</div>
               <div class="grp">Globex <small>2</small></div>
               <div class="row"><span class="th deck"></span>GX deck.key</div>
-              <div class="row"><span class="th doc"></span>Globex SOW.pdf</div>
-              <div class="grp">Internal <small>4</small></div>
+              <div class="row"><span class="th doc sig"></span>Globex SOW.pdf</div>
+              <div class="grp">Internal <small>6</small></div>
               <div class="row"><span class="th md"></span>Atlas roadmap.md</div>
+              <div class="row"><span class="th md"></span>kickoff.md</div>
+              <div class="row"><span class="th sheet"></span>Launch budget.xlsx</div>
+              <div class="row"><span class="th fig2"></span>home.fig</div>
+              <div class="row"><span class="th img"></span>Hero render 02.png</div>
+              <div class="row"><span class="th doc"></span>copy-deck.docx</div>
             </div>
             <div class="face top">
-              <div class="fh">By type</div>
-              <div class="grp">Contract <small>4</small></div>
-              <div class="row hl"><span class="th doc"></span>Acme SOW Q3.pdf</div>
-              <div class="row"><span class="th doc"></span>Acme NDA.pdf</div>
-              <div class="grp">Deck <small>2</small></div>
-              <div class="row"><span class="th deck"></span>GX deck.key</div>
-              <div class="grp">Design <small>2</small></div>
-              <div class="row"><span class="th fig"></span>home.fig</div>
+              <div class="fh">By type<span class="cnt">6 groups</span></div>
+              <div class="tiles">
+                <div class="tile hl"><div><b>Contract</b><small>4 files</small></div><div class="ths"><span class="th doc sig"></span><span class="th doc"></span><span class="th doc"></span><span class="th doc sig"></span></div></div>
+                <div class="tile"><div><b>Design</b><small>2 files</small></div><div class="ths"><span class="th fig2"></span><span class="th img"></span></div></div>
+                <div class="tile"><div><b>Markdown</b><small>2 files</small></div><div class="ths"><span class="th md"></span><span class="th md"></span></div></div>
+                <div class="tile"><div><b>Sheet</b><small>1 file</small></div><div class="ths"><span class="th sheet"></span></div></div>
+                <div class="tile"><div><b>Deck</b><small>1 file</small></div><div class="ths"><span class="th deck"></span></div></div>
+                <div class="tile"><div><b>Document</b><small>1 file</small></div><div class="ths"><span class="th doc"></span></div></div>
+              </div>
             </div>
           </div></div>
-          <svg class="cur" style="left:600px;top:560px"><use href="#cursor"/></svg>
-          <div class="tip" style="left:540px;top:590px"><svg class="ic" style="color:var(--ac)"><use href="#i-check"/></svg><b>Acme SOW Q3.pdf</b> · 3 faces</div>
+          <svg class="cur" style="left:566px;top:369px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:582px;top:392px"><svg class="ic" style="color:var(--ac)"><use href="#i-check"/></svg><b>Acme SOW Q3.pdf</b><small>3 of 5 axes shown</small></div>
           <div class="glass abs" style="left:20px;bottom:20px;padding:12px 14px;width:250px;display:flex;flex-direction:column;gap:8px">
             <div class="panel-h">Rotate to</div>
             <div class="legend">
@@ -181,15 +206,15 @@
               <div style="opacity:.7"><span class="dot" style="--c:#5b5f6c"></span>Client × Quarter × Type</div>
             </div>
           </div>
-          <div class="tip" style="right:20px;bottom:20px"><small>Nothing moves when you rotate. The file was always on every face it qualifies for.</small></div>
         </div>
+        <footer class="sbar"><b>11 files</b><span class="sep">·</span>3 of 6 axes on the cube<span class="sep">·</span>Acme SOW Q3.pdf selected<span class="r"><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-grid"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
-        <div class="prev th doc"></div>
+        <div class="prev th doc sig"></div>
         <h3>Acme SOW Q3.pdf<span class="pill ac">3 faces</span></h3>
-        <div class="meta"><span>Type</span><b>PDF · 1.1 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 09:41</b></div>
-        <div class="sec-h">Where it sits<span class="cnt">5 axes</span><span class="act">Edit</span></div>
+        <div class="meta"><span>Type</span><b>PDF · 1.1 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 09:41</b><span>Signed</span><b>Pending · Acme</b></div>
+        <div class="sec-h">Where it sits<span class="cnt">5 axes · 3 shown</span><span class="act">Edit</span></div>
         <div class="homes">
           <div class="home"><span class="dot" style="--c:#34d399"></span>Project<small>Atlas</small><span class="pill" style="margin-left:auto">front</span></div>
           <div class="home"><span class="dot" style="--c:#34d399"></span>Client<small>Acme</small><span class="pill" style="margin-left:auto">right</span></div>
@@ -197,6 +222,11 @@
           <div class="home" style="opacity:.75"><span class="dot" style="--c:#5b5f6c"></span>Quarter<small>Q3 2026</small><span class="pill" style="margin-left:auto">hidden</span></div>
           <div class="home" style="opacity:.75"><span class="dot" style="--c:#5b5f6c"></span>Person<small>Priya, Justin</small><span class="pill" style="margin-left:auto">hidden</span></div>
           <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Set a value on another axis</div>
+        </div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> sent for signature</span><time>09:41</time></div>
+          <div><span class="av" style="--c:#f97316;width:18px;height:18px;font-size:8px">RD</span><span><b>Rosa</b> set Client to Acme</span><time>Aug 28</time></div>
         </div>
       </aside>
     </div></div>
@@ -307,6 +337,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

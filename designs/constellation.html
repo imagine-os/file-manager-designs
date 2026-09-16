@@ -11,11 +11,23 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 /* ---- Constellation: CSS used only by this screen ---- */
-.star{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted);white-space:nowrap}
-.star i{width:8px;height:8px;border-radius:50%;background:#dfe3ff;box-shadow:0 0 10px 2px rgba(200,205,255,.5)}
-.star.dim{opacity:.55}.star.dim i{box-shadow:none;background:#8a8fa8;width:6px;height:6px}
+.star{position:absolute;width:0;height:0;font-size:11px;color:var(--muted)}
+.star i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#dfe3ff;box-shadow:0 0 10px 2px rgba(200,205,255,.5)}
+.star span{position:absolute;white-space:nowrap;text-shadow:0 0 3px #0a0b12,0 0 6px #0a0b12,0 1px 0 #0a0b12}
+.star.b span{top:0;left:0;transform:translateX(-50%);margin-top:11px}
+.star.t span{bottom:0;left:0;transform:translateX(-50%);margin-bottom:11px}
+.star.l span{right:0;top:0;transform:translateY(-50%);margin-right:14px}
+.star.r span{left:0;top:0;transform:translateY(-50%);margin-left:14px}
+.star.bl span{top:0;right:-6px;margin-top:11px}
+.star.tl span{bottom:0;right:-6px;margin-bottom:11px}
+.star.tr span{bottom:0;left:-6px;margin-bottom:11px}
+.star.gl span{top:0;right:8px;margin-top:12px}
+.star.dim{opacity:.75}.star.dim i{box-shadow:none;background:#8a8fa8;width:6px;height:6px}
 .star.big{color:var(--fg);font-weight:500}
 .star.big i{width:12px;height:12px;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.12),0 0 24px 8px color-mix(in srgb,var(--ac) 55%,transparent)}
+.star.ghost{color:var(--fg);font-weight:500}
+.star.ghost i{width:10px;height:10px;background:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 35%,transparent),0 0 18px 6px color-mix(in srgb,var(--ac) 45%,transparent)}
+.clabel{position:absolute;font-size:11px;font-weight:600;letter-spacing:.06em;text-shadow:0 0 4px #0a0b12}
 </style>
 </head>
 <body class="design" style="--ac:#8b7cf6">
@@ -96,22 +108,22 @@
       <aside class="sb">
         <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
         <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search the sky<span class="kbd">⌘K</span></div>
-        <nav class="nav"><a><svg class="ic"><use href="#i-home"/></svg>Sky</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">4</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Pinned</a></nav>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-home"/></svg>Sky</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">Constellations<svg class="ic plus"><use href="#i-plus"/></svg></div>
         <nav class="nav">
           <a class="on"><span class="dot" style="--c:#8b7cf6"></span>Q3 launch<span class="cnt">5</span></a>
-          <a><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">5</span></a>
+          <a class="on"><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">5</span></a>
           <a><span class="dot" style="--c:#6b7280"></span>Archive<span class="cnt">4</span></a>
-          <a><span class="dot" style="--c:#f5b544"></span>Website<span class="cnt">7</span></a>
-          <a><span class="dot" style="--c:#34d399"></span>Board pack<span class="cnt">3</span></a>
+          <a style="opacity:.6"><span class="dot" style="--c:#f5b544"></span>Website<span class="cnt">hidden</span></a>
+          <a style="opacity:.6"><span class="dot" style="--c:#34d399"></span>Board pack<span class="cnt">hidden</span></a>
         </nav>
         <div class="nav-h">People</div>
         <nav class="nav"><a><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya's sky</a><a><span class="av" style="--c:#0ea5e9;width:16px;height:16px;font-size:7px">JM</span>Justin's sky</a></nav>
-        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>priya@northwind.co</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Northwind</span><span class="sep">/</span><b>Sky</b><span class="pill ac">Q3 launch highlighted</span></div>
+          <div class="crumbs"><span>Northwind</span><span class="sep">/</span><b>Sky</b><span class="pill ac">Q3 launch + Legal lit</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on"><svg class="ic"><use href="#i-orbit"/></svg>Sky</span><span><svg class="ic"><use href="#i-grid"/></svg>Grid</span><span><svg class="ic"><use href="#i-list"/></svg>List</span></div>
             <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
@@ -120,70 +132,74 @@
           </div>
         </header>
         <div class="stage" style="background:radial-gradient(70% 60% at 45% 30%,rgba(139,124,246,.12),transparent 70%),radial-gradient(40% 40% at 80% 80%,rgba(34,211,238,.06),transparent 70%),#0a0b12">
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
-            <g fill="#c9cfe6" opacity=".35"><circle cx="60" cy="60" r="1"/><circle cx="700" cy="60" r="1.2"/><circle cx="840" cy="140" r="1"/><circle cx="500" cy="420" r="1"/><circle cx="200" cy="330" r="1.2"/><circle cx="760" cy="420" r="1"/><circle cx="120" cy="760" r="1"/><circle cx="380" cy="760" r="1.2"/><circle cx="660" cy="800" r="1"/><circle cx="820" cy="640" r="1.2"/><circle cx="40" cy="620" r="1"/><circle cx="560" cy="200" r="1"/><circle cx="300" cy="500" r="1"/><circle cx="470" cy="700" r="1"/></g>
-            <g fill="none" stroke="#6b7280" stroke-width="1.4" opacity=".45" stroke-linecap="round"><polyline points="150,560 290,640 440,590 590,680"/></g>
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
+            <g fill="#c9cfe6" opacity=".28"><circle cx="60" cy="60" r="1"/><circle cx="700" cy="60" r="1.2"/><circle cx="840" cy="140" r="1"/><circle cx="500" cy="480" r="1"/><circle cx="200" cy="370" r="1.2"/><circle cx="760" cy="470" r="1"/><circle cx="120" cy="760" r="1"/><circle cx="380" cy="770" r="1.2"/><circle cx="660" cy="790" r="1"/><circle cx="840" cy="600" r="1.2"/><circle cx="40" cy="620" r="1"/><circle cx="560" cy="260" r="1"/><circle cx="300" cy="520" r="1"/><circle cx="470" cy="760" r="1"/></g>
+            <g fill="none" stroke="#6b7280" stroke-width="1.4" opacity=".5" stroke-linecap="round"><polyline points="290,600 410,690 570,620 740,700"/></g>
             <g fill="none" stroke="#8b7cf6" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="120,200 230,120 330,220 450,150" stroke-width="7" opacity=".18"/><line x1="330" y1="220" x2="530" y2="290" stroke-width="7" opacity=".18"/>
-              <polyline points="120,200 230,120 330,220 450,150" stroke-width="1.6"/><line x1="330" y1="220" x2="530" y2="290" stroke-width="1.6"/>
+              <polyline points="120,230 230,150 330,250 450,180" stroke-width="7" opacity=".18"/><line x1="330" y1="250" x2="530" y2="320" stroke-width="7" opacity=".18"/>
+              <polyline points="120,230 230,150 330,250 450,180" stroke-width="1.6"/><line x1="330" y1="250" x2="530" y2="320" stroke-width="1.6"/>
             </g>
             <g fill="none" stroke="#22d3ee" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="650,110 450,150 530,290 690,350 780,210 650,110" stroke-width="7" opacity=".18"/>
-              <polyline points="650,110 450,150 530,290 690,350 780,210 650,110" stroke-width="1.6"/>
+              <polyline points="650,140 450,180 530,320 690,380 750,250 650,140" stroke-width="7" opacity=".18"/>
+              <polyline points="650,140 450,180 530,320 690,380 750,250 650,140" stroke-width="1.6"/>
             </g>
-            <line x1="780" y1="210" x2="598" y2="556" stroke="#8b7cf6" stroke-width="1.6" stroke-dasharray="5 5" opacity=".9"/>
-            <circle cx="780" cy="210" r="9" fill="none" stroke="#8b7cf6" stroke-width="1.5" opacity=".8"/>
+            <line x1="750" y1="250" x2="650" y2="658" stroke="#8b7cf6" stroke-width="1.6" stroke-dasharray="5 5" opacity=".9"/>
+            <circle cx="750" cy="250" r="9" fill="none" stroke="#8b7cf6" stroke-width="1.5" opacity=".8"/>
+            <circle cx="650" cy="658" r="12" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="3 3" opacity=".9"/>
           </svg>
-          <div class="star" style="left:120px;top:200px"><i></i>kickoff.md</div>
-          <div class="star" style="left:230px;top:120px"><i></i>Atlas roadmap.md</div>
-          <div class="star" style="left:330px;top:220px"><i></i>Launch budget.xlsx</div>
-          <div class="star big" style="left:450px;top:150px"><i></i>launch-brief.pdf</div>
-          <div class="star" style="left:530px;top:290px"><i></i>Q3 pricing deck.key</div>
-          <div class="star" style="left:650px;top:110px"><i></i>Acme NDA.pdf</div>
-          <div class="star" style="left:780px;top:210px"><i></i>Acme MSA v4.pdf</div>
-          <div class="star" style="left:690px;top:350px"><i></i>DPA — Acme.pdf</div>
-          <div class="star dim" style="left:150px;top:560px"><i></i>2024 retro.md</div>
-          <div class="star dim" style="left:290px;top:640px"><i></i>old-brand.fig</div>
-          <div class="star dim" style="left:440px;top:590px"><i></i>v1 pitch.key</div>
-          <div class="star dim" style="left:590px;top:680px"><i></i>Q4-2024 P&amp;L.xlsx</div>
-          <div class="star dim" style="left:790px;top:520px"><i></i>Hero render 02.png</div>
-          <div class="star dim" style="left:90px;top:400px"><i></i>scratch.md</div>
-          <div class="star dim" style="left:820px;top:760px"><i></i>notes.txt</div>
-          <div class="star dim" style="left:360px;top:430px"><i></i>Team offsite.png</div>
-          <span class="abs" style="left:100px;top:232px;font-size:11px;color:#8b7cf6;font-weight:600;letter-spacing:.04em">Q3 LAUNCH</span>
-          <span class="abs" style="left:800px;top:100px;font-size:11px;color:#22d3ee;font-weight:600;letter-spacing:.04em">LEGAL</span>
-          <span class="abs" style="left:130px;top:585px;font-size:11px;color:#6b7280;font-weight:600;letter-spacing:.04em">ARCHIVE</span>
-          <div class="card-tip" style="left:330px;top:40px"><span class="th doc"></span><div class="col"><span class="nm">launch-brief.pdf</span><span class="mt">In <span class="pill c" style="--c:#8b7cf6">Q3 launch</span><span class="pill c" style="--c:#22d3ee">Legal</span></span></div><span class="mt" style="margin-left:auto;align-self:flex-start">2h ago</span></div>
-          <svg class="cur" style="left:598px;top:556px"><use href="#cursor"/></svg>
-          <div class="tip" style="left:360px;top:578px"><svg class="ic" style="color:var(--ac)"><use href="#i-plus"/></svg>Add <b>Acme MSA v4.pdf</b> to Archive</div>
-          <div class="glass tool abs" style="left:20px;top:16px"><span><svg class="ic"><use href="#i-cursor"/></svg>Select</span><span class="on"><svg class="ic"><use href="#i-pen"/></svg>Draw constellation</span><span><svg class="ic"><use href="#i-hand"/></svg>Pan</span><span style="color:var(--dim)">82%</span></div>
+          <div class="star b" style="left:120px;top:230px"><i></i><span>kickoff.md</span></div>
+          <div class="star t" style="left:230px;top:150px"><i></i><span>Atlas roadmap.md</span></div>
+          <div class="star bl" style="left:330px;top:250px"><i></i><span>Launch budget.xlsx</span></div>
+          <div class="star big tl" style="left:450px;top:180px"><i></i><span>launch-brief.pdf</span></div>
+          <div class="star bl" style="left:530px;top:320px"><i></i><span>Q3 pricing deck.key</span></div>
+          <div class="star t" style="left:650px;top:140px"><i></i><span>Acme NDA.pdf</span></div>
+          <div class="star r" style="left:750px;top:250px"><i></i><span>Acme MSA v4.pdf</span></div>
+          <div class="star bl" style="left:690px;top:380px"><i></i><span>DPA — Acme.pdf</span></div>
+          <div class="star dim bl" style="left:290px;top:600px"><i></i><span>2024 retro.md</span></div>
+          <div class="star dim b" style="left:410px;top:690px"><i></i><span>old-brand.fig</span></div>
+          <div class="star dim t" style="left:570px;top:620px"><i></i><span>v1 pitch.key</span></div>
+          <div class="star dim b" style="left:740px;top:700px"><i></i><span>Q4-2024 P&amp;L.xlsx</span></div>
+          <div class="star dim b" style="left:790px;top:520px"><i></i><span>Hero render 02.png</span></div>
+          <div class="star dim b" style="left:90px;top:420px"><i></i><span>scratch.md</span></div>
+          <div class="star dim b" style="left:800px;top:760px"><i></i><span>notes.txt</span></div>
+          <div class="star dim b" style="left:200px;top:480px"><i></i><span>Team offsite.png</span></div>
+          <span class="clabel" style="left:60px;top:266px;color:#8b7cf6">Q3 LAUNCH</span>
+          <span class="clabel" style="left:790px;top:160px;color:#22d3ee">LEGAL</span>
+          <span class="clabel" style="left:262px;top:566px;color:#8b8f9c">ARCHIVE</span>
+          <!-- the dragged star (ghost) sitting on Archive's edge -->
+          <div class="star ghost gl" style="left:650px;top:658px"><i></i><span>Acme MSA v4.pdf</span></div>
+          <svg class="cur" style="left:647px;top:656px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:462px;top:700px"><svg class="ic" style="color:var(--ac)"><use href="#i-plus"/></svg>Add to <b>Archive</b><small>stays in Legal</small></div>
+          <div class="glass tool abs" style="left:20px;top:16px"><span><svg class="ic"><use href="#i-cursor"/></svg>Select</span><span class="on"><svg class="ic"><use href="#i-pen"/></svg>Draw constellation</span><span><svg class="ic"><use href="#i-hand"/></svg>Pan</span><span style="color:var(--muted)">82%</span></div>
           <div class="glass abs" style="left:20px;bottom:20px;padding:12px 14px;width:220px;display:flex;flex-direction:column;gap:10px">
             <div class="panel-h">Constellations<span style="margin-left:auto;color:var(--ac);text-transform:none;letter-spacing:0;font-weight:500">Manage</span></div>
             <div class="legend">
               <div><span class="dot" style="--c:#8b7cf6"></span>Q3 launch<span class="cnt">5 stars</span></div>
               <div><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">5 stars</span></div>
-              <div style="opacity:.6"><span class="dot" style="--c:#6b7280"></span>Archive<span class="cnt">4 stars</span></div>
+              <div style="opacity:.7"><span class="dot" style="--c:#6b7280"></span>Archive<span class="cnt">4 stars</span></div>
               <div style="opacity:.6"><span class="dot" style="--c:#f5b544"></span>Website<span class="cnt">hidden</span></div>
+              <div style="opacity:.6"><span class="dot" style="--c:#34d399"></span>Board pack<span class="cnt">hidden</span></div>
             </div>
           </div>
-          <div class="tip" style="right:20px;bottom:20px"><small>Hover a star to light every shape it belongs to</small></div>
         </div>
+        <footer class="sbar"><b>16 stars</b><span class="sep">·</span>3 constellations shown, 2 hidden<span class="sep">·</span>Dragging Acme MSA v4.pdf<span class="r"><span>82%</span><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
-        <div class="ih"><svg class="ic"><use href="#i-star"/></svg>Star details<svg class="ic x"><use href="#i-x"/></svg></div>
-        <div class="prev th doc"></div>
-        <h3>launch-brief.pdf<span class="pill ac">2 shapes</span></h3>
-        <div class="meta"><span>Type</span><b>PDF · 2.4 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 14:02</b><span>Created</span><b>Mar 3, 2026</b></div>
+        <div class="ih"><svg class="ic"><use href="#i-star"/></svg>Star<svg class="ic x"><use href="#i-x"/></svg></div>
+        <div class="prev th doc sig"></div>
+        <h3>Acme MSA v4.pdf<span class="pill ac">2 constellations</span></h3>
+        <div class="meta"><span>Type</span><b>PDF · 3.8 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#0ea5e9;width:16px;height:16px;font-size:7px">JM</span>Justin Massion</b><span>Modified</span><b>Today, 12:20</b><span>Created</span><b>Aug 4, 2026</b></div>
         <div class="sec-h">Constellations<span class="cnt">2</span><span class="act">Edit</span></div>
         <div class="homes">
-          <div class="home"><span class="dot" style="--c:#8b7cf6"></span>Q3 launch<small>vertex 4 of 5</small><svg class="ic x"><use href="#i-x"/></svg></div>
-          <div class="home"><span class="dot" style="--c:#22d3ee"></span>Legal<small>vertex 2 of 5</small><svg class="ic x"><use href="#i-x"/></svg></div>
-          <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Draw into another constellation</div>
+          <div class="home"><span class="dot" style="--c:#22d3ee"></span>Legal<small>star 5 of 5</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home" style="opacity:.8"><span class="dot" style="--c:#34d399"></span>Board pack<small>star 1 of 3 · hidden</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home add" style="border-color:color-mix(in srgb,var(--ac) 60%,transparent);color:var(--ac)"><svg class="ic plus"><use href="#i-plus"/></svg>Archive · dropping</div>
         </div>
         <div class="sec-h">Activity</div>
         <div class="act-list">
-          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> drew it into Legal</span><time>2d</time></div>
-          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> uploaded v3</span><time>Mar 3</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> uploaded v4</span><time>12:20</time></div>
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> drew it into Board pack</span><time>Aug 30</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> created it in Legal</span><time>Aug 4</time></div>
         </div>
       </aside>
     </div></div>
@@ -294,6 +310,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

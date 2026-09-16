@@ -111,18 +111,37 @@
 
   <!-- ============================================================
        COLLECTION: Classic
-       Phase 2 fills this section. Add a <ul class="cards"> using the card
-       markup documented above, add each design to designs/manifest.json with
-       "collection": "classic", and remove the placeholder <div>.
+       Cards use the markup documented above; entries live in designs/manifest.json
+       with "collection": "classic".
        ============================================================ -->
   <section class="collection" id="classic" aria-labelledby="h-classic">
     <div class="collection-head">
       <h2 id="h-classic">Classic: conventional file managers, done well</h2>
-      <span class="cnt">00 designs</span>
+      <span class="cnt">5 designs</span>
       <p>Familiar shapes, folders, lists, columns and panes, executed with the same attention to hierarchy, density and detail as the concepts above.</p>
     </div>
-    <!-- PHASE 2 PLACEHOLDER: replace this <div class="placeholder"> with a <ul class="cards"> of cards. -->
-    <div class="placeholder"><b>Coming in the next iteration.</b> Classic layouts (list, columns, tree, dual-pane, spatial) rebuilt with the same care.</div>
+    <ul class="cards">
+      <li><a class="card" href="designs/ledger.html" style="--ac:#60a5fa">
+        <span class="shot"><img src="shots/thumb-ledger.png" width="720" height="468" loading="lazy" alt="Ledger screen"></span>
+        <span class="txt"><span class="num">11</span><h3><i></i>Ledger</h3><p>Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.</p></span>
+      </a></li>
+      <li><a class="card" href="designs/mosaic.html" style="--ac:#fb7185">
+        <span class="shot"><img src="shots/thumb-mosaic.png" width="720" height="468" loading="lazy" alt="Mosaic screen"></span>
+        <span class="txt"><span class="num">12</span><h3><i></i>Mosaic</h3><p>A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.</p></span>
+      </a></li>
+      <li><a class="card" href="designs/twin.html" style="--ac:#34d399">
+        <span class="shot"><img src="shots/thumb-twin.png" width="720" height="468" loading="lazy" alt="Twin screen"></span>
+        <span class="txt"><span class="num">13</span><h3><i></i>Twin</h3><p>A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.</p></span>
+      </a></li>
+      <li><a class="card" href="designs/crew.html" style="--ac:#a78bfa">
+        <span class="shot"><img src="shots/thumb-crew.png" width="720" height="468" loading="lazy" alt="Crew screen"></span>
+        <span class="txt"><span class="num">14</span><h3><i></i>Crew</h3><p>A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.</p></span>
+      </a></li>
+      <li><a class="card" href="designs/lens.html" style="--ac:#fbbf24">
+        <span class="shot"><img src="shots/thumb-lens.png" width="720" height="468" loading="lazy" alt="Lens screen"></span>
+        <span class="txt"><span class="num">15</span><h3><i></i>Lens</h3><p>Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.</p></span>
+      </a></li>
+    </ul>
   </section>
 
   <!-- ============================================================
@@ -133,7 +152,7 @@
     <ol>
       <li><b>v1</b><time datetime="2026-09-16">2026-09-16</time><span>Ten concepts as annotated diagrams.<span class="pill-v">superseded</span></span></li>
       <li><b>v2</b><time datetime="2026-09-16">2026-09-16</time><span>Rebuilt as full product screens at 1440 × 900.</span></li>
-      <li class="current"><b>v3</b><time datetime="2026-09-16">2026-09-16</time><span>Refined screens, classic collection added, published on GitHub Pages.<span class="pill-v">current</span></span></li>
+      <li class="current"><b>v3</b><time datetime="2026-09-16">2026-09-16</time><span>Refined all ten innovative screens (one gesture per screen, reconciled counts, unified product chrome, status bar), added the Classic collection (Ledger, Mosaic, Twin, Crew, Lens), published on GitHub Pages.<span class="pill-v">current</span></span></li>
     </ol>
   </section>
 
@@ -233,6 +252,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

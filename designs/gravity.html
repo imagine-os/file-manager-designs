@@ -11,14 +11,16 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 /* ---- Gravity: CSS used only by this screen ---- */
-.well{position:absolute;transform:translate(-50%,-50%);border-radius:50%;background:repeating-radial-gradient(circle at center,color-mix(in srgb,var(--c) 34%,transparent) 0 1px,transparent 1px 30px),radial-gradient(circle at center,color-mix(in srgb,var(--c) 22%,transparent),transparent 60%)}
+.well{position:absolute;transform:translate(-50%,-50%);border-radius:50%;background:repeating-radial-gradient(circle at center,color-mix(in srgb,var(--c) 45%,transparent) 0 1px,transparent 1px 30px),radial-gradient(circle at center,color-mix(in srgb,var(--c) 22%,transparent),transparent 60%)}
 .well-core{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
 .well-core i{width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:0 0 18px 4px color-mix(in srgb,var(--c) 60%,transparent)}
 .well-core b{font-size:13px;font-weight:600}
-.well-core small{font-size:11px;color:var(--dim)}
-.gf{position:absolute;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:6px;padding:4px 8px 4px 6px;border-radius:999px;background:rgba(20,21,28,.85);border:1px solid var(--line);font-size:11px;color:var(--muted);white-space:nowrap}
+.well-core small{font-size:11px;color:var(--muted)}
+.gf{position:absolute;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:6px;padding:4px 8px 4px 6px;border-radius:999px;background:rgba(20,21,28,.94);border:1px solid var(--line);font-size:11px;color:var(--muted);white-space:nowrap}
 .gf .th{width:14px;height:14px;border-radius:3px}
-.gf.sel{border-color:var(--ac);color:var(--fg);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.gf.sel{border-color:var(--ac);color:var(--fg);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent),0 12px 30px rgba(0,0,0,.6);background:#1c1d26}
+.gf.saddle{color:var(--fg);border-color:var(--line2)}
+.tie-lbl{position:absolute;transform:translate(-50%,-50%);font-size:10.5px;padding:1px 7px;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body class="design" style="--ac:#e879f9">
@@ -102,7 +104,7 @@
         <nav class="nav"><a class="on"><svg class="ic"><use href="#i-orbit"/></svg>Field</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">Wells<svg class="ic plus"><use href="#i-plus"/></svg></div>
         <nav class="nav">
-          <a class="on"><span class="dot" style="--c:#e879f9"></span>Atlas<span class="cnt">8</span></a>
+          <a class="on"><span class="dot" style="--c:#e879f9"></span>Atlas<span class="cnt">9</span></a>
           <a class="on"><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">7</span></a>
           <a class="on"><span class="dot" style="--c:#f5b544"></span>Board<span class="cnt">4</span></a>
           <a style="opacity:.6"><span class="dot" style="--c:#34d399"></span>Website<span class="cnt">off</span></a>
@@ -114,66 +116,65 @@
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Field</span><span class="sep">/</span><b>Studio</b><span class="pill">3 wells · 21 files</span></div>
+          <div class="crumbs"><span>Field</span><span class="sep">/</span><b>Studio</b><span class="pill">3 wells · 17 files</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on">Field</span><span>Ranked</span></div>
             <span class="btn"><svg class="ic"><use href="#i-filter"/></svg>Filter</span>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
             <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>New well</span>
           </div>
         </header>
         <div class="stage" style="background:#0b0c11">
           <div class="well" style="--c:#e879f9;left:250px;top:330px;width:420px;height:420px"></div>
           <div class="well" style="--c:#22d3ee;left:640px;top:280px;width:380px;height:380px"></div>
-          <div class="well" style="--c:#f5b544;left:480px;top:660px;width:340px;height:340px"></div>
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
-            <g stroke="#fff" stroke-width="1" stroke-dasharray="2 4" opacity=".35"><line x1="445" y1="296" x2="256" y2="328"/><line x1="445" y1="296" x2="634" y2="282"/><line x1="450" y1="340" x2="256" y2="332"/><line x1="450" y1="340" x2="634" y2="284"/></g>
-            <line x1="370" y1="470" x2="250" y2="330" stroke="#e879f9" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>
-            <line x1="370" y1="470" x2="442" y2="594" stroke="#f5b544" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M442 594 l-13 -3 l7 -10 z" fill="#f5b544"/>
-            <g stroke="#22d3ee" opacity=".5" stroke-width="1"><line x1="770" y1="170" x2="742" y2="196"/><line x1="778" y1="186" x2="750" y2="212"/><line x1="762" y1="154" x2="734" y2="180"/></g>
-            <line x1="790" y1="150" x2="846" y2="98" stroke="#e8e9ee" stroke-width="1.5" opacity=".8"/><path d="M846 98 l-12 2 l4 8 z" fill="#e8e9ee" opacity=".8"/>
+          <div class="well" style="--c:#f5b544;left:480px;top:620px;width:320px;height:320px"></div>
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
+            <line x1="395" y1="520" x2="279" y2="368" stroke="#e879f9" stroke-width="1.5" opacity=".7"/>
+            <line x1="395" y1="520" x2="480" y2="620" stroke="#f5b544" stroke-width="1.5" opacity=".9"/>
+            <line x1="300" y1="470" x2="395" y2="520" stroke="#e8e9ee" stroke-width="1.5" stroke-dasharray="3 4" opacity=".5"/>
+            <circle cx="300" cy="470" r="3" fill="none" stroke="#e8e9ee" stroke-width="1.5" opacity=".6"/>
           </svg>
-          <div class="well-core" style="--c:#e879f9;left:250px;top:330px"><i></i><b>Atlas</b><small>8 files</small></div>
+          <div class="well-core" style="--c:#e879f9;left:250px;top:330px"><i></i><b>Atlas</b><small>9 files</small></div>
           <div class="well-core" style="--c:#22d3ee;left:640px;top:280px"><i></i><b>Legal</b><small>7 files</small></div>
-          <div class="well-core" style="--c:#f5b544;left:480px;top:660px"><i></i><b>Board</b><small>4 files</small></div>
+          <div class="well-core" style="--c:#f5b544;left:480px;top:620px"><i></i><b>Board</b><small>4 files</small></div>
           <!-- Atlas files -->
-          <div class="gf" style="left:190px;top:270px"><span class="th md"></span>Atlas roadmap.md</div>
-          <div class="gf" style="left:300px;top:260px"><span class="th sheet"></span>Launch budget.xlsx</div>
-          <div class="gf" style="left:170px;top:380px"><span class="th md"></span>kickoff.md</div>
-          <div class="gf" style="left:300px;top:400px"><span class="th fig"></span>home.fig</div>
-          <div class="gf" style="left:210px;top:440px"><span class="th img"></span>Hero render 02.png</div>
-          <div class="gf" style="left:340px;top:330px"><span class="th doc"></span>launch-brief.pdf</div>
+          <div class="gf" style="left:205px;top:235px"><span class="th md"></span>Atlas roadmap.md</div>
+          <div class="gf" style="left:362px;top:240px"><span class="th sheet"></span>Launch budget.xlsx</div>
+          <div class="gf" style="left:150px;top:320px"><span class="th md"></span>kickoff.md</div>
+          <div class="gf" style="left:345px;top:335px"><span class="th doc"></span>launch-brief.pdf</div>
+          <div class="gf" style="left:190px;top:415px"><span class="th fig2"></span>home.fig</div>
+          <div class="gf" style="left:180px;top:470px"><span class="th img"></span>Hero render 02.png</div>
           <!-- Legal files -->
-          <div class="gf" style="left:590px;top:210px"><span class="th doc"></span>Acme NDA.pdf</div>
-          <div class="gf" style="left:700px;top:230px"><span class="th doc"></span>Vendor terms.pdf</div>
-          <div class="gf" style="left:600px;top:350px"><span class="th doc"></span>Globex SOW.pdf</div>
-          <div class="gf" style="left:720px;top:330px"><span class="th doc"></span>Offer — R. Diaz.pdf</div>
+          <div class="gf" style="left:590px;top:175px"><span class="th doc"></span>Acme NDA.pdf</div>
+          <div class="gf" style="left:715px;top:190px"><span class="th doc sig"></span>Vendor terms.pdf</div>
+          <div class="gf" style="left:760px;top:285px"><span class="th doc"></span>Offer — R. Diaz.pdf</div>
+          <div class="gf" style="left:735px;top:360px"><span class="th doc sig"></span>Globex SOW.pdf</div>
+          <div class="gf" style="left:618px;top:406px"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
+          <!-- saddle: pulled equally by Atlas and Legal -->
+          <div class="gf saddle" style="left:455px;top:282px"><span class="th doc sig"></span>Acme MSA v4.pdf</div>
+          <div class="gf saddle" style="left:487px;top:335px"><span class="th doc"></span>DPA — Acme.pdf</div>
+          <span class="pill abs" style="left:472px;top:365px;transform:translateX(-50%);font-size:10.5px">on the saddle · Atlas 50% · Legal 50%</span>
           <!-- Board files -->
-          <div class="gf" style="left:430px;top:720px"><span class="th deck"></span>Q3 board deck.key</div>
-          <div class="gf" style="left:560px;top:700px"><span class="th md"></span>Board agenda.md</div>
-          <div class="gf" style="left:500px;top:770px"><span class="th sheet"></span>Q3 P&amp;L.xlsx</div>
-          <!-- saddle -->
-          <div class="gf" style="left:445px;top:296px;color:var(--fg);border-color:var(--line2)"><span class="th doc"></span>Acme MSA v4.pdf</div>
-          <div class="gf" style="left:450px;top:340px;color:var(--fg);border-color:var(--line2)"><span class="th doc"></span>DPA — Acme.pdf</div>
-          <span class="pill abs" style="left:400px;top:362px;font-size:10.5px">on the saddle · Atlas 50% · Legal 50%</span>
-          <!-- dragged -->
-          <div class="gf sel" style="left:370px;top:470px"><span class="th deck"></span>Q3 pricing deck.key</div>
-          <svg class="cur" style="left:380px;top:480px"><use href="#cursor"/></svg>
-          <div class="tip" style="left:400px;top:500px"><svg class="ic" style="color:#f5b544"><use href="#i-plus"/></svg>Tie to <b>Board</b><small>41% → 68%</small></div>
-          <!-- flung -->
-          <div class="gf" style="left:790px;top:150px;opacity:.85"><span class="th fig"></span>old-brand.fig</div>
-          <span class="pill abs" style="left:610px;top:100px;font-size:10.5px;color:#22d3ee;border-color:rgba(34,211,238,.4)">flinging out · removed from Legal</span>
-          <div class="glass abs" style="left:20px;top:16px;padding:12px 14px;width:220px;display:flex;flex-direction:column;gap:8px">
-            <div class="panel-h">Wells on the field</div>
-            <div class="legend">
-              <div><span class="dot" style="--c:#e879f9"></span>Atlas<span class="cnt">8</span></div>
-              <div><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">7</span></div>
-              <div><span class="dot" style="--c:#f5b544"></span>Board<span class="cnt">4</span></div>
+          <div class="gf" style="left:420px;top:690px"><span class="th deck"></span>Q3 board deck.key</div>
+          <div class="gf" style="left:560px;top:670px"><span class="th md"></span>Board agenda.md</div>
+          <div class="gf" style="left:490px;top:735px"><span class="th sheet"></span>Q3 P&amp;L.xlsx</div>
+          <!-- dragged file with its two ties -->
+          <span class="pill c tie-lbl" style="--c:#e879f9;left:322px;top:425px;background:#1d1220">82%</span>
+          <span class="pill c tie-lbl" style="--c:#f5b544;left:437px;top:570px;background:#1e1a10">68%</span>
+          <div class="gf sel" style="left:395px;top:520px"><span class="th deck"></span>Q3 pricing deck.key</div>
+          <svg class="cur" style="left:400px;top:526px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:480px;top:505px"><svg class="ic" style="color:#f5b544"><use href="#i-plus"/></svg>Tie to <b>Board</b><small>41% → 68%</small></div>
+          <div class="glass abs" style="left:20px;top:16px;padding:12px 14px;width:200px;display:flex;flex-direction:column;gap:8px">
+            <div class="panel-h">Rings</div>
+            <div class="legend" style="font-size:12px">
+              <div><span class="dot" style="--c:#e8e9ee"></span>Inner<span class="cnt">≥ 75%</span></div>
+              <div><span class="dot" style="--c:#8b8f9c"></span>Middle<span class="cnt">≥ 50%</span></div>
+              <div><span class="dot" style="--c:#5b5f6c"></span>Outer<span class="cnt">≥ 25%</span></div>
             </div>
           </div>
-          <div class="tip" style="right:20px;bottom:20px"><small>Pull toward a well to strengthen the tie. Fling past the last ring to break it.</small></div>
         </div>
+        <footer class="sbar"><b>3 wells</b><span class="sep">·</span>17 files on the field<span class="sep">·</span>9 drifting<span class="sep">·</span>Dragging Q3 pricing deck.key<span class="r"><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-orbit"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
@@ -186,8 +187,13 @@
           <div class="home" style="flex-wrap:wrap;gap:8px 10px;border-color:rgba(245,181,68,.5)"><span class="dot" style="--c:#f5b544"></span>Board<span class="pill warn" style="margin-left:6px">rising</span><span style="margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted)">68%</span><span class="bar" style="flex-basis:100%;--c:#f5b544;--w:68%"><i></i></span></div>
           <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Let another well claim it</div>
         </div>
-        <div class="sec-h">What strength changes</div>
-        <div class="act-list"><div><span>Stronger ties sort earlier, sync first and appear higher in that well's ranked view.</span></div></div>
+        <div class="sec-h">How ties work</div>
+        <div class="act-list"><div><span>Pull a file toward a well to strengthen the tie; fling it past the outer ring to break it. Stronger ties sort earlier and sync first in that well's ranked view.</span></div></div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited 3 slides</span><time>Yesterday</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> tied it to Board at 41%</span><time>Mon</time></div>
+        </div>
       </aside>
     </div></div>
   </div></div>
@@ -297,6 +303,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

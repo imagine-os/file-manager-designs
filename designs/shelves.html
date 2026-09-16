@@ -11,16 +11,21 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 /* ---- Shelves: CSS used only by this screen ---- */
-.sentence{position:absolute;left:24px;right:24px;top:20px;height:52px;display:flex;align-items:center;gap:10px;padding:0 10px 0 16px;font-size:14px;color:var(--muted)}
+.sentence{position:absolute;left:24px;right:24px;top:20px;height:52px;display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;font-size:13.5px;color:var(--muted);white-space:nowrap}
 .sentence .w{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:4px 10px;border-radius:8px;background:color-mix(in srgb,var(--c) 18%,transparent);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--fg);font-weight:500}
 .sentence .w svg.ic{width:12px;height:12px;color:var(--c)}
 .shelf{position:absolute;left:24px;right:24px}
-.shelf .sh{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;margin-bottom:10px}
+.shelf .sh{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;margin-bottom:10px;height:24px}
 .shelf .sh .cnt{color:var(--dim);font-weight:400;font-size:12px}
 .shelf .sh .more{margin-left:auto;color:var(--dim)}
 .shelf .row{display:flex;gap:12px}
 .shelf .row .fc .th{height:64px}
 .shelf .edge{position:absolute;left:0;right:0;bottom:-14px;height:2px;background:linear-gradient(90deg,var(--line2),transparent)}
+.fc.pending{border-color:color-mix(in srgb,var(--ac) 55%,transparent);opacity:.9}
+.fc.pending .th{opacity:.6}
+.dlg{position:absolute;z-index:6;width:420px;padding:12px 14px;border-radius:12px;background:rgba(25,26,34,.98);border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:8px}
+.dlg::before{content:"";position:absolute;width:10px;height:10px;background:#191a22;border-left:1px solid var(--line2);border-top:1px solid var(--line2);transform:rotate(45deg);top:-6px;left:var(--cx,20px)}
+.btn.hov{background:var(--glass2)}.btn.pri.hov{background:color-mix(in srgb,var(--ac) 82%,#fff)}
 </style>
 </head>
 <body class="design" style="--ac:#60a5fa">
@@ -100,8 +105,8 @@
     <div class="viewport"><div class="screen" style="--ac:#60a5fa">
       <aside class="sb">
         <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
-        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Ask for files…<span class="kbd">⌘K</span></div>
-        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-list"/></svg>Shelves</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">5</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search shelves<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-list"/></svg>Shelves</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">My shelves<svg class="ic plus"><use href="#i-plus"/></svg></div>
         <nav class="nav">
           <a class="on"><span class="dot" style="--c:#60a5fa"></span>Priya · this week · pricing<span class="cnt">5</span></a>
@@ -116,20 +121,21 @@
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Shelves</span><span class="sep">/</span><b>All</b><span class="pill">3 shown</span></div>
+          <div class="crumbs"><span>Shelves</span><span class="sep">/</span><b>All</b><span class="pill">3 of 5 shown</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on"><svg class="ic"><use href="#i-list"/></svg>Shelves</span><span><svg class="ic"><use href="#i-grid"/></svg>Grid</span></div>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
             <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>New shelf</span>
           </div>
         </header>
         <div class="stage">
           <div class="sentence glass" style="--c:#60a5fa">
-            <span>everything</span><span class="w" style="--c:#7c3aed"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya<svg class="ic"><use href="#i-chev"/></svg></span><span>touched</span><span class="w" style="--c:#34d399">this week<svg class="ic"><use href="#i-chev"/></svg></span><span>that mentions</span><span class="w" style="--c:#60a5fa">pricing<svg class="ic"><use href="#i-chev"/></svg></span><span style="color:var(--dim)">and…</span>
-            <span class="pill ok" style="margin-left:auto">Live · 5 files</span><span class="btn pri sm">Save as shelf</span>
+            <span>everything</span><span class="w" style="--c:#7c3aed"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya<svg class="ic"><use href="#i-chev"/></svg></span><span>touched</span><span class="w" style="--c:#34d399">this week<svg class="ic"><use href="#i-chev"/></svg></span><span>that mentions</span><span class="w" style="--c:#60a5fa">pricing<svg class="ic"><use href="#i-chev"/></svg></span><span class="btn ghost sm"><svg class="ic"><use href="#i-plus"/></svg>and</span>
+            <span class="pill ok" style="margin-left:auto">Live · 5 files</span><span class="btn sm">Edit shelf</span>
           </div>
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none"><line x1="261" y1="252" x2="261" y2="324" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 4"/></svg>
-          <div class="shelf" style="top:100px">
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none"><line x1="261" y1="248" x2="261" y2="302" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 4"/></svg>
+          <div class="shelf" style="top:84px">
             <div class="sh"><span class="dot" style="--c:#60a5fa"></span>Priya · this week · pricing<span class="pill ok">Live</span><span class="cnt">5 files</span><svg class="ic more"><use href="#i-dots"/></svg></div>
             <div class="row">
               <div class="fc"><span class="th deck"></span><span class="nm">Q3 pricing deck.key</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Yesterday</span></div>
@@ -140,8 +146,8 @@
             </div>
             <span class="edge"></span>
           </div>
-          <span class="pill ac abs" style="left:273px;top:274px;background:#101a2a">same file</span>
-          <div class="shelf" style="top:300px">
+          <span class="pill ac abs" style="left:268px;top:263px;background:#101a2a">same file</span>
+          <div class="shelf" style="top:268px">
             <div class="sh"><span class="dot" style="--c:#34d399"></span>Board pack<span class="pill">Saved</span><span class="cnt">4 files</span><svg class="ic more"><use href="#i-dots"/></svg></div>
             <div class="row">
               <div class="fc"><span class="th deck"></span><span class="nm">Q3 board deck.key</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Today</span></div>
@@ -151,25 +157,26 @@
             </div>
             <span class="edge"></span>
           </div>
-          <div class="shelf" style="top:500px">
-            <div class="sh"><span class="dot" style="--c:#f5b544"></span>Contracts<span class="pill">Saved</span><span class="cnt">4 files</span><span class="pill ac">Drop to add</span><svg class="ic more"><use href="#i-dots"/></svg></div>
-            <div class="row" style="outline:1.5px dashed color-mix(in srgb,var(--ac) 55%,transparent);outline-offset:8px;border-radius:8px">
-              <div class="fc"><span class="th doc"></span><span class="nm">Acme MSA v4.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>2h ago</span></div>
+          <div class="shelf" style="top:452px">
+            <div class="sh"><span class="dot" style="--c:#f5b544"></span>Contracts<span class="pill">Saved</span><span class="cnt">4 files · 1 pending</span><svg class="ic more"><use href="#i-dots"/></svg></div>
+            <div class="row">
+              <div class="fc"><span class="th doc sig"></span><span class="nm">Acme MSA v4.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>2h ago</span></div>
               <div class="fc"><span class="th doc"></span><span class="nm">Acme NDA.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Aug 30</span></div>
               <div class="fc"><span class="th doc"></span><span class="nm">DPA — Acme.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 14</span></div>
-              <div class="fc"><span class="th doc"></span><span class="nm">Vendor terms.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 28</span></div>
+              <div class="fc"><span class="th doc sig"></span><span class="nm">Vendor terms.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 28</span></div>
+              <div class="fc pending"><span class="th doc"></span><span class="nm">pricing-memo.docx</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span><span class="pill ac" style="margin-left:auto">pending</span></span></div>
             </div>
             <span class="edge"></span>
           </div>
-          <div class="fc ghost abs" style="left:640px;top:520px"><span class="th doc" style="height:64px"></span><span class="nm">pricing-memo.docx</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Today</span></div>
-          <svg class="cur" style="left:700px;top:580px"><use href="#cursor"/></svg>
-          <div class="glass abs" style="left:420px;top:628px;width:400px;padding:14px;background:rgba(25,26,34,.97);box-shadow:0 20px 50px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:10px">
+          <div class="dlg" style="left:436px;top:640px;--cx:306px">
             <div style="font-weight:600;font-size:13px">Add pricing-memo.docx to Contracts?</div>
-            <div style="font-size:12px;color:var(--muted)">It does not match this shelf yet. It will belong if you set:</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill c" style="--c:#f5b544;padding:4px 10px;font-size:12px"><svg class="ic" style="width:12px;height:12px"><use href="#i-check"/></svg>Type = Contract</span><span class="pill" style="padding:4px 10px;font-size:12px">Client = Acme</span><span class="pill" style="padding:4px 10px;font-size:12px">Status = Signed</span></div>
-            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:2px"><span class="btn sm">Cancel</span><span class="btn pri sm">Set type and add</span></div>
+            <div style="font-size:12px;color:var(--muted)">It does not match this shelf yet. It will belong once you set:</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill ac" style="padding:4px 10px;font-size:12px"><svg class="ic" style="width:12px;height:12px"><use href="#i-check"/></svg>Type = Contract</span><span class="pill" style="padding:4px 10px;font-size:12px">Client = Acme</span><span class="pill" style="padding:4px 10px;font-size:12px">Status = Signed</span></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:2px"><span class="btn sm">Cancel</span><span class="btn pri sm hov">Set type and add</span></div>
           </div>
+          <svg class="cur" style="left:790px;top:756px"><use href="#cursor"/></svg>
         </div>
+        <footer class="sbar"><b>3 shelves</b> shown, 2 hidden<span class="sep">·</span>13 files<span class="sep">·</span>1 live shelf<span class="r"><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-list"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
@@ -182,8 +189,13 @@
           <div class="home"><span class="dot" style="--c:#34d399"></span>Board pack<small>added by Justin</small><svg class="ic x"><use href="#i-x"/></svg></div>
           <div class="home add" style="border-color:color-mix(in srgb,var(--ac) 60%,transparent);color:var(--ac)"><svg class="ic plus"><use href="#i-plus"/></svg>Contracts · pending</div>
         </div>
-        <div class="sec-h">Properties</div>
-        <div class="meta"><span>Type</span><b style="color:var(--muted)">not set</b><span>Client</span><b>Acme</b><span>Status</span><b>Draft</b></div>
+        <div class="sec-h">Properties<span class="act">Edit</span></div>
+        <div class="meta"><span>Type</span><b style="color:var(--ac)">not set · required by Contracts</b><span>Client</span><b>Acme</b><span>Status</span><b>Draft</b></div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited the tiers table</span><time>11:08</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> put it on Board pack</span><time>Yesterday</time></div>
+        </div>
       </aside>
     </div></div>
   </div></div>
@@ -293,6 +305,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

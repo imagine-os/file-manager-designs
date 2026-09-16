@@ -4,7 +4,7 @@ A static portfolio of high-fidelity file-manager product screens, built as plain
 HTML/CSS with no build step, no external fonts, scripts or CDNs, and published
 with GitHub Pages.
 
-- **Live site:** `https://imagine-os.github.io/<repo>/` (replace `<repo>` with this repository's name; enable Pages once, see below)
+- **Live site:** <https://imagine-os.github.io/file-manager-designs/> (repository `imagine-os/file-manager-designs`)
 - **Gallery:** `index.html`, two collections: *Innovative* (files that live in many places) and *Classic* (conventional file managers, done well)
 - **Design pages:** `designs/<slug>.html`, one per screen
 
@@ -107,4 +107,4 @@ repository sub-path.
 
 - **v1** 2026-09-16, ten concepts as annotated diagrams (superseded)
 - **v2** 2026-09-16, rebuilt as full product screens
-- **v3** 2026-09-16, refined screens, classic collection added, published on GitHub Pages
+- **v3** 2026-09-16, refined all ten innovative screens (one gesture per screen, reconciled counts, unified product chrome, status bar), added the Classic collection (Ledger, Mosaic, Twin, Crew, Lens), published on GitHub Pages

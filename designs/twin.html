@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en" data-slug="twin">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twin · File Manager Design Portfolio</title>
+<meta name="description" content="A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%238b7cf6%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- Twin: CSS used only by this screen ---- */
+.screen.twin{grid-template-columns:220px 1fr}
+.pane{position:absolute;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;overflow:hidden}
+.pane.drop{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.pane-h{height:38px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600}
+.pane-h svg.ic{color:var(--muted)}
+.pane-h .pill{margin-left:auto;font-weight:500}
+.pbar{height:38px;display:flex;align-items:center;gap:4px;padding:0 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.pseg{padding:3px 8px;border-radius:6px;border:1px solid var(--line);background:var(--glass);font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.pseg.on{color:var(--fg);border-color:var(--line2);background:var(--glass2)}
+.pbar svg.ic{color:var(--dim);width:13px;height:13px}
+.pbar .edit{margin-left:auto;color:var(--dim);display:flex;align-items:center;gap:6px;font-size:11px}
+.pbar .edit svg.ic{width:13px;height:13px}
+.thead,.trow{display:grid;align-items:center;padding:0 12px;gap:10px;white-space:nowrap}
+.left .thead,.left .trow{grid-template-columns:1fr 78px 118px}
+.right .thead,.right .trow{grid-template-columns:1fr 78px 96px 26px}
+.thead{height:26px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:600;border-bottom:1px solid var(--line)}
+.trow{height:28px;font-size:12.5px;border-radius:6px;margin:0 6px;padding:0 6px}
+.trow .nm{display:flex;align-items:center;gap:8px;font-weight:400;overflow:visible}
+.trow .nm .th{width:16px;height:16px;border-radius:3px;flex:none}
+.trow .c2,.trow .c3{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.trow .c2{text-align:right}
+.trow.sel{background:color-mix(in srgb,var(--ac) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 55%,transparent)}
+.trow.sel .c2,.trow.sel .c3{color:var(--fg)}
+.trow.up{color:var(--dim)}
+.list{padding:4px 0;display:flex;flex-direction:column;gap:1px;position:relative;flex:1}
+.list.drop{margin:6px;border-radius:8px;border:1.5px dashed color-mix(in srgb,var(--ac) 65%,transparent);background:color-mix(in srgb,var(--ac) 7%,transparent);padding:4px 0}
+.list.drop .trow{margin:0 6px}
+.pfoot{height:30px;border-top:1px solid var(--line);display:flex;align-items:center;padding:0 12px;font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pfoot b{color:var(--muted);font-weight:500}
+.pfoot .r{margin-left:auto}
+.fold{width:15px;height:12px;border-radius:2px;background:linear-gradient(180deg,#7dd3b5,#3fb98d);position:relative;flex:none;margin:0 .5px}
+.fold::before{content:"";position:absolute;left:0;top:-3px;width:6px;height:4px;border-radius:2px 2px 0 0;background:#3fb98d}
+.ghost{position:absolute;width:250px;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:#1b1d26;border:1px solid var(--ac);box-shadow:0 20px 40px rgba(0,0,0,.6);font-size:12.5px;z-index:8}
+.ghost .th{width:26px;height:26px;border-radius:5px;flex:none}
+.ghost small{color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.ghost.back{opacity:.7;transform:rotate(-3deg);z-index:7}
+.gn{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--ac);color:#0b0c10;font-size:11px;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.drawer{position:absolute;left:16px;right:16px;top:612px;height:176px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);display:flex;flex-direction:column}
+.drawer .dh{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600}
+.drawer .dh .act{margin-left:auto;display:flex;gap:6px}
+.xfer{display:grid;grid-template-columns:26px 300px 1fr 250px;align-items:center;gap:12px;padding:0 14px;height:40px;font-size:12.5px;white-space:nowrap}
+.xfer+.xfer{border-top:1px solid var(--line)}
+.xfer .th{width:26px;height:26px;border-radius:5px}
+.xfer .route{display:flex;align-items:center;gap:6px;min-width:0}
+.xfer .route span{color:var(--muted)}
+.xfer .route svg.ic{color:var(--dim);width:13px;height:13px}
+.xfer .bar{height:5px}
+.xfer .stat{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.xfer .stat b{color:var(--fg);font-weight:500}
+.xfer.done .stat{color:#34d399}
+.fkeys{position:absolute;left:16px;right:16px;bottom:10px;display:flex;gap:6px}
+.fk{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:30px;border-radius:7px;border:1px solid var(--line);background:var(--glass);font-size:12px;color:var(--muted);white-space:nowrap}
+.fk .k{font-family:var(--mono);font-size:10.5px;color:var(--dim);padding:0 4px;border:1px solid var(--line2);border-radius:4px;line-height:1.5}
+.fk.on{border-color:color-mix(in srgb,var(--ac) 60%,transparent);color:var(--fg);background:color-mix(in srgb,var(--ac) 12%,transparent)}
+.fk.on .k{color:var(--ac);border-color:color-mix(in srgb,var(--ac) 60%,transparent)}
+</style>
+</head>
+<body class="design" style="--ac:#34d399">
+<!-- Icon sprite (identical copy of assets/icons.svg, inlined so <use href="#i-…"> works over file://) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h10"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2.5 3.5h11l-4.3 5v4l-2.4 1v-5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c0-2.4 1.9-3.8 4.2-3.8s4.2 1.4 4.2 3.8M10.5 9.4c2 0 3.7 1.3 3.7 3.6M10 3.4a2.2 2.2 0 0 1 0 4.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 16 16"><path d="M4 14V7a4 4 0 0 1 8 0v7M2.5 14h11"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><path d="M2.5 2.5h5.5l5.5 5.5-5.5 5.5-5.5-5.5z"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 16 16"><path d="m11.5 2.5 2 2-8 8-3 1 1-3z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 2.5 13 7.5 8.7 8.7 7.5 13z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M3 5.5h9l-2.5-2.5M13 10.5H4l2.5 2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 13.5a1.5 1.5 0 0 0 3 0"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><ellipse cx="8" cy="8" rx="6.5" ry="3.2" transform="rotate(-30 8 8)"/></symbol>
+    <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4H6.5a2 2 0 0 1 0-4H11"/></symbol>
+    <symbol id="cursor" viewBox="0 0 20 24"><path d="M3 2v17l4.6-4.2L10.8 22l2.6-1.1-3.2-7.2H17z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Shared nav bar. Static hrefs are filled in so the page works without JS;
+     assets/nav.js re-derives them (and the Jump-to menu) from designs/manifest.json. -->
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="false">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="true">Classic</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <a class="pn" data-nav="prev" rel="prev" href="mosaic.html" title="Previous: Mosaic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span class="lbl">Prev</span><span class="pn-name">Mosaic</span></a>
+  <span class="pos" aria-label="Position in collection"><b>3</b> / 5</span>
+  <a class="pn" data-nav="next" rel="next" href="crew.html" title="Next: Crew"><span class="lbl">Next</span><span class="pn-name">Crew</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></a>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">←</span><span class="key">→</span></dt><dd>Previous / next design</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="design-head">
+    <span class="num">13</span>
+    <h1>Twin</h1>
+    <span class="coll-tag">Classic</span>
+  </header>
+  <p class="tag">A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.</p>
+
+  <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
+       and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css
+       plus the per-design classes in the <style> block above. -->
+  <div class="frame"><div class="device">
+    <div class="winbar"><i></i><i></i><i></i><span class="url">northwind.app/twin?left=~/Projects/atlas&right=northwind/q3-launch</span></div>
+    <div class="viewport"><div class="screen twin" style="--ac:#34d399">
+<aside class="sb">
+        <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">1</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <div class="nav-h">Locations</div>
+        <nav class="nav">
+          <a class="on"><svg class="ic"><use href="#i-layers"/></svg>MacBook Pro<span class="cnt">586 GB</span></a>
+          <a class="on"><svg class="ic"><use href="#i-home"/></svg>Team drive<span class="cnt">1.8 TB</span></a>
+          <a><svg class="ic"><use href="#i-door"/></svg>Archive (S3)</a>
+        </nav>
+        <div class="nav-h">Bookmarks<svg class="ic plus"><use href="#i-plus"/></svg></div>
+        <nav class="nav">
+          <a><span class="dot" style="--c:#34d399"></span>~/Projects/atlas</a>
+          <a><span class="dot" style="--c:#8b7cf6"></span>Northwind/Q3 launch</a>
+          <a><span class="dot" style="--c:#22d3ee"></span>Northwind/Legal</a>
+          <a><span class="dot" style="--c:#f5b544"></span>~/Downloads</a>
+        </nav>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+      </aside>
+      <main class="mn">
+        <header class="tb">
+          <div class="crumbs"><b>~/Projects/atlas</b><span class="btn sm" style="padding:3px 6px;color:var(--muted)"><svg class="ic"><use href="#i-swap"/></svg></span><b>Northwind / Q3 launch</b></div>
+          <div class="tb-r">
+            <div class="seg"><span class="on"><svg class="ic" viewBox="0 0 16 16"><path d="M2.5 3h11v10h-11zM8 3v10"/></svg>Split</span><span><svg class="ic"><use href="#i-list"/></svg>Single</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f59e0b">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
+          </div>
+        </header>
+        <div class="stage">
+          <div class="pane left" style="left:16px;top:14px;width:586px;height:582px">
+            <div class="pane-h"><svg class="ic"><use href="#i-layers"/></svg>Local<span class="pill">586 GB free</span></div>
+            <div class="pbar"><span class="pseg">~</span><svg class="ic"><use href="#i-chevr"/></svg><span class="pseg">Projects</span><svg class="ic"><use href="#i-chevr"/></svg><span class="pseg on">atlas</span><span class="edit"><svg class="ic"><use href="#i-pen"/></svg>click a segment to edit</span></div>
+            <div class="thead"><span>Name</span><span style="text-align:right">Size</span><span>Modified</span></div>
+            <div class="list">
+              <div class="trow up"><span class="nm">..</span><span class="c2"></span><span class="c3"></span></div>
+              <div class="trow"><span class="nm"><span class="fold"></span>assets</span><span class="c2">14 items</span><span class="c3">Sep 10, 16:20</span></div>
+              <div class="trow"><span class="nm"><span class="fold"></span>docs</span><span class="c2">6 items</span><span class="c3">Sep 8, 11:04</span></div>
+              <div class="trow"><span class="nm"><span class="fold"></span>src</span><span class="c2">41 items</span><span class="c3">Today, 09:12</span></div>
+              <div class="trow"><span class="nm"><span class="fold"></span>tests</span><span class="c2">12 items</span><span class="c3">Sep 14, 18:31</span></div>
+              <div class="trow"><span class="nm"><span class="th md"></span>.gitignore</span><span class="c2">214 B</span><span class="c3">Aug 2, 10:15</span></div>
+              <div class="trow sel"><span class="nm"><span class="th img"></span>hero-render-02.png</span><span class="c2">60.5 MB</span><span class="c3">Sep 12, 14:47</span></div>
+              <div class="trow"><span class="nm"><span class="th md"></span>kickoff.md</span><span class="c2">6 KB</span><span class="c3">Sep 9, 09:40</span></div>
+              <div class="trow sel"><span class="nm"><span class="th doc"></span>launch-brief.pdf</span><span class="c2">812 KB</span><span class="c3">Sep 11, 17:02</span></div>
+              <div class="trow"><span class="nm"><span class="th doc"></span>LICENSE</span><span class="c2">1 KB</span><span class="c3">Aug 2, 10:15</span></div>
+              <div class="trow"><span class="nm"><span class="th md"></span>package.json</span><span class="c2">2 KB</span><span class="c3">Today, 09:12</span></div>
+              <div class="trow"><span class="nm"><span class="th md"></span>README.md</span><span class="c2">4 KB</span><span class="c3">Sep 3, 12:30</span></div>
+              <div class="trow"><span class="nm"><span class="th md"></span>roadmap.md</span><span class="c2">18 KB</span><span class="c3">Today, 08:55</span></div>
+            </div>
+            <div class="pfoot"><span><b>2 selected</b> · 61.3 MB</span><span class="r">12 items</span></div>
+          </div>
+
+          <div class="pane right drop" style="left:618px;top:14px;width:586px;height:582px">
+            <div class="pane-h"><svg class="ic"><use href="#i-home"/></svg>Team drive<span class="pill ok">Synced</span></div>
+            <div class="pbar"><span class="pseg">Northwind</span><svg class="ic"><use href="#i-chevr"/></svg><span class="pseg on">Q3 launch</span></div>
+            <div class="thead"><span>Name</span><span style="text-align:right">Size</span><span>Modified</span><span></span></div>
+            <div class="list drop">
+              <div class="trow"><span class="nm"><span class="fold"></span>Assets</span><span class="c2">12 items</span><span class="c3">Sep 15, 10:08</span><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:7.5px">JM</span></div>
+              <div class="trow"><span class="nm"><span class="fold"></span>Legal</span><span class="c2">4 items</span><span class="c3">Sep 14, 15:22</span><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:7.5px">PS</span></div>
+              <div class="trow"><span class="nm"><span class="th doc"></span>Acme MSA v4.pdf</span><span class="c2">1.4 MB</span><span class="c3">Yesterday, 17:42</span><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:7.5px">JM</span></div>
+              <div class="trow"><span class="nm"><span class="th sheet"></span>Launch budget.xlsx</span><span class="c2">248 KB</span><span class="c3">Sep 13, 09:51</span><span class="av" style="--c:#f59e0b;width:18px;height:18px;font-size:7.5px">RD</span></div>
+              <div class="trow"><span class="nm"><span class="th sheet"></span>Press list.csv</span><span class="c2">41 KB</span><span class="c3">Sep 11, 13:05</span><span class="av" style="--c:#f59e0b;width:18px;height:18px;font-size:7.5px">RD</span></div>
+              <div class="trow"><span class="nm"><span class="th deck"></span>Q3 pricing deck.key</span><span class="c2">38.2 MB</span><span class="c3">Sep 12, 18:26</span><span class="av" style="--c:#f59e0b;width:18px;height:18px;font-size:7.5px">RD</span></div>
+              <div class="trow"><span class="nm"><span class="th fig"></span>Timeline.fig</span><span class="c2">12.7 MB</span><span class="c3">Sep 10, 11:37</span><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:7.5px">PS</span></div>
+            </div>
+            <div class="pfoot">7 items<span class="r">1.8 TB available</span></div>
+          </div>
+
+          <div class="ghost back" style="left:800px;top:362px"><span class="th img"></span>hero-render-02.png<small>60.5 MB</small></div>
+          <div class="ghost" style="left:786px;top:344px"><span class="th doc"></span>launch-brief.pdf<small>812 KB</small></div>
+          <span class="gn" style="left:1025px;top:335px">2</span>
+          <svg class="cur" style="left:776px;top:334px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:786px;top:418px"><svg class="ic" style="color:var(--ac)"><use href="#i-plus"/></svg>Copy 2 items to <b>Q3 launch</b><small>61.3 MB · hold ⌥ to move</small></div>
+
+          <div class="drawer">
+            <div class="dh"><svg class="ic" style="color:var(--muted)"><use href="#i-swap"/></svg>Transfers<span class="pill ac">2 active</span><span class="pill">1 done</span><span class="act"><span class="btn sm">Pause all</span><span class="btn sm" style="color:var(--muted)">Clear done</span></span></div>
+            <div class="xfer"><span class="th img"></span><span class="route">Hero render 02.png<svg class="ic"><use href="#i-chevr"/></svg><span>Q3 launch / Assets</span></span><span class="bar"><i style="--w:68%"></i></span><span class="stat"><b>41.2 of 60.5 MB</b> · 18.4 MB/s · 1 s left</span></div>
+            <div class="xfer"><span class="th fig"></span><span class="route">Brand refresh.fig<svg class="ic"><use href="#i-chevr"/></svg><span>Design system</span></span><span class="bar"><i style="--w:23%"></i></span><span class="stat"><b>10.6 of 46.2 MB</b> · 3.1 MB/s · 12 s left</span></div>
+            <div class="xfer done"><span class="th md"></span><span class="route">kickoff.md<svg class="ic"><use href="#i-chevr"/></svg><span>Q3 launch</span></span><span class="bar"><i style="--w:100%;--c:#34d399"></i></span><span class="stat"><svg class="ic" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><use href="#i-check"/></svg>6 KB · done just now</span></div>
+          </div>
+
+          <div class="fkeys">
+            <span class="fk"><span class="k">F2</span>Rename</span><span class="fk"><span class="k">F3</span>View</span><span class="fk"><span class="k">F4</span>Edit</span><span class="fk on"><span class="k">F5</span>Copy</span><span class="fk"><span class="k">F6</span>Move</span><span class="fk"><span class="k">F7</span>New folder</span><span class="fk"><span class="k">F8</span>Delete</span><span class="fk"><span class="k">F9</span>Sync</span><span class="fk"><span class="k">F10</span>Menu</span>
+          </div>
+        </div>
+      </main>
+    </div></div>
+  </div></div>
+
+  <section class="body" aria-label="About this design">
+      <p>Twin is the two-pane commander, the layout that has outlived every trend because moving files between two places is most of what a file manager does. The left pane is a local checkout, the right is the team drive, and both keep a path bar whose segments are buttons you can click into and retype. Two files are mid-drag from left to right: the ghost stack shows what is in hand, the right pane lights up as the drop target, and the tooltip says exactly what will happen and how to change it (hold the option key to move instead of copy). Transfers land in a queue at the bottom with progress, throughput and time remaining, so nothing modal ever interrupts the next task. The function-key row is a quiet reminder that everything here has a key.</p>
+      <dl class="homes-note"><dt>Why it works</dt><dd>Two lists side by side make source and destination explicit at every moment, and treating transfers as a queue rather than a dialog lets a power user keep working while the bytes move.</dd></dl>
+  </section>
+
+  <nav class="pager" aria-label="Previous and next design">
+    <a class="prev" data-nav="prev" rel="prev" href="mosaic.html"><small>Previous</small><b>Mosaic</b></a>
+    <a class="next" data-nav="next" rel="next" href="crew.html"><small>Next</small><b>Crew</b></a>
+    <p class="gallery">3 of 5 in the Classic collection · <a href="../index.html#classic">Back to the gallery</a></p>
+  </nav>
+</main>
+
+<!-- Inline copy of designs/manifest.json so navigation works over file://.
+     Regenerate with `node tools/sync-manifest.mjs` after editing the manifest. -->
+<script type="application/json" id="manifest">
+[
+  {
+    "slug": "constellation",
+    "number": "01",
+    "name": "Constellation",
+    "collection": "innovative",
+    "accent": "#8b7cf6",
+    "summary": "Files are stars. A collection is the shape you draw between them, and one star can sit in as many shapes as you like.",
+    "shot": "shots/constellation.png"
+  },
+  {
+    "slug": "prism",
+    "number": "02",
+    "name": "Prism",
+    "collection": "innovative",
+    "accent": "#22d3ee",
+    "summary": "Every tag is a translucent lens. Stack them and the files you want are where the colors overlap.",
+    "shot": "shots/prism.png"
+  },
+  {
+    "slug": "loom",
+    "number": "03",
+    "name": "Loom",
+    "collection": "innovative",
+    "accent": "#f5b544",
+    "summary": "Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.",
+    "shot": "shots/loom.png"
+  },
+  {
+    "slug": "facet",
+    "number": "04",
+    "name": "Facet",
+    "collection": "innovative",
+    "accent": "#34d399",
+    "summary": "One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.",
+    "shot": "shots/facet.png"
+  },
+  {
+    "slug": "rooms",
+    "number": "05",
+    "name": "Rooms and Portals",
+    "collection": "innovative",
+    "accent": "#fb7185",
+    "summary": "An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.",
+    "shot": "shots/rooms.png"
+  },
+  {
+    "slug": "shelves",
+    "number": "06",
+    "name": "Shelves",
+    "collection": "innovative",
+    "accent": "#60a5fa",
+    "summary": "Finish a sentence and it becomes a shelf. Files keep landing on every shelf whose sentence is true of them.",
+    "shot": "shots/shelves.png"
+  },
+  {
+    "slug": "transit",
+    "number": "07",
+    "name": "Transit",
+    "collection": "innovative",
+    "accent": "#fb923c",
+    "summary": "Collections are colored lines, files are stations, and a file in several collections is where you change trains.",
+    "shot": "shots/transit.png"
+  },
+  {
+    "slug": "columns",
+    "number": "08",
+    "name": "Columns of Context",
+    "collection": "innovative",
+    "accent": "#a3e635",
+    "summary": "A board where every column is a context, and moving a card never removes it from where it already was.",
+    "shot": "shots/columns.png"
+  },
+  {
+    "slug": "gravity",
+    "number": "09",
+    "name": "Gravity",
+    "collection": "innovative",
+    "accent": "#e879f9",
+    "summary": "Collections pull. Files settle where the pulls on them balance, and how far they sit from a well is how strongly they belong.",
+    "shot": "shots/gravity.png"
+  },
+  {
+    "slug": "orbit",
+    "number": "10",
+    "name": "Orbit",
+    "collection": "innovative",
+    "accent": "#2dd4bf",
+    "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
+    "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
+  }
+]
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

@@ -28,5 +28,20 @@
     "shot": "shots/gravity.png" },
   { "slug": "orbit", "number": "10", "name": "Orbit", "collection": "innovative", "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
-    "shot": "shots/orbit.png" }
+    "shot": "shots/orbit.png" },
+  { "slug": "ledger", "number": "11", "name": "Ledger", "collection": "classic", "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png" },
+  { "slug": "mosaic", "number": "12", "name": "Mosaic", "collection": "classic", "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png" },
+  { "slug": "twin", "number": "13", "name": "Twin", "collection": "classic", "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png" },
+  { "slug": "crew", "number": "14", "name": "Crew", "collection": "classic", "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png" },
+  { "slug": "lens", "number": "15", "name": "Lens", "collection": "classic", "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png" }
 ]

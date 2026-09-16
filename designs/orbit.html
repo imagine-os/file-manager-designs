@@ -11,14 +11,14 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 /* ---- Orbit: CSS used only by this screen ---- */
-.ring{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(255,255,255,.18)}
-.onode{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;padding:8px 12px 8px 10px;border-radius:999px;background:rgba(20,21,28,.9);border:1px solid var(--line2);font-size:12.5px;font-weight:500;backdrop-filter:blur(10px)}
-.onode .cnt{color:var(--dim);font-weight:400;font-size:11px}
+.ring{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(255,255,255,.2)}
+.onode{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;padding:8px 12px 8px 10px;border-radius:999px;background:rgba(20,21,28,.96);border:1px solid var(--line2);font-size:12.5px;font-weight:500;backdrop-filter:blur(10px)}
+.onode .cnt{color:var(--muted);font-weight:400;font-size:11px}
 .onode.hov{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent),0 10px 30px rgba(0,0,0,.5)}
-.ofile{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;padding:4px 8px 4px 5px;border-radius:999px;background:rgba(20,21,28,.9);border:1px solid var(--line);font-size:11px;color:var(--muted);white-space:nowrap}
+.ofile{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;padding:4px 8px 4px 5px;border-radius:999px;background:rgba(20,21,28,.96);border:1px solid var(--line);font-size:11px;color:var(--muted);white-space:nowrap}
 .ofile .th{width:16px;height:16px;border-radius:3px}
 .ofile.here{border-color:var(--ac);color:var(--fg)}
-.center-node{position:absolute;transform:translate(-50%,-50%);width:184px;padding:10px;border-radius:14px;background:rgba(24,25,33,.95);border:1px solid var(--line2);box-shadow:0 0 0 6px rgba(255,255,255,.03),0 20px 50px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:8px}
+.center-node{position:absolute;transform:translate(-50%,-50%);width:184px;padding:10px;border-radius:14px;background:rgba(24,25,33,.97);border:1px solid var(--line2);box-shadow:0 0 0 6px rgba(255,255,255,.03),0 20px 50px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:8px}
 .center-node .th{height:74px;border-radius:8px}
 </style>
 </head>
@@ -100,7 +100,7 @@
       <aside class="sb">
         <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
         <div class="search"><svg class="ic"><use href="#i-search"/></svg>Center anything<span class="kbd">⌘K</span></div>
-        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-orbit"/></svg>Orbit</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-orbit"/></svg>Orbit</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">Recent centers</div>
         <nav class="nav">
           <a><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya</a>
@@ -118,38 +118,36 @@
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span>Priya</span><svg class="ic" style="color:var(--dim)"><use href="#i-chevr"/></svg><span>Q3 launch</span><svg class="ic" style="color:var(--dim)"><use href="#i-chevr"/></svg><b>Atlas roadmap.md</b><svg class="ic" style="color:var(--dim)"><use href="#i-chevr"/></svg><span class="pill ac">Atlas · previewing</span></div>
+          <div class="crumbs"><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span>Priya</span><svg class="ic" style="color:var(--dim)"><use href="#i-chevr"/></svg><span>Q3 launch</span><svg class="ic" style="color:var(--dim)"><use href="#i-chevr"/></svg><b>Atlas roadmap.md</b><span class="pill ac">previewing Atlas</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on"><svg class="ic"><use href="#i-orbit"/></svg>Orbit</span><span><svg class="ic"><use href="#i-list"/></svg>List</span></div>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
             <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
           </div>
         </header>
-        <div class="stage" style="background:radial-gradient(45% 45% at 50% 52%,rgba(45,212,191,.08),transparent 70%)">
-          <div class="ring" style="left:440px;top:440px;width:440px;height:440px"></div>
-          <div class="ring" style="left:649px;top:372px;width:200px;height:200px;border-color:rgba(45,212,191,.45)"></div>
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
-            <g stroke="#fff" stroke-width="1" opacity=".18"><line x1="440" y1="440" x2="440" y2="220"/><line x1="440" y1="440" x2="649" y2="372"/><line x1="440" y1="440" x2="569" y2="618"/><line x1="440" y1="440" x2="311" y2="618"/><line x1="440" y1="440" x2="231" y2="372"/></g>
-            <g stroke="#2dd4bf" stroke-width="1" opacity=".35"><line x1="649" y1="372" x2="649" y2="272"/><line x1="649" y1="372" x2="736" y2="322"/><line x1="649" y1="372" x2="736" y2="422"/><line x1="649" y1="372" x2="649" y2="472"/><line x1="649" y1="372" x2="562" y2="322"/></g>
-            <path d="M600 355 Q 560 330 505 395" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4 4" opacity=".8"/>
-            <path d="M505 395 l3 -12 l8 8 z" fill="#2dd4bf"/>
+        <div class="stage" style="background:radial-gradient(45% 45% at 42% 50%,rgba(45,212,191,.08),transparent 70%)">
+          <div class="ring" style="left:370px;top:410px;width:480px;height:480px"></div>
+          <div class="ring" style="left:598px;top:336px;width:280px;height:280px;border-color:rgba(45,212,191,.5)"></div>
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
+            <g stroke="#fff" stroke-width="1" opacity=".25"><line x1="370" y1="410" x2="370" y2="170"/><line x1="370" y1="410" x2="598" y2="336"/><line x1="370" y1="410" x2="511" y2="604"/><line x1="370" y1="410" x2="229" y2="604"/><line x1="370" y1="410" x2="142" y2="336"/></g>
+            <g stroke="#2dd4bf" stroke-width="1" opacity=".4"><line x1="598" y1="336" x2="598" y2="196"/><line x1="598" y1="336" x2="731" y2="293"/><line x1="598" y1="336" x2="680" y2="449"/><line x1="598" y1="336" x2="516" y2="449"/><line x1="598" y1="336" x2="465" y2="293"/></g>
           </svg>
-          <div class="center-node" style="left:440px;top:440px"><span class="th md"></span><span class="nm" style="font-size:13px">Atlas roadmap.md</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Today<span class="pill ac" style="margin-left:auto">5 collections</span></span></div>
-          <div class="onode" style="left:440px;top:220px"><span class="dot" style="--c:#8b7cf6"></span>Q3 launch<span class="cnt">9</span></div>
-          <div class="onode hov" style="left:649px;top:372px"><span class="dot" style="--c:#2dd4bf"></span>Atlas<span class="cnt">5</span></div>
-          <div class="onode" style="left:569px;top:618px"><span class="dot" style="--c:#f5b544"></span>Board pack<span class="cnt">4</span></div>
-          <div class="onode" style="left:311px;top:618px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya<span class="cnt">57</span></div>
-          <div class="onode" style="left:231px;top:372px"><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">7</span></div>
-          <div class="ofile" style="left:649px;top:272px"><span class="th doc"></span>Acme SOW Q3.pdf</div>
-          <div class="ofile" style="left:736px;top:322px"><span class="th fig"></span>Brand refresh.fig</div>
-          <div class="ofile" style="left:736px;top:422px"><span class="th sheet"></span>Launch budget.xlsx</div>
-          <div class="ofile" style="left:649px;top:472px"><span class="th fig"></span>home.fig</div>
-          <div class="ofile here" style="left:562px;top:322px"><span class="th md"></span>Atlas roadmap.md<span class="pill ac" style="font-size:9.5px;padding:0 6px">here</span></div>
-          <svg class="cur" style="left:664px;top:382px"><use href="#cursor"/></svg>
-          <div class="tip" style="left:590px;top:506px"><svg class="ic" style="color:var(--ac)"><use href="#i-orbit"/></svg>Center <b>Atlas</b><small>its 5 files take the ring</small><span class="kbd" style="margin:0">⏎</span></div>
+          <div class="center-node" style="left:370px;top:410px"><span class="th md"></span><span class="nm" style="font-size:13px">Atlas roadmap.md</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Today<span class="pill ac" style="margin-left:auto">5 collections</span></span></div>
+          <div class="onode" style="left:370px;top:170px"><span class="dot" style="--c:#8b7cf6"></span>Q3 launch<span class="cnt">9</span></div>
+          <div class="onode hov" style="left:598px;top:336px"><span class="dot" style="--c:#2dd4bf"></span>Atlas<span class="cnt">5</span></div>
+          <div class="onode" style="left:511px;top:604px"><span class="dot" style="--c:#f5b544"></span>Board pack<span class="cnt">4</span></div>
+          <div class="onode" style="left:229px;top:604px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya<span class="cnt">57</span></div>
+          <div class="onode" style="left:142px;top:336px"><span class="dot" style="--c:#22d3ee"></span>Legal<span class="cnt">7</span></div>
+          <div class="ofile" style="left:598px;top:196px"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
+          <div class="ofile" style="left:731px;top:293px"><span class="th sheet"></span>Launch budget.xlsx</div>
+          <div class="ofile" style="left:680px;top:449px"><span class="th fig"></span>Brand refresh.fig</div>
+          <div class="ofile" style="left:516px;top:449px"><span class="th fig2"></span>home.fig</div>
+          <div class="ofile here" style="left:465px;top:293px"><span class="th md"></span>Atlas roadmap.md<span class="pill ac" style="font-size:9.5px;padding:0 6px">here</span></div>
+          <svg class="cur" style="left:610px;top:344px"><use href="#cursor"/></svg>
+          <div class="tip down" style="left:598px;top:368px;transform:translateX(-50%);--cx:calc(50% - 5px)"><svg class="ic" style="color:var(--ac)"><use href="#i-orbit"/></svg>Center <b>Atlas</b><small>its 5 files take the ring</small><span class="kbd" style="margin:0">⏎</span></div>
           <div class="glass abs" style="left:20px;bottom:20px;display:flex;gap:2px;padding:4px"><span class="btn sm" style="border:0;background:transparent"><svg class="ic"><use href="#i-back"/></svg>Back one hop</span><span class="btn sm" style="border:0;background:transparent;color:var(--muted)">Show 2 rings</span></div>
-          <div class="tip" style="right:20px;bottom:20px"><small>The trail is the path you walked through the graph, not a folder path. It can loop.</small></div>
         </div>
+        <footer class="sbar"><b>Atlas roadmap.md</b><span class="sep">·</span>5 collections in orbit<span class="sep">·</span>Trail: Priya › Q3 launch › Atlas roadmap.md<span class="r"><span>1 ring shown</span><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-orbit"/></svg>Center<svg class="ic x"><use href="#i-x"/></svg></div>
@@ -164,6 +162,11 @@
           <div class="home"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya<small>57 files</small><svg class="ic x"><use href="#i-x"/></svg></div>
           <div class="home"><span class="dot" style="--c:#22d3ee"></span>Legal<small>7 files</small><svg class="ic x"><use href="#i-x"/></svg></div>
           <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Add to a collection</div>
+        </div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited the Q4 section</span><time>08:55</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> added it to Board pack</span><time>Yesterday</time></div>
         </div>
       </aside>
     </div></div>
@@ -274,6 +277,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

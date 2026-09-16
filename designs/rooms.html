@@ -12,12 +12,14 @@
 <style>
 /* ---- Rooms and Portals: CSS used only by this screen ---- */
 .room{position:absolute;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.025)}
-.room .rh{display:flex;align-items:center;gap:8px;padding:10px 14px;font-weight:600;font-size:13px}
+.room .rh{display:flex;align-items:center;gap:8px;padding:0 14px;height:42px;font-weight:600;font-size:13px}
 .room .rh .cnt{color:var(--dim);font-weight:400;font-size:12px}
 .room .rh .avs{margin-left:auto}
 .portal{position:absolute;left:-6px;top:-6px;width:22px;height:22px;border-radius:6px;background:var(--ac);color:#0b0c10;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 .portal svg{width:13px;height:13px;stroke:#0b0c10;fill:none;stroke-width:2}
 .dots{background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:22px 22px}
+.mm{position:relative;height:70px}
+.mm span{position:absolute;border-radius:3px}
 </style>
 </head>
 <body class="design" style="--ac:#fb7185">
@@ -104,58 +106,67 @@
           <a class="on"><span class="dot" style="--c:#fb7185"></span>Design<span class="cnt">4</span></a>
           <a><span class="dot" style="--c:#34d399"></span>Finance<span class="cnt">2</span></a>
           <a><span class="dot" style="--c:#60a5fa"></span>Board Deck<span class="cnt">3</span></a>
-          <a><span class="dot" style="--c:#f5b544"></span>Legal<span class="cnt">6</span></a>
-          <a><span class="dot" style="--c:#e879f9"></span>Archive<span class="cnt">41</span></a>
+          <a><span class="dot" style="--c:#f5b544"></span>Legal<span class="cnt">4</span></a>
         </nav>
         <div class="nav-h">Portals</div>
-        <nav class="nav"><a><svg class="ic"><use href="#i-door"/></svg>All portals<span class="cnt">9</span></a><a><svg class="ic"><use href="#i-door"/></svg>Broken links<span class="cnt">0</span></a></nav>
+        <nav class="nav"><a><svg class="ic"><use href="#i-door"/></svg>All portals<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-door"/></svg>Broken links<span class="cnt">0</span></a></nav>
+        <div class="nav-h">Other canvases</div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-layers"/></svg>Archive<span class="cnt">41</span></a></nav>
         <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Canvas</span><span class="sep">/</span><b>Studio</b><span class="sep">/</span><span>Design, Finance, Board Deck</span></div>
+          <div class="crumbs"><span>Canvas</span><span class="sep">/</span><b>Studio</b><span class="pill">4 rooms</span></div>
           <div class="tb-r">
-            <div class="seg"><span class="on"><svg class="ic"><use href="#i-cursor"/></svg></span><span><svg class="ic"><use href="#i-hand"/></svg></span><span><svg class="ic"><use href="#i-door"/></svg></span></div>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#ec4899">LM</span><span class="av" style="--c:#10b981">AK</span></div>
+            <div class="seg"><span class="on"><svg class="ic"><use href="#i-cursor"/></svg>Select</span><span><svg class="ic"><use href="#i-hand"/></svg>Pan</span><span><svg class="ic"><use href="#i-door"/></svg>Portal</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
             <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
             <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>New room</span>
           </div>
         </header>
         <div class="stage dots">
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
-            <path d="M194 122 C 330 122, 360 402, 484 402" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4 5" opacity=".9"/>
-            <path d="M559 212 C 559 290, 729 260, 729 332" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4 5" opacity=".9"/>
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
+            <g fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4 5" opacity=".9" stroke-linejoin="round">
+              <path d="M194 147 H445 V265 H559 V332"/>
+              <path d="M729 222 V332"/>
+            </g>
+            <g fill="#fb7185"><circle cx="194" cy="147" r="2.5"/><circle cx="729" cy="222" r="2.5"/></g>
           </svg>
           <div class="room" style="left:20px;top:20px;width:410px;height:360px"><div class="rh"><span class="dot" style="--c:#fb7185"></span>Design<span class="cnt">4 files</span><div class="avs"><span class="av" style="--c:#ec4899">LM</span><span class="av" style="--c:#7c3aed">PS</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
           <div class="room" style="left:460px;top:20px;width:400px;height:230px"><div class="rh"><span class="dot" style="--c:#34d399"></span>Finance<span class="cnt">2 files</span><div class="avs"><span class="av" style="--c:#10b981">AK</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
           <div class="room" style="left:460px;top:280px;width:400px;height:360px;border-color:color-mix(in srgb,var(--ac) 50%,transparent)"><div class="rh"><span class="dot" style="--c:#60a5fa"></span>Board Deck<span class="cnt">3 files · 2 portals</span><div class="avs"><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#7c3aed">PS</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
-          <div class="room" style="left:20px;top:410px;width:410px;height:230px;border-style:dashed;background:transparent;display:grid;place-items:center;color:var(--dim);font-size:12.5px"><span><svg class="ic" style="vertical-align:-3px;margin-right:6px"><use href="#i-plus"/></svg>Draw a wall to make a room</span></div>
+          <div class="room" style="left:20px;top:410px;width:410px;height:386px"><div class="rh"><span class="dot" style="--c:#f5b544"></span>Legal<span class="cnt">4 files</span><div class="avs"><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
           <!-- Design files -->
           <div class="fc sel abs" style="left:44px;top:72px"><span class="th deck"></span><span class="nm">Q3 pricing deck.key</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Yesterday</span><span class="tag pill ac"><svg class="ic" style="width:10px;height:10px"><use href="#i-door"/></svg>2 rooms</span></div>
           <div class="fc abs" style="left:214px;top:72px"><span class="th fig"></span><span class="nm">Brand refresh.fig</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Fri</span></div>
           <div class="fc abs" style="left:44px;top:228px"><span class="th img"></span><span class="nm">Hero render 02.png</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Mon</span></div>
-          <div class="fc abs" style="left:214px;top:228px"><span class="th fig"></span><span class="nm">App icons.fig</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Aug 30</span></div>
+          <div class="fc abs" style="left:214px;top:228px"><span class="th fig2"></span><span class="nm">App icons.fig</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Aug 30</span></div>
           <!-- Finance files -->
-          <div class="fc abs" style="left:484px;top:72px"><span class="th sheet"></span><span class="nm">Q3 P&amp;L.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Today</span><span class="tag pill ac"><svg class="ic" style="width:10px;height:10px"><use href="#i-door"/></svg>2 rooms</span></div>
-          <div class="fc abs" style="left:654px;top:72px"><span class="th sheet"></span><span class="nm">Launch budget.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Tue</span></div>
+          <div class="fc abs" style="left:484px;top:72px"><span class="th sheet"></span><span class="nm">Launch budget.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Tue</span></div>
+          <div class="fc abs" style="left:654px;top:72px"><span class="th sheet"></span><span class="nm">Q3 P&amp;L.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Today</span><span class="tag pill ac"><svg class="ic" style="width:10px;height:10px"><use href="#i-door"/></svg>2 rooms</span></div>
           <!-- Board Deck: portals -->
           <div class="fc hov abs" style="left:484px;top:332px"><span class="portal"><svg><use href="#i-door"/></svg></span><span class="th deck"></span><span class="nm">Q3 pricing deck.key</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Yesterday</span><span class="tag pill ac">Portal</span></div>
           <div class="fc abs" style="left:654px;top:332px"><span class="portal"><svg><use href="#i-door"/></svg></span><span class="th sheet"></span><span class="nm">Q3 P&amp;L.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Today</span><span class="tag pill ac">Portal</span></div>
-          <div class="fc abs" style="left:484px;top:488px"><span class="th md"></span><span class="nm">Board agenda.md</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Today</span></div>
-          <svg class="cur" style="left:600px;top:420px"><use href="#cursor"/></svg>
-          <div class="tip" style="left:560px;top:442px"><svg class="ic" style="color:var(--ac)"><use href="#i-door"/></svg>Portal of <b>Design</b><small>edits sync both ways</small></div>
-          <div class="glass abs" style="left:20px;bottom:20px;display:flex;gap:2px;padding:4px"><span class="btn sm" style="border:0;background:transparent">−</span><span style="padding:4px 6px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums">64%</span><span class="btn sm" style="border:0;background:transparent">+</span><span class="btn sm" style="border:0;background:transparent;color:var(--muted)">Fit</span></div>
-          <div class="glass abs" style="right:20px;bottom:20px;width:160px;height:110px;padding:8px">
+          <div class="fc abs" style="left:654px;top:488px"><span class="th md"></span><span class="nm">Board agenda.md</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Today</span></div>
+          <!-- Legal files -->
+          <div class="fc abs" style="left:44px;top:462px"><span class="th doc sig"></span><span class="nm">Acme MSA v4.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>2h ago</span></div>
+          <div class="fc abs" style="left:214px;top:462px"><span class="th doc"></span><span class="nm">Acme NDA.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Aug 30</span></div>
+          <div class="fc abs" style="left:44px;top:618px"><span class="th doc"></span><span class="nm">DPA — Acme.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 14</span></div>
+          <div class="fc abs" style="left:214px;top:618px"><span class="th doc sig"></span><span class="nm">Vendor terms.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 28</span></div>
+          <svg class="cur" style="left:560px;top:420px"><use href="#cursor"/></svg>
+          <div class="tip down" style="left:484px;top:496px;--cx:66px;white-space:normal;width:164px;align-items:flex-start;line-height:1.4"><svg class="ic" style="color:var(--ac);margin-top:1px"><use href="#i-door"/></svg><span>Portal of <b>Design</b><br><small>edits sync both ways</small></span></div>
+          <div class="glass abs" style="right:20px;bottom:20px;width:160px;padding:8px">
             <div class="panel-h" style="margin-bottom:6px">Minimap</div>
-            <div style="position:relative;height:70px">
-              <span class="abs" style="left:4px;top:4px;width:56px;height:34px;border-radius:3px;background:rgba(251,113,133,.35)"></span>
-              <span class="abs" style="left:66px;top:4px;width:56px;height:22px;border-radius:3px;background:rgba(52,211,153,.35)"></span>
-              <span class="abs" style="left:66px;top:30px;width:56px;height:34px;border-radius:3px;background:rgba(96,165,250,.35)"></span>
-              <span class="abs" style="left:124px;top:4px;width:18px;height:60px;border-radius:3px;background:rgba(245,181,68,.25)"></span>
-              <span class="abs" style="left:0;top:0;width:126px;height:68px;border:1.5px solid #fff;border-radius:3px;opacity:.8"></span>
+            <div class="mm">
+              <span style="left:4px;top:4px;width:56px;height:30px;background:rgba(251,113,133,.4)"></span>
+              <span style="left:66px;top:4px;width:56px;height:18px;background:rgba(52,211,153,.4)"></span>
+              <span style="left:66px;top:26px;width:56px;height:30px;background:rgba(96,165,250,.4)"></span>
+              <span style="left:4px;top:38px;width:56px;height:30px;background:rgba(245,181,68,.4)"></span>
+              <span style="left:0;top:0;width:128px;height:70px;border:1.5px solid rgba(255,255,255,.85)"></span>
             </div>
           </div>
         </div>
+        <footer class="sbar"><b>Studio</b><span class="sep">·</span>4 rooms<span class="sep">·</span>13 files<span class="sep">·</span>2 portals<span class="r"><span>64% <span style="color:var(--line2)">·</span> Fit</span><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-door"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
@@ -165,13 +176,14 @@
         <div class="sec-h">Rooms<span class="cnt">2</span><span class="act">Jump to</span></div>
         <div class="homes">
           <div class="home"><span class="dot" style="--c:#fb7185"></span>Design<small>original</small><svg class="ic x"><use href="#i-x"/></svg></div>
-          <div class="home"><span class="dot" style="--c:#60a5fa"></span>Board Deck<small>portal · opened by Justin</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home" style="border-color:color-mix(in srgb,var(--ac) 50%,transparent)"><span class="dot" style="--c:#60a5fa"></span>Board Deck<small>portal · Justin</small><svg class="ic x"><use href="#i-x"/></svg></div>
           <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Open a portal in another room</div>
         </div>
         <div class="sec-h">Activity</div>
         <div class="act-list">
-          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> opened a portal in Board Deck</span><time>1d</time></div>
-          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited slide 12 from Design</span><time>1d</time></div>
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited slide 12 from Design</span><time>Yesterday</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> opened a portal in Board Deck</span><time>Mon</time></div>
+          <div><span class="av" style="--c:#ec4899;width:18px;height:18px;font-size:8px">LM</span><span><b>Lena</b> commented on slide 4</span><time>Aug 29</time></div>
         </div>
       </aside>
     </div></div>
@@ -282,6 +294,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>

@@ -13,8 +13,9 @@
 /* ---- Transit: CSS used only by this screen ---- */
 .station{position:absolute;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#0e0f14;border:2.5px solid #e8e9ee}
 .station.xc{width:20px;height:20px;border:3px solid #fff;box-shadow:0 0 0 3px #0e0f14,0 0 0 4px rgba(255,255,255,.35)}
-.slabel{position:absolute;font-size:11.5px;color:var(--muted);white-space:nowrap;transform:translateY(-50%)}
+.slabel{position:absolute;font-size:11.5px;color:var(--muted);white-space:nowrap;transform:translateY(-50%);display:flex;align-items:center;gap:6px}
 .slabel.b{color:var(--fg);font-weight:600}
+.slabel .pill{font-size:10px;padding:0 6px;line-height:1.6}
 </style>
 </head>
 <body class="design" style="--ac:#fb923c">
@@ -95,7 +96,7 @@
       <aside class="sb">
         <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
         <div class="search"><svg class="ic"><use href="#i-search"/></svg>Find a station<span class="kbd">⌘K</span></div>
-        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-route"/></svg>Map</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-route"/></svg>Map</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
         <div class="nav-h">Lines<svg class="ic plus"><use href="#i-plus"/></svg></div>
         <nav class="nav">
           <a class="on"><span class="dot" style="--c:#fb923c"></span>Atlas<span class="cnt">5</span></a>
@@ -105,58 +106,65 @@
           <a style="opacity:.6"><span class="dot" style="--c:#60a5fa"></span>Website<span class="cnt">hidden</span></a>
         </nav>
         <div class="nav-h">Interchanges</div>
-        <nav class="nav"><a><svg class="ic"><use href="#i-route"/></svg>launch-brief.pdf<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-route"/></svg>Acme MSA v4.pdf<span class="cnt">2</span></a></nav>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-route"/></svg>launch-brief.pdf<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-route"/></svg>Acme MSA v4.pdf<span class="cnt">2</span></a></nav>
         <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
       </aside>
       <main class="mn">
         <header class="tb">
-          <div class="crumbs"><span>Map</span><span class="sep">/</span><b>Studio network</b><span class="pill">19 stations · 4 lines</span></div>
+          <div class="crumbs"><span>Map</span><span class="sep">/</span><b>Studio network</b><span class="pill">17 stations · 4 lines</span></div>
           <div class="tb-r">
             <div class="seg"><span class="on">Map</span><span>Lines</span><span>Stations</span></div>
-            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
             <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
             <span class="btn pri"><svg class="ic"><use href="#i-route"/></svg>Route</span>
           </div>
         </header>
         <div class="stage" style="background:radial-gradient(60% 50% at 60% 45%,rgba(251,146,60,.07),transparent 70%)">
-          <svg class="ov" viewBox="0 0 880 844" preserveAspectRatio="none">
-            <polyline points="300,260 680,260 600,340" fill="none" stroke="#fff" stroke-width="22" stroke-opacity=".12" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
             <g fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="80" y1="260" x2="820" y2="260" stroke="#fb923c"/>
-              <line x1="80" y1="520" x2="820" y2="520" stroke="#22d3ee"/>
-              <polyline points="200,740 680,260 680,120" stroke="#e879f9"/>
-              <polyline points="760,760 560,560 560,140" stroke="#34d399"/>
+              <line x1="160" y1="260" x2="790" y2="260" stroke="#fb923c"/>
+              <line x1="160" y1="520" x2="800" y2="520" stroke="#22d3ee"/>
             </g>
-            <polyline points="300,260 680,260 600,340" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" opacity=".9"/>
+            <g fill="none" stroke-width="14" stroke="#0e0f14" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="260,680 680,260 680,180"/>
+              <polyline points="700,700 560,560 560,160"/>
+            </g>
+            <g fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="260,680 680,260 680,180" stroke="#e879f9"/>
+              <polyline points="700,700 560,560 560,160" stroke="#34d399"/>
+            </g>
+            <polyline points="300,260 680,260 600,340" fill="none" stroke="#fff" stroke-width="22" stroke-opacity=".14" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="300,260 680,260 600,340" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round" opacity=".95"/>
           </svg>
-          <!-- stations -->
+          <!-- Atlas -->
           <span class="station" style="left:160px;top:260px"></span><span class="slabel" style="left:130px;top:236px">kickoff.md</span>
-          <span class="station" style="left:300px;top:260px;border-color:#fb923c"></span><span class="slabel b" style="left:262px;top:232px">roadmap.md</span>
-          <span class="station" style="left:440px;top:260px"></span><span class="slabel" style="left:390px;top:236px">Launch budget.xlsx</span>
-          <span class="station xc" style="left:680px;top:260px"></span><span class="slabel b" style="left:634px;top:226px">launch-brief.pdf</span>
+          <span class="station" style="left:300px;top:260px;border-color:#fb923c"></span><span class="slabel b" style="left:250px;top:232px">roadmap.md<span class="pill c" style="--c:#fb923c;background:#2a1a0e">From</span></span>
+          <span class="station" style="left:440px;top:260px"></span><span class="slabel" style="left:388px;top:286px">Launch budget.xlsx</span>
+          <span class="station xc" style="left:680px;top:260px"></span><span class="slabel b" style="left:700px;top:296px">launch-brief.pdf</span>
           <span class="station" style="left:790px;top:260px"></span><span class="slabel" style="left:766px;top:236px">retro.md</span>
+          <!-- Contracts -->
           <span class="station" style="left:160px;top:520px"></span><span class="slabel" style="left:124px;top:546px">Acme NDA.pdf</span>
           <span class="station" style="left:300px;top:520px"></span><span class="slabel" style="left:256px;top:546px">MSA v3 (old).pdf</span>
           <span class="station xc" style="left:560px;top:520px"></span><span class="slabel b" style="left:510px;top:552px">Acme MSA v4.pdf</span>
           <span class="station" style="left:700px;top:520px"></span><span class="slabel" style="left:660px;top:546px">DPA — Acme.pdf</span>
           <span class="station" style="left:800px;top:520px"></span><span class="slabel" style="left:776px;top:546px">SOW.pdf</span>
+          <!-- Q3 -->
           <span class="station" style="left:260px;top:680px"></span><span class="slabel" style="left:276px;top:680px">Q3 calendar.ics</span>
           <span class="station" style="left:340px;top:600px"></span><span class="slabel" style="left:356px;top:600px">Q3 OKRs.md</span>
-          <span class="station" style="left:600px;top:340px;border-color:#e879f9"></span><span class="slabel b" style="left:616px;top:340px">hiring-plan.md</span>
+          <span class="station" style="left:600px;top:340px;border-color:#e879f9"></span><span class="slabel b" style="left:616px;top:340px">hiring-plan.md<span class="pill c" style="--c:#e879f9;background:#231226">To</span></span>
           <span class="station" style="left:680px;top:180px"></span><span class="slabel" style="left:696px;top:180px">Q3 board deck.key</span>
+          <!-- Priya -->
           <span class="station" style="left:560px;top:160px"></span><span class="slabel" style="left:576px;top:160px">reading list.md</span>
           <span class="station" style="left:560px;top:420px"></span><span class="slabel" style="left:576px;top:420px">1:1 notes.md</span>
           <span class="station" style="left:700px;top:700px"></span><span class="slabel" style="left:716px;top:700px">expenses.csv</span>
-          <span class="pill ac abs" style="left:262px;top:274px;background:#2a1a0e">From</span>
-          <span class="pill c abs" style="--c:#e879f9;left:616px;top:358px;background:#231226">To</span>
           <!-- route panel -->
-          <div class="glass abs" style="left:20px;top:16px;width:260px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:rgba(18,19,26,.9)">
+          <div class="glass abs" style="left:20px;top:16px;width:260px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:rgba(18,19,26,.92)">
             <div class="panel-h"><svg class="ic"><use href="#i-route"/></svg>Route<svg class="ic" style="margin-left:auto"><use href="#i-swap"/></svg></div>
             <div class="chip" style="border-color:rgba(251,146,60,.5)"><span class="th md"></span>roadmap.md<span class="pill c" style="--c:#fb923c;margin-left:auto">Atlas</span></div>
             <div class="chip" style="border-color:rgba(232,121,249,.5)"><span class="th md"></span>hiring-plan.md<span class="pill c" style="--c:#e879f9;margin-left:auto">Q3</span></div>
             <div style="font-size:12px;color:var(--muted);line-height:1.5">Ride <b style="color:#fb923c">Atlas</b> 2 stops, change at <b style="color:var(--fg)">launch-brief.pdf</b>, then <b style="color:#e879f9">Q3</b> 1 stop.</div>
           </div>
-          <div class="card-tip" style="left:704px;top:282px;min-width:160px"><span class="th doc"></span><div class="col"><span class="nm">launch-brief.pdf</span><span class="mt"><span class="pill c" style="--c:#fb923c">Atlas</span><span class="pill c" style="--c:#e879f9">Q3</span></span></div></div>
+          <div class="card-tip" style="left:470px;top:196px;min-width:160px"><span class="th doc"></span><div class="col"><span class="nm">launch-brief.pdf</span><span class="mt"><span class="pill c" style="--c:#fb923c">Atlas</span><span class="pill c" style="--c:#e879f9">Q3</span></span></div></div>
           <svg class="cur" style="left:688px;top:266px"><use href="#cursor"/></svg>
           <div class="glass abs" style="left:20px;bottom:20px;padding:10px 14px;display:flex;gap:16px;font-size:12px;align-items:center">
             <span style="display:flex;align-items:center;gap:6px"><i style="width:18px;height:5px;border-radius:3px;background:#fb923c"></i>Atlas</span>
@@ -165,24 +173,26 @@
             <span style="display:flex;align-items:center;gap:6px"><i style="width:18px;height:5px;border-radius:3px;background:#34d399"></i>Priya</span>
             <span style="display:flex;align-items:center;gap:6px;color:var(--muted);margin-left:6px"><span class="station xc" style="position:static;transform:none;width:14px;height:14px;border-width:2.5px;box-shadow:none"></span>Interchange</span>
           </div>
-          <div class="tip" style="right:20px;bottom:20px"><small>Pick any two stations to route between them</small></div>
         </div>
+        <footer class="sbar"><b>17 stations</b><span class="sep">·</span>4 lines, 1 hidden<span class="sep">·</span>2 interchanges<span class="sep">·</span>Route: 3 stops, 1 change<span class="r"><span class="sync"><i></i>Synced</span></span></footer>
       </main>
       <aside class="insp">
         <div class="ih"><svg class="ic"><use href="#i-route"/></svg>Station<svg class="ic x"><use href="#i-x"/></svg></div>
         <div class="prev th doc"></div>
         <h3>launch-brief.pdf<span class="pill ac">Interchange</span></h3>
-        <div class="meta"><span>Type</span><b>PDF · 2.4 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 14:02</b><span>Connections</span><b>2 lines · 6 neighbours</b></div>
+        <div class="meta"><span>Type</span><b>PDF · 2.4 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 14:02</b><span>Connections</span><b>2 lines · 4 neighbours</b></div>
         <div class="sec-h">Lines<span class="cnt">2</span><span class="act">Edit</span></div>
         <div class="homes">
-          <div class="home"><span class="dot" style="--c:#fb923c"></span>Atlas<small>stop 4 of 5</small><svg class="ic x"><use href="#i-x"/></svg></div>
-          <div class="home"><span class="dot" style="--c:#e879f9"></span>Q3<small>stop 4 of 5</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home"><span class="dot" style="--c:#fb923c"></span>Atlas<small>stop 4 of 5 from kickoff.md</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home"><span class="dot" style="--c:#e879f9"></span>Q3<small>stop 4 of 5 from Q3 calendar.ics</small><svg class="ic x"><use href="#i-x"/></svg></div>
           <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Add a line through this station</div>
         </div>
-        <div class="sec-h">Neighbours</div>
+        <div class="sec-h">Neighbours<span class="cnt">4</span></div>
         <div class="act-list">
-          <div><span class="dot" style="--c:#fb923c;margin-top:4px"></span><span>Launch budget.xlsx · retro.md</span></div>
-          <div><span class="dot" style="--c:#e879f9;margin-top:4px"></span><span>hiring-plan.md · Q3 board deck.key</span></div>
+          <div><span class="dot" style="--c:#fb923c;margin-top:4px"></span><span><b>Launch budget.xlsx</b> · previous on Atlas</span></div>
+          <div><span class="dot" style="--c:#fb923c;margin-top:4px"></span><span><b>retro.md</b> · next on Atlas</span></div>
+          <div><span class="dot" style="--c:#e879f9;margin-top:4px"></span><span><b>hiring-plan.md</b> · previous on Q3</span></div>
+          <div><span class="dot" style="--c:#e879f9;margin-top:4px"></span><span><b>Q3 board deck.key</b> · next on Q3</span></div>
         </div>
       </aside>
     </div></div>
@@ -293,6 +303,51 @@
     "accent": "#2dd4bf",
     "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
     "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
   }
 ]
 </script>
