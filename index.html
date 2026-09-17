@@ -18,6 +18,7 @@
   <nav class="coll" aria-label="Collections">
     <a href="index.html#innovative" data-collection="innovative" aria-current="false">Innovative</a>
     <a href="index.html#classic" data-collection="classic" aria-current="false">Classic</a>
+    <a href="prototype/index.html" title="Interactive prototypes: Facet, Tesseract, Polyhedron, Nested">Prototypes</a>
   </nav>
   <span class="grow"></span>
   <label class="visually-hidden" for="jump">Jump to a design</label>
@@ -145,6 +146,24 @@
   </section>
 
   <!-- ============================================================
+       Prototypes banner → prototype/index.html
+       ============================================================ -->
+  <section class="proto-banner" id="prototypes" aria-labelledby="h-protos" style="--ac:#34d399">
+    <div class="pb-txt">
+      <p class="eyebrow">Interactive prototypes</p>
+      <h2 id="h-protos">Beyond the cube</h2>
+      <p>Facet as a working cube, and the three directions from its tour built for real over the same files: <b>Tesseract</b> slides the cube through the quarters, <b>Polyhedron</b> gives every axis a face on a rolling solid, <b>Nested cubes</b> open a group into its own child cube.</p>
+      <a class="pb-btn" href="prototype/index.html">See the four prototypes <span aria-hidden="true">→</span></a>
+    </div>
+    <ul class="pb-cubes" aria-hidden="true">
+      <li style="--c:#34d399"><a href="prototype/facet/" tabindex="-1"><img src="shots/thumb-proto-facet.png" alt="" loading="lazy" width="720" height="450"><span>Facet</span></a></li>
+      <li style="--c:#22d3ee"><a href="prototype/tesseract/" tabindex="-1"><img src="shots/thumb-proto-tesseract.png" alt="" loading="lazy" width="720" height="450"><span>Tesseract</span></a></li>
+      <li style="--c:#8b7cf6"><a href="prototype/polyhedron/" tabindex="-1"><img src="shots/thumb-proto-polyhedron.png" alt="" loading="lazy" width="720" height="450"><span>Polyhedron</span></a></li>
+      <li style="--c:#f5b544"><a href="prototype/nested/" tabindex="-1"><img src="shots/thumb-proto-nested.png" alt="" loading="lazy" width="720" height="450"><span>Nested</span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================
        Versions
        ============================================================ -->
   <section class="versions" id="versions" aria-labelledby="h-versions">
@@ -153,7 +172,8 @@
       <li><b>v1</b><time datetime="2026-09-16">2026-09-16</time><span>Ten concepts as annotated diagrams.<span class="pill-v">superseded</span></span></li>
       <li><b>v2</b><time datetime="2026-09-16">2026-09-16</time><span>Rebuilt as full product screens at 1440 × 900.</span></li>
       <li><b>v3</b><time datetime="2026-09-16">2026-09-16</time><span>Refined all ten innovative screens (one gesture per screen, reconciled counts, unified product chrome, status bar), added the Classic collection (Ledger, Mosaic, Twin, Crew, Lens), published on GitHub Pages.</span></li>
-      <li class="current"><b>v4</b><time datetime="2026-09-17">2026-09-17</time><span>Interactive Facet prototype with Ledger comparison and guided tutorial: <a href="prototype/facet/">prototype/facet/</a>, a real CSS 3D cube over one shared dataset, a Miller-column Ledger of the same files, a Compare drawer with live demos, and a draggable tour.<span class="pill-v">current</span></span></li>
+      <li><b>v4</b><time datetime="2026-09-17">2026-09-17</time><span>Interactive Facet prototype with Ledger comparison and guided tutorial: <a href="prototype/facet/">prototype/facet/</a>, a real CSS 3D cube over one shared dataset, a Miller-column Ledger of the same files, a Compare drawer with live demos, and a draggable tour.</span></li>
+      <li class="current"><b>v5</b><time datetime="2026-09-17">2026-09-17</time><span>Beyond the cube: Tesseract, Polyhedron and Nested cubes prototypes, with a <a href="prototype/index.html">prototypes hub</a>, a shared dataset with twelve axes and four quarters of history, and a shared cube engine, tour and chrome under <code>prototype/shared/</code>.<span class="pill-v">current</span></span></li>
     </ol>
   </section>
 

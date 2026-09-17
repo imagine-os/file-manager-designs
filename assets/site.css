@@ -89,6 +89,23 @@ a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(
 .versions li.current{border-color:color-mix(in srgb,var(--ac,#8b7cf6) 45%,transparent)}
 .versions li .pill-v{display:inline-block;margin-left:8px;font-size:10.5px;padding:1px 7px;border-radius:999px;border:1px solid var(--line2);color:var(--dim);vertical-align:1px}
 footer.colophon{font-size:12.5px;color:var(--dim);padding-block:0 3rem;max-width:44rem}
+.versions li code{font-family:var(--mono);font-size:12px;color:var(--fg)}
+
+/* ---- prototypes banner (index.html → prototype/index.html) ---- */
+.proto-banner{padding-block:3rem;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:2rem 3rem;align-items:center}
+.proto-banner h2{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .6rem}
+.proto-banner p{margin:0 0 1.2rem;color:var(--muted);max-width:52ch}
+.proto-banner p b{color:var(--fg);font-weight:500}
+.proto-banner .eyebrow{margin-bottom:.5rem}
+.pb-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;background:var(--ac);color:#062b1f;text-decoration:none;font-weight:600;font-size:14px;box-shadow:0 8px 24px color-mix(in srgb,var(--ac) 35%,transparent);transition:transform .15s}
+.pb-btn:hover{transform:translateY(-1px)}
+.pb-cubes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pb-cubes li a{display:block;position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#0e0f14;text-decoration:none;color:var(--fg);aspect-ratio:1440/900;transition:border-color .15s,transform .15s}
+.pb-cubes li a:hover{border-color:color-mix(in srgb,var(--c) 60%,var(--line2));transform:translateY(-2px)}
+.pb-cubes img{display:block;width:100%;height:100%;object-fit:cover;opacity:.9}
+.pb-cubes span{position:absolute;left:8px;bottom:6px;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--fg);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.pb-cubes span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:1px}
+@media (max-width:760px){.proto-banner{grid-template-columns:1fr}.pb-cubes{grid-template-columns:repeat(2,1fr)}}
 
 /* ---- design page ---- */
 .design main.wrap{padding-block:1.5rem 4rem;overflow-x:clip}

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polyhedron prototype · Northwind files</title>
+<meta name="description" content="Interactive prototype of Polyhedron: every axis of the Northwind files gets its own face on one rolling solid, which morphs from a cube to a dodecahedron as axes are switched on and folds flat into a net.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 4l10 6.5 2 11L21 27h-10l-7-5.5 2-11z%27 fill=%27none%27 stroke=%27%238b7cf6%27 stroke-width=%272%27 stroke-linejoin=%27round%27/%3E%3Cpath d=%27M16 4l-4 9 4 10 4-10zM6 10.5l6 2.5M26 10.5l-6 2.5M4 21.5l8-8.5M28 21.5l-8-8.5M11 27l5-4 5 4%27 fill=%27none%27 stroke=%27%238b7cf6%27 stroke-width=%271.6%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
+<!-- shared chrome first, then the cube engine styles (rows, groups, thumbnails reused inside every face), then the strip, then this prototype's own CSS -->
+<link rel="stylesheet" href="../shared/chrome.css">
+<link rel="stylesheet" href="../shared/cube.css">
+<link rel="stylesheet" href="../shared/proto-nav.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<!-- prototype strip (../shared/proto-nav.js fills it; the .app below is shortened by --proto-nav-h) -->
+<nav class="pnav" id="proto-nav" data-proto="polyhedron"></nav>
+<template id="about">
+  <p><b>Polyhedron</b> gives every axis of the same 25 files its own face on one solid. Three axes are Facet’s cube; switch more on and the solid re-forms: four make a <b>tetrahedron</b>, up to six a cube, up to eight an <b>octahedron</b>, up to twelve a <b>dodecahedron</b>. Spare faces stay blank.</p>
+  <ul>
+    <li><b>Drag</b> to roll the solid. Faces turned toward you show their groups and files; faces turning away fade to labels.</li>
+    <li><b>Roll to</b> (or keys <kbd>1</kbd>–<kbd>9</kbd>) turns an axis to the front. Click a face header, or <kbd>⏎</kbd>, to <b>focus</b> it square-on; <kbd>Esc</kbd> lets go.</li>
+    <li>The <b>Axes</b> rail switches axes on and off; the presets set the whole rail. <kbd>F</kbd> <b>flattens</b> the solid into its net, <kbd>0</kbd> resets.</li>
+    <li>Select a file to light it up on every face; the inspector’s <b>Solid</b> tab shows a wireframe turning in sync. <kbd>?</kbd> opens the tour.</li>
+  </ul>
+</template>
+
+<div class="app" id="app">
+  <!-- ============ sidebar ============ -->
+  <aside class="sb" id="sidebar" aria-label="Workspace">
+    <div class="ws"><span class="logo" aria-hidden="true"></span><b>Northwind</b><a class="back-link" href="../../index.html" title="Back to the design portfolio"><svg class="ic"><use href="#i-external"/></svg><span class="sr">Portfolio</span></a></div>
+    <label class="search" for="search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Search files" autocomplete="off" aria-label="Search files across every face"><kbd class="kbd" aria-hidden="true">/</kbd></label>
+    <nav class="nav" aria-label="Views">
+      <a href="#" class="on" id="nav-all"><svg class="ic"><use href="#i-poly"/></svg><span>All files</span><span class="cnt" id="nav-all-count">25</span></a>
+      <a href="#"><svg class="ic"><use href="#i-inbox"/></svg><span>Inbox</span><span class="cnt">3</span></a>
+      <a href="#"><svg class="ic"><use href="#i-clock"/></svg><span>Recent</span></a>
+      <a href="#"><svg class="ic"><use href="#i-star"/></svg><span>Starred</span></a>
+    </nav>
+    <div class="nav-h">Axes <span class="hint count" id="axes-count" title="Axes on the solid">3 of 12</span></div>
+    <div class="pre-row" id="presets" role="group" aria-label="Axis presets"></div>
+    <nav class="nav axes-nav" id="axes-rail" aria-label="Axes on the solid"></nav>
+    <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div><b>Priya Shah</b><small>Northwind · Pro</small></div><button class="ib" type="button" title="Workspace settings" aria-label="Workspace settings"><svg class="ic"><use href="#i-gear"/></svg></button></div>
+  </aside>
+
+  <!-- ============ main ============ -->
+  <main class="mn">
+    <header class="tb">
+      <button class="ib only-narrow" id="sb-toggle" type="button" title="Show or hide the sidebar" aria-label="Toggle sidebar"><svg class="ic"><use href="#i-sidebar"/></svg></button>
+      <div class="seg views" role="tablist" aria-label="View" id="view-seg">
+        <button role="tab" type="button" data-view="polyhedron" aria-selected="true" title="Polyhedron: one face per axis"><svg class="ic"><use href="#i-poly"/></svg>Polyhedron</button>
+      </div>
+      <div class="tb-center" id="tb-center"></div>
+      <div class="tb-r">
+        <button class="btn" id="tour-btn" type="button" title="Open the guided tour (?)"><svg class="ic"><use href="#i-help"/></svg>Tour</button>
+        <button class="ib" id="theme-btn" type="button" title="Switch to light theme" aria-label="Switch to light theme"><svg class="ic"><use href="#i-sun"/></svg></button>
+        <div class="avs" title="Priya Shah, Justin Mehta and Rosa Delgado are here"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+        <button class="btn" type="button" title="Share this view"><svg class="ic"><use href="#i-share"/></svg>Share</button>
+      </div>
+    </header>
+
+    <!-- ---- stage ---- -->
+    <section class="stage" id="stage" aria-label="Polyhedron">
+      <div class="chips" id="chips">
+        <span class="solid-chip" id="solid-chip"></span>
+        <span class="chips-l">Faces</span>
+        <div class="chip-row" id="chips-active"></div>
+        <span class="chips-hint"><svg class="ic"><use href="#i-hand"/></svg>Drag to roll · click a face header to focus it</span>
+      </div>
+      <div class="poly-stage" id="poly-stage">
+        <div class="poly-wrap"><div class="poly" id="poly"></div></div>
+        <div class="poly-tools" id="tools" role="toolbar" aria-label="Solid controls">
+          <button class="btn" id="roll-btn" type="button" aria-haspopup="menu" aria-expanded="false" title="Roll an axis to the front (1–9)"><svg class="ic"><use href="#i-poly"/></svg>Roll to<svg class="ic chev"><use href="#i-chev"/></svg></button>
+          <span class="sep"></span>
+          <button class="btn tog" id="focus-btn" type="button" aria-pressed="false" title="Focus the front-most face (Enter)"><svg class="ic"><use href="#i-search"/></svg>Focus<kbd>⏎</kbd></button>
+          <button class="btn tog" id="flat-btn" type="button" aria-pressed="false" title="Unfold the solid into its net (F)"><svg class="ic"><use href="#i-flat"/></svg>Flatten<kbd>F</kbd></button>
+          <button class="btn" id="reset-btn" type="button" title="Back to the first axis, folded up (0)"><svg class="ic"><use href="#i-reset"/></svg>Reset<kbd>0</kbd></button>
+        </div>
+      </div>
+      <div class="callout" id="callout" hidden></div>
+      <div class="toast" id="toast" hidden role="status"></div>
+    </section>
+
+    <footer class="sbar" id="sbar"></footer>
+  </main>
+
+  <!-- ============ inspector ============ -->
+  <aside class="insp" id="inspector" aria-label="Inspector"></aside>
+</div>
+
+<!-- popover menu (Roll to, add an axis) -->
+<div class="menu" id="menu" hidden role="menu"></div>
+
+<!-- the shared tour fills these -->
+<aside class="tut" id="tut" hidden aria-label="Guided tour" role="dialog" aria-modal="false"></aside>
+<div class="tut-ring" id="tut-ring" hidden aria-hidden="true"></div>
+
+<script type="module" src="app.js"></script>
+<script src="../shared/proto-nav.js"></script>
+</body>
+</html>

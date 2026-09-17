@@ -38,7 +38,7 @@ async function linkOk(url) {
 }
 
 try {
-  const pages = ['index.html', 'prototype/facet/index.html', ...manifest.map((d) => `designs/${d.slug}.html`)];
+  const pages = ['index.html', 'prototype/index.html', 'prototype/facet/index.html', 'prototype/tesseract/index.html', 'prototype/polyhedron/index.html', 'prototype/nested/index.html', ...manifest.map((d) => `designs/${d.slug}.html`)];
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   for (const rel of pages) {
     const page = await context.newPage();

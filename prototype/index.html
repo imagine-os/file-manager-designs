@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beyond the cube · Prototypes · File Manager Design Portfolio</title>
+<meta name="description" content="Four interactive prototypes of the Facet idea: the cube itself, then Tesseract (time as a fourth axis), Polyhedron (one face per axis) and Nested cubes (a group opens into its own cube).">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 6l9 5v10l-9 5-9-5V11z%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3Cpath d=%27M7 11l9 5 9-5M16 16v10%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- hub page only ---- */
+.hub-head{padding-block:3.5rem 1.5rem;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:2rem 4rem;align-items:end}
+.hub-head h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.05;letter-spacing:-.025em;font-weight:600;margin:0;text-wrap:balance}
+.hub-head .premise{max-width:36rem}
+.protos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding-block:1rem 3rem}
+.proto{display:flex;flex-direction:column;gap:14px;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--glass);position:relative;transition:border-color .15s,background .15s,transform .15s}
+.proto:hover{border-color:color-mix(in srgb,var(--ac) 55%,var(--line2));background:var(--glass2);transform:translateY(-2px)}
+.proto .shot{position:relative;aspect-ratio:1440/900;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0e0f14;isolation:isolate;display:block}
+.proto .shot::before{content:"";position:absolute;inset:-30%;z-index:-1;background:radial-gradient(50% 50% at 50% 50%,color-mix(in srgb,var(--ac) 30%,transparent),transparent 70%);filter:blur(24px)}
+.proto .shot::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4);border-radius:inherit}
+.proto .shot img{display:block;width:100%;height:100%;object-fit:cover}
+.proto .txt{display:flex;flex-direction:column;gap:8px;padding:0 6px 4px;flex:1}
+.proto .kicker{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:600}
+.proto .kicker i{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 10px color-mix(in srgb,var(--ac) 70%,transparent)}
+.proto .kicker .st{margin-left:auto;white-space:nowrap;flex:none;font-size:10.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--dim);letter-spacing:.06em}
+.proto .kicker .st.live{background:color-mix(in srgb,var(--ac) 16%,transparent);border-color:color-mix(in srgb,var(--ac) 45%,transparent);color:var(--ac)}
+.proto h2{margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-.015em}
+.proto h2 small{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-top:2px;letter-spacing:0}
+.proto .adds{margin:0;font-size:13.5px;color:var(--muted);line-height:1.55}
+.proto .adds b{color:var(--fg);font-weight:600}
+.proto .row{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:6px}
+.proto .open{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:var(--ac);color:#0b0c10;text-decoration:none;font-weight:600;font-size:13.5px;box-shadow:0 8px 22px color-mix(in srgb,var(--ac) 30%,transparent);transition:transform .15s}
+.proto .open:hover{transform:translateY(-1px)}
+.proto .open svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.proto .readme{font-size:12.5px;color:var(--muted);text-decoration:none;padding:6px 8px;border-radius:8px}
+.proto .readme:hover{color:var(--fg);background:var(--glass2)}
+.proto .keys{margin-left:auto;display:inline-flex;gap:6px;color:var(--dim);font-size:12px}
+.proto .checks{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);padding:0 6px 6px}
+.proto .checks i{width:6px;height:6px;border-radius:50%;background:var(--ac);flex:none}
+.proto .checks code{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.how{padding-block:2.5rem 3.5rem;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:1.5rem 4rem;align-items:start}
+.how h2{font-size:1.25rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .5rem}
+.how p{margin:0 0 .8rem;color:var(--muted);max-width:60ch}
+.how p b{color:var(--fg);font-weight:500}
+.how dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:14px;align-items:baseline}
+.how dt{font-family:var(--mono);font-size:12.5px;color:var(--fg);white-space:nowrap;padding:2px 8px;border:1px solid var(--line2);border-radius:6px;background:rgba(0,0,0,.25)}
+.how dd{margin:0;color:var(--muted)}
+.how dd b{color:var(--fg);font-weight:500}
+.topnav .coll a.here{background:var(--glass2);color:var(--fg)}
+@media (max-width:760px){.hub-head{grid-template-columns:1fr;gap:1rem;padding-block:2.5rem 1rem}.how{grid-template-columns:1fr}}
+</style>
+</head>
+<body style="--ac:#34d399">
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="false">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="false">Classic</a>
+    <a href="index.html" class="here" aria-current="page">Prototypes</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">[</span><span class="key">]</span></dt><dd>Previous / next prototype (inside a prototype)</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="hub-head">
+    <div>
+      <p class="eyebrow">Prototypes · Northwind files</p>
+      <h1>Beyond the cube</h1>
+    </div>
+    <p class="premise">Facet put one set of files on a cube, one axis per face. The last step of its tour sketched three ways the idea could grow. These are those three, <b>built and shipped</b> as interactive prototypes over the same 25 Northwind files, side by side with the cube they start from. Each is plain HTML, CSS and JavaScript with no build step; a strip at the top of every one moves between them (<span class="key">[</span> and <span class="key">]</span>).</p>
+  </header>
+
+  <ul class="protos">
+    <li class="proto" style="--ac:#34d399">
+      <a class="shot" href="facet/" tabindex="-1" aria-hidden="true"><img src="../shots/thumb-proto-facet.png" width="720" height="450" loading="lazy" alt=""></a>
+      <div class="txt">
+        <div class="kicker"><i></i>00 · The starting point<span class="st live">Shipped first</span></div>
+        <h2>Facet<small>One set of files, three faces</small></h2>
+        <p class="adds"><b>What it is.</b> A real CSS 3D cube: Project, Client and Type on its faces, two more axes waiting as chips. Select a file and it lights up on every face with connector lines; change one fact in the inspector and it slides to its new group. A Ledger view of the same files and a Compare drawer keep the comparison honest, and a draggable tour explains it.</p>
+        <div class="row"><a class="open" href="facet/">Open prototype<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></svg></a><a class="readme" href="../designs/facet.html">Design page</a><span class="keys" title="Keys inside the prototype"><span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">F</span></span></div>
+        <div class="checks"><i></i>27 interaction checks pass · <code>tools/proto-check.mjs</code></div>
+      </div>
+    </li>
+    <li class="proto" style="--ac:#22d3ee">
+      <a class="shot" href="tesseract/" tabindex="-1" aria-hidden="true"><img src="../shots/thumb-proto-tesseract.png" width="720" height="450" loading="lazy" alt=""></a>
+      <div class="txt">
+        <div class="kicker"><i></i>01 · Time as a fourth axis</div>
+        <h2>Tesseract<small>The cube, sliced through the quarters</small></h2>
+        <p class="adds"><b>What it adds over the cube.</b> A <b>time scrubber</b> under the cube slides the whole workspace through 2026 Q1 to Q4; <b>ghost cubes</b> for the neighbouring quarters sit behind it, and <b>world lines</b> trace where a file was and where it goes. A <b>diff panel</b> lists every file that moved, appeared or was archived between two quarters, <b>pin-and-compare</b> holds one quarter beside another, and a <b>timeline</b> under the stage shows each file’s changes as beads on a thread. The faces never change meaning; only the moment does.</p>
+        <div class="row"><a class="open" href="tesseract/">Open prototype<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></svg></a><span class="keys" title="Keys inside the prototype"><span class="key">←</span><span class="key">→</span> scrub</span></div>
+        <div class="checks"><i></i>25 interaction checks pass · <code>tools/proto-check-tesseract.mjs</code></div>
+      </div>
+    </li>
+    <li class="proto" style="--ac:#8b7cf6">
+      <a class="shot" href="polyhedron/" tabindex="-1" aria-hidden="true"><img src="../shots/thumb-proto-polyhedron.png" width="720" height="450" loading="lazy" alt=""></a>
+      <div class="txt">
+        <div class="kicker"><i></i>02 · One face per axis</div>
+        <h2>Polyhedron<small>A Platonic solid that morphs as axes come and go</small></h2>
+        <p class="adds"><b>What it adds over the cube.</b> <b>One face per axis</b>, up to twelve: Status, Owner, Shared with, Size, Modified, Format and Starred join Facet’s five. Switch axes on and off and the solid <b>morphs</b> through the Platonic series, 3 → 4 → 6 → 8 → 12 faces, keeping every file in place. <b>Roll to</b> any axis to bring it square-on, <b>focus</b> a face to read it as a list, pick a <b>preset</b> for the pairs you use most, or <b>unfold the net</b> to see every face flat at once.</p>
+        <div class="row"><a class="open" href="polyhedron/">Open prototype<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></svg></a><span class="keys" title="Keys inside the prototype"><span class="key">←</span><span class="key">→</span> roll</span></div>
+        <div class="checks"><i></i>25 interaction checks pass · <code>tools/proto-check-polyhedron.mjs</code></div>
+      </div>
+    </li>
+    <li class="proto" style="--ac:#f5b544">
+      <a class="shot" href="nested/" tabindex="-1" aria-hidden="true"><img src="../shots/thumb-proto-nested.png" width="720" height="450" loading="lazy" alt=""></a>
+      <div class="txt">
+        <div class="kicker"><i></i>03 · Cubes inside cubes</div>
+        <h2>Nested cubes<small>A group opens into its own child cube</small></h2>
+        <p class="adds"><b>What it adds over the cube.</b> Depth. <b>Open a group</b> on any face, say Acme on the Client face, and its files become a <b>child cube</b> of their own, grouped by the axes that still tell them apart. The breadcrumb is a <b>path of live mini-cubes</b> you can step back along; an <b>axis override</b> re-groups a child without leaving it, a <b>depth guard</b> stops you drilling past the point where groups hold one file, a <b>mini-map</b> keeps the whole tree in view and <b>sibling compare</b> puts two groups’ cubes side by side.</p>
+        <div class="row"><a class="open" href="nested/">Open prototype<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></svg></a><span class="keys" title="Keys inside the prototype"><span class="key">Enter</span> open <span class="key">⌫</span> back</span></div>
+        <div class="checks"><i></i>22 interaction checks pass · <code>tools/proto-check-nested.mjs</code></div>
+      </div>
+    </li>
+  </ul>
+
+  <section class="how" aria-labelledby="h-how">
+    <div>
+      <h2 id="h-how">Built on one foundation</h2>
+      <p>The three new prototypes share one dataset and one toolkit, in <b>prototype/shared/</b>, so the same 25 files behave the same everywhere and a change of grouping means the same thing on a cube, a polyhedron or a child cube.</p>
+      <p>Every prototype has its own Playwright test under <b>tools/</b> that drives it end to end, fails on console errors and writes its screenshots.</p>
+    </div>
+    <dl>
+      <dt>shared/data.js</dt><dd>The Northwind files with <b>twelve axes</b> and a <b>history per file</b> across 2026 Q1 to Q4, plus <b>filesAt</b>, <b>diff</b> and <b>groupBy</b> helpers.</dd>
+      <dt>shared/cube.js</dt><dd>The cube engine from Facet as a factory: faces, drag with inertia and snapping, face enlarge, connector lines, group hover. A page can host one cube or many.</dd>
+      <dt>shared/tour.js</dt><dd>The floating, draggable, never-modal tour, generic over any list of steps and any event bus.</dd>
+      <dt>shared/chrome.css</dt><dd>The Northwind chrome: tokens, sidebar, top bar, inspector, buttons, chips, toasts, light and dark.</dd>
+      <dt>shared/proto-nav.js</dt><dd>The strip above each app that moves between the four prototypes and holds the "About this prototype" note.</dd>
+    </dl>
+  </section>
+
+  <footer class="colophon">Workspace, people and files are illustrative. The prototypes run from disk or from GitHub Pages under the repository path; relative links only. Keyboard: <span class="key">[</span> <span class="key">]</span> move between prototypes once inside one, Esc or G returns to the gallery.</footer>
+</main>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

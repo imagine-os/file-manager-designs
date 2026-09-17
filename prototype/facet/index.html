@@ -8,6 +8,7 @@
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 6l9 5v10l-9 5-9-5V11z%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3Cpath d=%27M7 11l9 5 9-5M16 16v10%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3C/svg%3E">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="../shared/proto-nav.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -44,6 +45,14 @@
     <symbol id="i-external" viewBox="0 0 16 16"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></symbol>
   </defs>
 </svg>
+
+<!-- prototype strip (shared/proto-nav.js fills it; the .app below is shortened by --proto-nav-h) -->
+<nav class="pnav" id="proto-nav" data-proto="facet"></nav>
+<template id="about">
+  <p><b>Facet</b> puts one set of 25 files on a cube. Each face groups them by a different axis (Project, Client, Type, Quarter or Person), so rotating the cube is a different question about the same files, and refiling is changing one fact in the inspector.</p>
+  <ul><li>Drag the cube; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> bring a face square-on, <kbd>0</kbd> resets, <kbd>F</kbd> unfolds the front face.</li><li><kbd>L</kbd> switches to the classic Ledger columns over the same files; <b>Compare</b> lays the two side by side.</li><li><kbd>?</kbd> opens the guided tour.</li></ul>
+  <p>The three prototypes beside it (Tesseract, Polyhedron, Nested) each take one direction from the last step of the tour and build it for real.</p>
+</template>
 
 <div class="app" id="app" data-view="facet">
   <!-- ============ sidebar ============ -->
@@ -168,5 +177,6 @@
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script src="tutorial.js"></script>
+<script src="../shared/proto-nav.js"></script>
 </body>
 </html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nested cubes prototype · Northwind files</title>
+<meta name="description" content="Interactive prototype of Nested cubes: any group on a face of the Facet cube opens into its own child cube of just those files, grouped by the axes that still tell them apart, and the breadcrumb becomes a path of cubes.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 6l9 5v10l-9 5-9-5V11z%27 fill=%27none%27 stroke=%27%23f5b544%27 stroke-width=%272%27/%3E%3Cpath d=%27M7 11l9 5 9-5M16 16v10%27 fill=%27none%27 stroke=%27%23f5b544%27 stroke-width=%272%27/%3E%3Cpath d=%27M16 13.5l4.5 2.5v5l-4.5 2.5-4.5-2.5v-5z%27 fill=%27%23f5b544%27 opacity=%27.55%27/%3E%3C/svg%3E">
+<!-- shared chrome first, then the cube engine styles, then the strip, then this prototype's own CSS -->
+<link rel="stylesheet" href="../shared/chrome.css">
+<link rel="stylesheet" href="../shared/cube.css">
+<link rel="stylesheet" href="../shared/proto-nav.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<!-- prototype strip (../shared/proto-nav.js fills it; the .app below is shortened by --proto-nav-h) -->
+<nav class="pnav" id="proto-nav" data-proto="nested"></nav>
+<template id="about">
+  <p><b>Nested cubes</b> keeps Facet's cube and adds one move: any group on a face opens into <b>its own smaller cube</b> holding just those files, grouped by the three axes that still tell them apart. The parent shrinks into the breadcrumb as a live mini cube, so the path you took is a <b>row of cubes</b> you can step back along.</p>
+  <ul>
+    <li>Hover a group and press <b>Open ▸</b> (or double-click it, or <kbd>Enter</kbd> on a focused group). Groups with too few axes left open as a flat list instead.</li>
+    <li>Click any cube in the path, or press <kbd>Backspace</kbd> / <kbd>Esc</kbd> to go up one and <kbd>Home</kbd> to return to the root. The mini-map bottom-left shows the nesting.</li>
+    <li>The chips override a child cube's axes; only axes the path has not already used are offered. <b>Compare siblings</b> puts two sibling groups side by side as cubes that turn together.</li>
+    <li>Select a file anywhere: it lights up on every cube in the path and the inspector shows the path it took. <b>Show in root</b> zooms all the way out and highlights it.</li>
+    <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> bring a face square-on, <kbd>0</kbd> resets, <kbd>?</kbd> opens the guided tour.</li>
+  </ul>
+</template>
+
+<div class="app" id="app">
+  <!-- ============ sidebar ============ -->
+  <aside class="sb" id="sidebar" aria-label="Workspace">
+    <div class="ws"><span class="logo" aria-hidden="true"></span><b>Northwind</b><a class="back-link" href="../../index.html" title="Back to the design portfolio"><svg class="ic"><use href="#i-external"/></svg><span class="sr">Portfolio</span></a></div>
+    <label class="search" for="search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Search this cube" autocomplete="off" aria-label="Search the files on the current cube"><kbd class="kbd" aria-hidden="true">/</kbd></label>
+    <nav class="nav" aria-label="Views">
+      <a href="#" class="on" id="nav-all" title="The root cube: every file"><svg class="ic"><use href="#i-nested"/></svg><span>All files</span><span class="cnt" id="nav-all-count">25</span></a>
+      <a href="#"><svg class="ic"><use href="#i-inbox"/></svg><span>Inbox</span><span class="cnt">3</span></a>
+      <a href="#"><svg class="ic"><use href="#i-clock"/></svg><span>Recent</span></a>
+      <a href="#"><svg class="ic"><use href="#i-star"/></svg><span>Starred</span></a>
+    </nav>
+    <div class="nav-h">Path of cubes <span class="hint" id="path-count" title="How deep you are">1</span></div>
+    <nav class="nav path-nav" id="path-nav" aria-label="Path of cubes"></nav>
+    <div class="nav-h">Axes <span class="hint" id="axes-count" title="Three axes are on the current cube; the axes the path used are fixed">12</span></div>
+    <nav class="nav axes-nav" id="axes-nav" aria-label="Axes"></nav>
+    <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div><b>Priya Shah</b><small>Northwind · Pro</small></div><button class="ib" type="button" title="Workspace settings" aria-label="Workspace settings"><svg class="ic"><use href="#i-gear"/></svg></button></div>
+  </aside>
+
+  <!-- ============ main ============ -->
+  <main class="mn">
+    <header class="tb">
+      <button class="ib only-narrow" id="sb-toggle" type="button" title="Show or hide the sidebar" aria-label="Toggle sidebar"><svg class="ic"><use href="#i-sidebar"/></svg></button>
+      <div class="seg views" role="tablist" aria-label="View" id="view-seg">
+        <button role="tab" type="button" data-view="nested" aria-selected="true" title="Nested cubes: a group opens into its own cube"><svg class="ic"><use href="#i-nested"/></svg>Nested cubes</button>
+      </div>
+      <div class="tb-center" id="tb-center"><span class="tb-where" id="tb-where"></span></div>
+      <div class="tb-r">
+        <button class="btn" id="compare-btn" type="button" aria-pressed="false" title="Put this group beside a sibling group as two cubes that turn together (C)" disabled><svg class="ic"><use href="#i-compare"/></svg>Compare siblings<kbd>C</kbd></button>
+        <button class="btn" id="tour-btn" type="button" title="Open the guided tour (?)"><svg class="ic"><use href="#i-help"/></svg>Tour</button>
+        <button class="ib" id="theme-btn" type="button" title="Switch to light theme" aria-label="Switch to light theme"><svg class="ic"><use href="#i-sun"/></svg></button>
+        <div class="avs" title="Priya Shah, Justin Mehta and Rosa Delgado are here"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+        <button class="btn" type="button" title="Share this view"><svg class="ic"><use href="#i-share"/></svg>Share</button>
+      </div>
+    </header>
+
+    <!-- ---- stage ---- -->
+    <section class="stage" id="stage" aria-label="Nested cubes">
+      <!-- the path of cubes: one live mini cube per level, the current one last -->
+      <div class="crumbs-bar" id="crumbs-bar">
+        <div class="crumbs-l">Path</div>
+        <nav class="cubepath" id="crumbs" aria-label="Path of cubes"></nav>
+        <div class="crumbs-r">
+          <button class="btn sm" id="up-btn" type="button" title="Zoom out one level (Backspace)" disabled><svg class="ic"><use href="#i-back"/></svg>Up<kbd>⌫</kbd></button>
+          <button class="btn sm" id="home-btn" type="button" title="Zoom out to the root cube (Home)" disabled><svg class="ic"><use href="#i-home"/></svg>Root<kbd>Home</kbd></button>
+        </div>
+      </div>
+      <div class="chips" id="chips">
+        <span class="chips-l">On this cube</span>
+        <div class="chip-row" id="chips-shown"></div>
+        <span class="chips-l" id="chips-fixed-l">Fixed by the path</span>
+        <div class="chip-row" id="chips-fixed"></div>
+        <span class="chips-l">Free</span>
+        <div class="chip-row" id="chips-hidden"></div>
+        <span class="chips-hint"><svg class="ic"><use href="#i-hand"/></svg>Drag to rotate · hover a group and press Open ▸</span>
+      </div>
+      <!-- every level of the path keeps its cube here; only the current one is shown -->
+      <div class="levels" id="levels">
+        <div class="minimap" id="minimap" aria-label="Mini-map of the open cubes"></div>
+        <div class="callout" id="callout" hidden></div>
+      </div>
+      <div class="toast" id="toast" hidden role="status"></div>
+    </section>
+
+    <footer class="sbar" id="sbar"></footer>
+  </main>
+
+  <!-- ============ inspector ============ -->
+  <aside class="insp" id="inspector" aria-label="Inspector"></aside>
+</div>
+
+<!-- popover menu for the axis chips -->
+<div class="menu" id="menu" hidden role="menu"></div>
+
+<!-- the shared tour renders into these -->
+<aside class="tut" id="tut" hidden aria-label="Guided tour" role="dialog" aria-modal="false"></aside>
+<div class="tut-ring" id="tut-ring" hidden aria-hidden="true"></div>
+
+<script type="module" src="app.js"></script>
+<script src="../shared/proto-nav.js"></script>
+</body>
+</html>

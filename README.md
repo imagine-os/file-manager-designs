@@ -28,7 +28,13 @@ shots/thumb-<slug>.png   720 px thumbnail used by the gallery cards
 tools/screenshot.mjs     regenerates shots/ and thumbnails with Playwright
 tools/check.mjs          site checker (console errors, 404s, links, nav, overflow, phone width)
 tools/proto-check.mjs    drives the Facet prototype end to end, records the walkthrough video and shots
+tools/proto-check-<slug>.mjs  the same for tesseract, polyhedron and nested
+prototype/index.html     "Beyond the cube" hub: the four prototypes with thumbnails and what each adds
 prototype/facet/         interactive Facet + Ledger prototype (index.html, app.css, app.js, data.js, tutorial.js)
+prototype/tesseract/     Tesseract: time as a fourth axis (scrubber, ghost cubes, world lines, diff, pin-and-compare)
+prototype/polyhedron/    Polyhedron: one face per axis on a Platonic solid that morphs 3→4→6→8→12 (solids.js), unfolded net
+prototype/nested/        Nested cubes: a group opens into a child cube; breadcrumbs are a path of live mini-cubes
+prototype/shared/        shared dataset (12 axes, Q1–Q4 history), cube engine, tour, chrome, strip; see its README
 tools/sync-manifest.mjs  copies manifest.json into every page's inline fallback
 .github/workflows/pages.yml  publishes the site to the gh-pages branch on push to main
 ```
@@ -43,6 +49,22 @@ tutorial. Vanilla HTML/CSS/JS, relative paths only. Live at
 `prototype/facet/README.md` for the feature list and the three "beyond the cube" directions.
 `node tools/proto-check.mjs` drives every feature with Playwright, records
 `prototype/facet/walkthrough.webm` and writes `shots/facet-proto-*.png`.
+
+Three more prototypes build the "beyond the cube" ideas from Facet's tour on shared
+modules (`prototype/shared/`): the same 25 files with twelve axes and a history per file
+across 2026 Q1 to Q4, the cube engine as a factory, the tour, the chrome and a strip that
+moves between prototypes (`[` / `]`). The hub at
+<https://imagine-os.github.io/file-manager-designs/prototype/> lists all four.
+
+| Prototype | Folder | What it adds | Check |
+| --- | --- | --- | --- |
+| Facet | `prototype/facet/` | the cube, Ledger, Compare, tour | `node tools/proto-check.mjs` |
+| Tesseract | `prototype/tesseract/` | time scrubber, ghost cubes, world lines, diff panel, pin-and-compare, timeline | `node tools/proto-check-tesseract.mjs` |
+| Polyhedron | `prototype/polyhedron/` | one face per axis, Platonic morph 3→4→6→8→12, roll-to, focus, presets, unfolded net | `node tools/proto-check-polyhedron.mjs` |
+| Nested cubes | `prototype/nested/` | open a group into a child cube, breadcrumb path of live mini-cubes, axis override, depth guard, mini-map, sibling compare | `node tools/proto-check-nested.mjs` |
+
+Each check accepts `--no-video` to skip the recording. Each prototype has `walkthrough.webm`
+beside it and `shots/proto-<slug>*.png` (2× captures) plus `shots/thumb-proto-<slug>.png`.
 
 ## Adding a design
 
@@ -121,4 +143,5 @@ repository sub-path.
 - **v1** 2026-09-16, ten concepts as annotated diagrams (superseded)
 - **v2** 2026-09-16, rebuilt as full product screens
 - **v4** 2026-09-17, interactive Facet prototype with Ledger comparison and guided tutorial (`prototype/facet/`)
+- **v5** 2026-09-17, Beyond the cube: Tesseract, Polyhedron and Nested cubes prototypes on shared modules, with a prototypes hub (`prototype/`)
 - **v3** 2026-09-16, refined all ten innovative screens (one gesture per screen, reconciled counts, unified product chrome, status bar), added the Classic collection (Ledger, Mosaic, Twin, Crew, Lens), published on GitHub Pages
