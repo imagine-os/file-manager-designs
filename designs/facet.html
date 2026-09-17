@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en" data-slug="facet">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Facet · File Manager Design Portfolio</title>
+<meta name="description" content="One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%238b7cf6%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- Facet: CSS used only by this screen ---- */
+.cube-wrap{position:absolute;inset:0;perspective:2400px;perspective-origin:50% 42%}
+.floor{position:absolute;left:50%;top:84%;width:600px;height:100px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent)}
+.cube{position:absolute;left:50%;top:50%;width:430px;height:430px;transform-style:preserve-3d;transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-42deg)}
+.face{position:absolute;inset:0;background:rgba(22,23,31,.94);border:1px solid var(--line2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+.face.front{transform:translateZ(215px)}
+.face.right{transform:rotateY(90deg) translateZ(215px);background:rgba(18,19,26,.97)}
+.face.top{transform:rotateX(90deg) translateZ(215px);background:rgba(28,29,38,.96);gap:10px}
+.face .fh{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.face .fh .cnt{margin-left:auto;letter-spacing:0;color:var(--dim);font-weight:500}
+.face .grp{font-size:12.5px;font-weight:600;color:var(--fg);margin-top:2px;display:flex;align-items:center;gap:6px}
+.face .grp small{color:var(--dim);font-weight:400}
+.face .row{display:flex;align-items:center;gap:7px;padding:3px 6px;border-radius:6px;font-size:12.5px;color:var(--muted)}
+.face .row .th{width:16px;height:16px;border-radius:3px;flex:none}
+.face .row.hl{background:color-mix(in srgb,var(--ac) 20%,transparent);color:var(--fg);outline:1px solid color-mix(in srgb,var(--ac) 55%,transparent)}
+.face .row.hov{background:var(--glass2);color:var(--fg)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1;min-height:0}
+.tile{border:1px solid var(--line);border-radius:10px;padding:12px 12px 10px;display:flex;flex-direction:column;justify-content:space-between;background:rgba(255,255,255,.03)}
+.tile b{font-size:24px;font-weight:600;color:var(--fg);line-height:1.1;display:block}
+.tile small{font-size:20px;color:var(--muted);font-weight:500;display:block;margin-top:4px}
+.tile .ths{display:flex;gap:4px;margin-top:8px}
+.tile .ths .th{width:22px;height:22px;border-radius:4px}
+.tile.hl{border-color:color-mix(in srgb,var(--ac) 60%,transparent);background:color-mix(in srgb,var(--ac) 16%,transparent)}
+.tile.hl .ths .th:first-child{outline:2px solid var(--ac);outline-offset:1px}
+/* link to the interactive prototype */
+.proto-cta{margin:-.6rem 0 1.4rem}
+.proto-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 16px 10px 14px;border-radius:12px;background:var(--ac);color:#062b1f;text-decoration:none;font-weight:600;font-size:14px;box-shadow:0 8px 24px color-mix(in srgb,var(--ac) 35%,transparent);transition:transform .15s,box-shadow .15s}
+.proto-btn:hover{transform:translateY(-1px);box-shadow:0 12px 30px color-mix(in srgb,var(--ac) 45%,transparent)}
+.proto-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.proto-btn span{font-weight:500;opacity:.8;font-size:12.5px;border-left:1px solid rgba(6,43,31,.25);padding-left:10px}
+@media (max-width:560px){.proto-btn span{display:none}}
+</style>
+</head>
+<body class="design" style="--ac:#34d399">
+<!-- Icon sprite (identical copy of assets/icons.svg, inlined so <use href="#i-…"> works over file://) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h10"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2.5 3.5h11l-4.3 5v4l-2.4 1v-5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c0-2.4 1.9-3.8 4.2-3.8s4.2 1.4 4.2 3.8M10.5 9.4c2 0 3.7 1.3 3.7 3.6M10 3.4a2.2 2.2 0 0 1 0 4.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 16 16"><path d="M4 14V7a4 4 0 0 1 8 0v7M2.5 14h11"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><path d="M2.5 2.5h5.5l5.5 5.5-5.5 5.5-5.5-5.5z"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 16 16"><path d="m11.5 2.5 2 2-8 8-3 1 1-3z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 2.5 13 7.5 8.7 8.7 7.5 13z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M3 5.5h9l-2.5-2.5M13 10.5H4l2.5 2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 13.5a1.5 1.5 0 0 0 3 0"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><ellipse cx="8" cy="8" rx="6.5" ry="3.2" transform="rotate(-30 8 8)"/></symbol>
+    <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4H6.5a2 2 0 0 1 0-4H11"/></symbol>
+    <symbol id="cursor" viewBox="0 0 20 24"><path d="M3 2v17l4.6-4.2L10.8 22l2.6-1.1-3.2-7.2H17z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Shared nav bar. Static hrefs are filled in so the page works without JS;
+     assets/nav.js re-derives them (and the Jump-to menu) from designs/manifest.json. -->
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="true">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="false">Classic</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <a class="pn" data-nav="prev" rel="prev" href="loom.html" title="Previous: Loom"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span class="lbl">Prev</span><span class="pn-name">Loom</span></a>
+  <span class="pos" aria-label="Position in collection"><b>4</b> / 10</span>
+  <a class="pn" data-nav="next" rel="next" href="rooms.html" title="Next: Rooms and Portals"><span class="lbl">Next</span><span class="pn-name">Rooms and Portals</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></a>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">←</span><span class="key">→</span></dt><dd>Previous / next design</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="design-head">
+    <span class="num">04</span>
+    <h1>Facet</h1>
+    <span class="coll-tag">Innovative</span>
+  </header>
+  <p class="tag">One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.</p>
+  <p class="proto-cta"><a class="proto-btn" href="../prototype/facet/"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 14 5v6l-6 3.2L2 11V5z"/><path d="M2 5l6 3 6-3M8 8v6.2"/></svg>Open the interactive prototype<span>drag the cube, switch to Ledger, take the tour</span></a></p>
+
+  <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
+       and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css
+       plus the per-design classes in the <style> block above. -->
+  <div class="frame"><div class="device">
+    <div class="winbar"><i></i><i></i><i></i><span class="url">northwind.facet.app/cube?faces=project,client,type</span></div>
+    <div class="viewport"><div class="screen" style="--ac:#34d399">
+      <aside class="sb">
+        <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search any axis<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-grid"/></svg>Cube</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <div class="nav-h">Axes<svg class="ic plus"><use href="#i-plus"/></svg></div>
+        <nav class="nav">
+          <a class="on"><span class="dot" style="--c:#34d399"></span>Project<span class="cnt">front</span></a>
+          <a class="on"><span class="dot" style="--c:#34d399"></span>Client<span class="cnt">right</span></a>
+          <a class="on"><span class="dot" style="--c:#34d399"></span>Type<span class="cnt">top</span></a>
+          <a><span class="dot" style="--c:#5b5f6c"></span>Quarter</a>
+          <a><span class="dot" style="--c:#5b5f6c"></span>Person</a>
+          <a><span class="dot" style="--c:#5b5f6c"></span>Status</a>
+        </nav>
+        <div class="nav-h">Saved angles</div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-layers"/></svg>Legal review</a><a><svg class="ic"><use href="#i-layers"/></svg>By client, this quarter</a></nav>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+      </aside>
+      <main class="mn">
+        <header class="tb">
+          <div class="crumbs"><span>Cube</span><span class="sep">/</span><b>Project · Client · Type</b><span class="pill">11 files</span></div>
+          <div class="tb-r">
+            <div class="seg"><span class="on">Cube</span><span>Flat</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-filter"/></svg>Filter</span>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
+            <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>Upload</span>
+          </div>
+        </header>
+        <div class="stage">
+          <div class="abs" style="left:24px;right:24px;top:14px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)">
+            Faces
+            <span class="pill ac" style="padding:4px 10px;font-size:12px">Project</span><span class="pill ac" style="padding:4px 10px;font-size:12px">Client</span><span class="pill ac" style="padding:4px 10px;font-size:12px">Type</span>
+            <span style="margin-left:8px">Hidden</span>
+            <span class="pill" style="padding:4px 10px;font-size:12px">Quarter</span><span class="pill" style="padding:4px 10px;font-size:12px">Person</span><span class="pill" style="padding:4px 10px;font-size:12px">Status</span>
+            <span class="pill" style="margin-left:auto;padding:4px 10px;font-size:12px;color:var(--muted)"><svg class="ic" style="width:12px;height:12px"><use href="#i-hand"/></svg>Drag to rotate</span>
+          </div>
+          <div class="floor"></div>
+          <div class="cube-wrap"><div class="cube">
+            <div class="face front">
+              <div class="fh">By project<span class="cnt">4 groups</span></div>
+              <div class="grp">Atlas <small>4</small></div>
+              <div class="row hl"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
+              <div class="row"><span class="th md"></span>Atlas roadmap.md</div>
+              <div class="row"><span class="th sheet"></span>Launch budget.xlsx</div>
+              <div class="row"><span class="th md"></span>kickoff.md</div>
+              <div class="grp">Website <small>3</small></div>
+              <div class="row"><span class="th fig2"></span>home.fig</div>
+              <div class="row"><span class="th img"></span>Hero render 02.png</div>
+              <div class="row"><span class="th doc"></span>copy-deck.docx</div>
+              <div class="grp">Legal <small>2</small></div>
+              <div class="row"><span class="th doc"></span>DPA — Acme.pdf</div>
+              <div class="row"><span class="th doc"></span>Acme NDA.pdf</div>
+              <div class="grp">Globex <small>2</small></div>
+              <div class="row"><span class="th deck"></span>GX deck.key</div>
+              <div class="row"><span class="th doc sig"></span>Globex SOW.pdf</div>
+            </div>
+            <div class="face right">
+              <div class="fh">By client<span class="cnt">3 groups</span></div>
+              <div class="grp">Acme <small>3</small></div>
+              <div class="row hl hov"><span class="th doc sig"></span>Acme SOW Q3.pdf</div>
+              <div class="row"><span class="th doc"></span>Acme NDA.pdf</div>
+              <div class="row"><span class="th doc"></span>DPA — Acme.pdf</div>
+              <div class="grp">Globex <small>2</small></div>
+              <div class="row"><span class="th deck"></span>GX deck.key</div>
+              <div class="row"><span class="th doc sig"></span>Globex SOW.pdf</div>
+              <div class="grp">Internal <small>6</small></div>
+              <div class="row"><span class="th md"></span>Atlas roadmap.md</div>
+              <div class="row"><span class="th md"></span>kickoff.md</div>
+              <div class="row"><span class="th sheet"></span>Launch budget.xlsx</div>
+              <div class="row"><span class="th fig2"></span>home.fig</div>
+              <div class="row"><span class="th img"></span>Hero render 02.png</div>
+              <div class="row"><span class="th doc"></span>copy-deck.docx</div>
+            </div>
+            <div class="face top">
+              <div class="fh">By type<span class="cnt">6 groups</span></div>
+              <div class="tiles">
+                <div class="tile hl"><div><b>Contract</b><small>4 files</small></div><div class="ths"><span class="th doc sig"></span><span class="th doc"></span><span class="th doc"></span><span class="th doc sig"></span></div></div>
+                <div class="tile"><div><b>Design</b><small>2 files</small></div><div class="ths"><span class="th fig2"></span><span class="th img"></span></div></div>
+                <div class="tile"><div><b>Markdown</b><small>2 files</small></div><div class="ths"><span class="th md"></span><span class="th md"></span></div></div>
+                <div class="tile"><div><b>Sheet</b><small>1 file</small></div><div class="ths"><span class="th sheet"></span></div></div>
+                <div class="tile"><div><b>Deck</b><small>1 file</small></div><div class="ths"><span class="th deck"></span></div></div>
+                <div class="tile"><div><b>Document</b><small>1 file</small></div><div class="ths"><span class="th doc"></span></div></div>
+              </div>
+            </div>
+          </div></div>
+          <svg class="cur" style="left:566px;top:369px"><use href="#cursor"/></svg>
+          <div class="tip" style="left:582px;top:392px"><svg class="ic" style="color:var(--ac)"><use href="#i-check"/></svg><b>Acme SOW Q3.pdf</b><small>3 of 5 axes shown</small></div>
+          <div class="glass abs" style="left:20px;bottom:20px;padding:12px 14px;width:250px;display:flex;flex-direction:column;gap:8px">
+            <div class="panel-h">Rotate to</div>
+            <div class="legend">
+              <div><span class="dot" style="--c:#34d399"></span>Project × Client × Type<span class="cnt">current</span></div>
+              <div style="opacity:.7"><span class="dot" style="--c:#5b5f6c"></span>Quarter × Person × Status</div>
+              <div style="opacity:.7"><span class="dot" style="--c:#5b5f6c"></span>Client × Quarter × Type</div>
+            </div>
+          </div>
+        </div>
+        <footer class="sbar"><b>11 files</b><span class="sep">·</span>3 of 6 axes on the cube<span class="sep">·</span>Acme SOW Q3.pdf selected<span class="r"><span class="sync"><i></i>Synced</span></span></footer>
+      </main>
+      <aside class="insp">
+        <div class="ih"><svg class="ic"><use href="#i-grid"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
+        <div class="prev th doc sig"></div>
+        <h3>Acme SOW Q3.pdf<span class="pill ac">3 faces</span></h3>
+        <div class="meta"><span>Type</span><b>PDF · 1.1 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Today, 09:41</b><span>Signed</span><b>Pending · Acme</b></div>
+        <div class="sec-h">Where it sits<span class="cnt">5 axes · 3 shown</span><span class="act">Edit</span></div>
+        <div class="homes">
+          <div class="home"><span class="dot" style="--c:#34d399"></span>Project<small>Atlas</small><span class="pill" style="margin-left:auto">front</span></div>
+          <div class="home"><span class="dot" style="--c:#34d399"></span>Client<small>Acme</small><span class="pill" style="margin-left:auto">right</span></div>
+          <div class="home"><span class="dot" style="--c:#34d399"></span>Type<small>Contract</small><span class="pill" style="margin-left:auto">top</span></div>
+          <div class="home" style="opacity:.75"><span class="dot" style="--c:#5b5f6c"></span>Quarter<small>Q3 2026</small><span class="pill" style="margin-left:auto">hidden</span></div>
+          <div class="home" style="opacity:.75"><span class="dot" style="--c:#5b5f6c"></span>Person<small>Priya, Justin</small><span class="pill" style="margin-left:auto">hidden</span></div>
+          <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Set a value on another axis</div>
+        </div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> sent for signature</span><time>09:41</time></div>
+          <div><span class="av" style="--c:#f97316;width:18px;height:18px;font-size:8px">RD</span><span><b>Rosa</b> set Client to Acme</span><time>Aug 28</time></div>
+        </div>
+      </aside>
+    </div></div>
+  </div></div>
+
+  <section class="body" aria-label="About this design">
+      <p>Facet treats the filing scheme as a viewing angle, not a structure. The three visible faces of the cube are three groupings of the same files, by project, by client and by type, and dragging the cube brings a hidden axis around: by quarter, by person, by status. Nothing is copied or moved when you rotate. The file was always in every group it qualifies for, and the face only decides which grouping is in front. Selecting a file highlights it on every face at once.</p>
+      <dl class="homes-note"><dt>How multi-home shows up</dt><dd>A file is listed under its value on every axis, so the inspector reads as one row per axis with the value beside it and a badge for which face currently shows it. Setting a value on a new axis is how you give it another home.</dd></dl>
+  </section>
+
+  <nav class="pager" aria-label="Previous and next design">
+    <a class="prev" data-nav="prev" rel="prev" href="loom.html"><small>Previous</small><b>Loom</b></a>
+    <a class="next" data-nav="next" rel="next" href="rooms.html"><small>Next</small><b>Rooms and Portals</b></a>
+    <p class="gallery">4 of 10 in the Innovative collection · <a href="../index.html#innovative">Back to the gallery</a></p>
+  </nav>
+</main>
+
+<!-- Inline copy of designs/manifest.json so navigation works over file://.
+     Regenerate with `node tools/sync-manifest.mjs` after editing the manifest. -->
+<script type="application/json" id="manifest">
+[
+  {
+    "slug": "constellation",
+    "number": "01",
+    "name": "Constellation",
+    "collection": "innovative",
+    "accent": "#8b7cf6",
+    "summary": "Files are stars. A collection is the shape you draw between them, and one star can sit in as many shapes as you like.",
+    "shot": "shots/constellation.png"
+  },
+  {
+    "slug": "prism",
+    "number": "02",
+    "name": "Prism",
+    "collection": "innovative",
+    "accent": "#22d3ee",
+    "summary": "Every tag is a translucent lens. Stack them and the files you want are where the colors overlap.",
+    "shot": "shots/prism.png"
+  },
+  {
+    "slug": "loom",
+    "number": "03",
+    "name": "Loom",
+    "collection": "innovative",
+    "accent": "#f5b544",
+    "summary": "Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.",
+    "shot": "shots/loom.png"
+  },
+  {
+    "slug": "facet",
+    "number": "04",
+    "name": "Facet",
+    "collection": "innovative",
+    "accent": "#34d399",
+    "summary": "One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.",
+    "shot": "shots/facet.png"
+  },
+  {
+    "slug": "rooms",
+    "number": "05",
+    "name": "Rooms and Portals",
+    "collection": "innovative",
+    "accent": "#fb7185",
+    "summary": "An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.",
+    "shot": "shots/rooms.png"
+  },
+  {
+    "slug": "shelves",
+    "number": "06",
+    "name": "Shelves",
+    "collection": "innovative",
+    "accent": "#60a5fa",
+    "summary": "Finish a sentence and it becomes a shelf. Files keep landing on every shelf whose sentence is true of them.",
+    "shot": "shots/shelves.png"
+  },
+  {
+    "slug": "transit",
+    "number": "07",
+    "name": "Transit",
+    "collection": "innovative",
+    "accent": "#fb923c",
+    "summary": "Collections are colored lines, files are stations, and a file in several collections is where you change trains.",
+    "shot": "shots/transit.png"
+  },
+  {
+    "slug": "columns",
+    "number": "08",
+    "name": "Columns of Context",
+    "collection": "innovative",
+    "accent": "#a3e635",
+    "summary": "A board where every column is a context, and moving a card never removes it from where it already was.",
+    "shot": "shots/columns.png"
+  },
+  {
+    "slug": "gravity",
+    "number": "09",
+    "name": "Gravity",
+    "collection": "innovative",
+    "accent": "#e879f9",
+    "summary": "Collections pull. Files settle where the pulls on them balance, and how far they sit from a well is how strongly they belong.",
+    "shot": "shots/gravity.png"
+  },
+  {
+    "slug": "orbit",
+    "number": "10",
+    "name": "Orbit",
+    "collection": "innovative",
+    "accent": "#2dd4bf",
+    "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
+    "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
+  }
+]
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

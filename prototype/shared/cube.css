@@ -1,0 +1,90 @@
+/* ==========================================================================
+   prototype/shared/cube.css — styles for the cube engine (cube.js). Copied from
+   prototype/facet/app.css. Needs the tokens, .seg, .btn and .th.* from
+   chrome.css. Everything is class-scoped so a page can host several cubes.
+
+   .cube-stage            the element you pass to createCube(); gets this class
+   .cube-wrap  .cube      perspective wrapper and the rotating solid (--s size,
+                          --rx --ry rotation, --zoom, --cy vertical offset)
+   .face.front|right|top  one face; --fc is the axis colour
+   .face .fh .fdot .pos .cnt        face header
+   .face .fb .grp .gh .bar .row .th .nm .meta   grouped rows
+   .face .tiles .tile .ths .more    the top face at the isometric angle
+   .cube[data-topmode="tiles"|"rows"]           which of the two is visible
+   .row.sel .row.lit .row.dim .row.moved .grp.lit .grp.spot .tile.lit .tile.sel
+   .face.drop             drop target highlight while dragging an axis chip
+   .cube-tools            floating snap toolbar (.seg.snaps inside)
+   .connectors            SVG overlay for the selected file's connector lines
+   ========================================================================== */
+.cube-stage{position:relative;flex:1;min-height:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.cube-stage.grabbing{cursor:grabbing}
+.cube-stage::before{content:"";position:absolute;inset:0;background:radial-gradient(55% 50% at 50% 42%,color-mix(in srgb,var(--ac) 9%,transparent),transparent 70%);pointer-events:none}
+.cube-wrap{position:absolute;inset:0;perspective:2000px;perspective-origin:50% 45%}
+.cube{position:absolute;left:50%;top:50%;width:var(--s,500px);height:var(--s,500px);margin:calc(var(--s,500px) / -2) 0 0 calc(var(--s,500px) / -2);transform-style:preserve-3d;transform:translateY(var(--cy,0px)) scale(var(--zoom,1)) rotateX(var(--rx,-27deg)) rotateY(var(--ry,-42deg));will-change:transform}
+.cube.animating{transition:transform 480ms var(--ease)}
+.cube.swapping .face .fb,.cube.swapping .face .tiles{transition:none}
+.face{position:absolute;inset:0;background:var(--face);border:1px solid var(--line2);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);transition:box-shadow var(--dur)}
+.face.front{transform:translateZ(calc(var(--s,500px) / 2))}
+.face.right{transform:rotateY(90deg) translateZ(calc(var(--s,500px) / 2));background:var(--face2)}
+.face.top{transform:rotateX(90deg) translateZ(calc(var(--s,500px) / 2));background:var(--face3)}
+.face.drop{box-shadow:inset 0 0 0 3px var(--fc),0 0 40px color-mix(in srgb,var(--fc) 45%,transparent)}
+.face .fh{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);flex:none;background:linear-gradient(180deg,color-mix(in srgb,var(--fc) 14%,transparent),transparent)}
+.face .fh .fdot{width:10px;height:10px;border-radius:50%;background:var(--fc);box-shadow:0 0 10px color-mix(in srgb,var(--fc) 70%,transparent)}
+.face .fh .cnt{margin-left:auto;letter-spacing:0;text-transform:none;color:var(--dim);font-weight:500;font-size:12.5px}
+.face .fh .pos{letter-spacing:0;text-transform:none;font-weight:500;font-size:11px;color:var(--fg);background:color-mix(in srgb,var(--fc) 26%,transparent);border-radius:999px;padding:1px 7px}
+.face .fb{position:relative;flex:1;min-height:0;overflow:hidden auto;padding:6px 8px 10px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;transition:opacity var(--dur)}
+.face .grp{margin-top:6px;border-radius:8px;transition:background var(--dur)}
+.face .grp:first-child{margin-top:0}
+.face .gh{display:flex;align-items:center;gap:8px;padding:6px 8px 4px;font-size:15px;font-weight:700;color:var(--fg);border-radius:7px;cursor:default}
+.face .gh small{font-size:12px;color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums}
+.face .gh .bar{flex:1;height:3px;border-radius:2px;background:color-mix(in srgb,var(--fc) 22%,transparent);position:relative;overflow:hidden;margin:0 4px}
+.face .gh .bar i{position:absolute;inset:0 auto 0 0;width:var(--w,0%);background:var(--fc);border-radius:2px}
+.face .grp.none .gh{color:var(--muted);font-weight:600}
+.face .grp.lit{background:color-mix(in srgb,var(--fc) 10%,transparent)}
+.face .grp.lit .gh{color:var(--fc)}
+.face .grp.spot{background:color-mix(in srgb,var(--fc) 16%,transparent);box-shadow:inset 0 0 0 2px var(--fc);animation:pulse 1.2s ease-in-out 2}
+@keyframes pulse{50%{box-shadow:inset 0 0 0 2px var(--fc),0 0 26px color-mix(in srgb,var(--fc) 50%,transparent)}}
+.face .row{display:flex;align-items:center;gap:8px;height:28px;padding:0 8px;border-radius:7px;font-size:15px;color:var(--fg);cursor:pointer;white-space:nowrap;position:relative;transition:background var(--dur),opacity var(--dur),color var(--dur);will-change:transform}
+.face .row .th{width:19px;height:19px;border-radius:4px;flex:none}
+.face .row .nm{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.face .row .meta{margin-left:auto;font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums}
+.face .row:hover{background:var(--glass2)}
+.face .row.lit{background:color-mix(in srgb,var(--fc) 18%,transparent)}
+.face .row.sel{background:color-mix(in srgb,var(--ac) 24%,transparent);box-shadow:inset 0 0 0 1.5px var(--ac);color:var(--fg)}
+.face .row.dim,.face .tile .th.dim{opacity:.22}
+.face .row.moved{animation:land .5s var(--ease)}
+@keyframes land{0%{background:color-mix(in srgb,var(--ac) 50%,transparent)}100%{}}
+.face .empty{padding:20px 12px;color:var(--dim);font-size:13px;text-align:center}
+/* tiles: the top face at the isometric angle shows groups as large tiles (rows would be foreshortened past legibility) */
+.face .tiles{position:absolute;inset:50px 0 0 0;padding:12px;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(0,1fr);gap:10px;transition:opacity var(--dur)}
+.face .tiles.dense{gap:8px}
+.face .tiles.dense .tile{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px}
+.face .tiles.dense .tile .ths{margin-top:0;flex:none;justify-content:flex-end;max-width:48%}
+.face .tiles.dense .tile b{font-size:22px}
+.face .tiles.dense .tile small{font-size:17px;margin-top:2px}
+.face .tile .ths .more{display:inline-grid;place-items:center;height:22px;min-width:26px;padding:0 5px;border-radius:5px;background:var(--glass2);color:var(--muted);font-size:14px;font-weight:600}
+.cube[data-topmode="tiles"] .face.top .fh{font-size:18px;padding:14px 16px 12px}
+.cube[data-topmode="tiles"] .face.top .fh .cnt,.cube[data-topmode="tiles"] .face.top .fh .pos{font-size:16px}
+.face .tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px 10px;display:flex;flex-direction:column;justify-content:space-between;background:var(--glass);min-height:0;overflow:hidden;transition:background var(--dur),border-color var(--dur)}
+.face .tile b{font-size:24px;font-weight:700;color:var(--fg);line-height:1.05;display:block;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.face .tile small{font-size:18px;color:var(--muted);font-weight:500;display:block;margin-top:4px}
+.face .tile .ths{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.face .tile .ths .th{width:22px;height:22px;border-radius:5px;cursor:pointer;transition:opacity var(--dur)}
+.face .tile .ths .th.sel{outline:3px solid var(--ac);outline-offset:2px}
+.face .tile .ths .th.lit{outline:2px solid var(--fc);outline-offset:2px}
+.face .tile.lit{border-color:color-mix(in srgb,var(--fc) 60%,transparent);background:color-mix(in srgb,var(--fc) 14%,transparent)}
+.face .tile.sel{border-color:color-mix(in srgb,var(--ac) 60%,transparent)}
+.face .tile.none b{color:var(--muted);font-size:20px}
+.cube[data-topmode="tiles"] .face.top .fb{opacity:0;pointer-events:none}
+.cube[data-topmode="rows"] .face.top .tiles{opacity:0;pointer-events:none}
+.cube.flatmode .face.right,.cube.flatmode .face.top{opacity:0;pointer-events:none;transition:opacity var(--dur)}
+
+/* floating cube controls */
+.cube-tools{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;z-index:3;padding:6px;border-radius:13px;background:color-mix(in srgb,var(--pop) 90%,transparent);border:1px solid var(--line2);box-shadow:var(--shadow);backdrop-filter:blur(10px);cursor:default}
+.cube-tools .seg{background:transparent;border-color:var(--line)}
+
+/* connector lines */
+.connectors{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.connectors path{fill:none;stroke:var(--ac);stroke-width:1.5;stroke-dasharray:5 4;animation:dash 1.4s linear infinite;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 60%,transparent))}
+.connectors circle{fill:var(--ac);stroke:var(--bg);stroke-width:1.5}
+@keyframes dash{to{stroke-dashoffset:-18}}

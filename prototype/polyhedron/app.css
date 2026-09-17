@@ -1,0 +1,180 @@
+/* ==========================================================================
+   prototype/polyhedron/app.css — what Polyhedron adds on top of the shared
+   chrome.css (tokens, app grid, sidebar, inspector, tour) and cube.css (which
+   still styles the rows, group headers and thumbnails inside every face).
+
+   .poly-stage .poly-wrap .poly     the stage, the perspective wrapper, the rotating solid
+   .face (own placement)            one panel per face; --fc axis colour, --sh shade alpha,
+                                    data-mode = full | label | back | blank, .focus .gone
+   .face .outline .shade .fh .fb .fl .lab .fx     the panel's layers
+   .poly-tools                      the floating Roll to / Focus / Flatten / Reset bar
+   .pre-row .pre  .axt .sw          presets and axis toggles in the sidebar rail
+   .itabs                           inspector tabs; .wire the mini wireframe; .wl .wr where-it-sits rows
+   ========================================================================== */
+.app{--ac:#8b7cf6;--ink-on-ac:#160f3a}
+:root[data-theme="light"] .app{--ac:#6d5bd9;--ink-on-ac:#fff}
+.seg.views button[aria-selected="true"]{box-shadow:inset 0 -2px 0 var(--ac)}
+
+/* ---- stage ---- */
+.poly-stage{position:relative;flex:1;min-height:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;--shk:1}
+:root[data-theme="light"] .poly-stage{--shk:.45}
+.poly-stage.grabbing{cursor:grabbing}
+.poly-stage::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 44%,color-mix(in srgb,var(--ac) 10%,transparent),transparent 72%);pointer-events:none}
+.poly-stage.flat::before{opacity:.5}
+.poly-wrap{position:absolute;inset:0;perspective:1600px;perspective-origin:50% 46%}
+.poly{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.poly.notrans .face,.poly.notrans .face .fin,.poly.notrans .face .fin>*{transition:none!important}
+
+/* ---- one face panel ---- */
+.poly .face{position:absolute;inset:auto;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible;display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform-origin:50% 50%;
+  transition:transform 680ms var(--ease),transform-origin 680ms var(--ease),width 680ms var(--ease),height 680ms var(--ease),left 680ms var(--ease),top 680ms var(--ease),opacity 240ms linear;cursor:default}
+.poly .face .fin{position:absolute;inset:0;background:var(--face);clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%);transition:clip-path 680ms var(--ease)}
+.poly .face .fin>*{transition:left 680ms var(--ease),top 680ms var(--ease),width 680ms var(--ease),height 680ms var(--ease)}
+.poly .face .fin::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--fc) 13%,transparent),transparent 55%);pointer-events:none}
+.poly .face .outline{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.poly .face .outline polygon{fill:none;stroke:color-mix(in srgb,var(--fc) 55%,var(--line2));stroke-width:2.5;stroke-linejoin:round;transition:points 680ms var(--ease),stroke 240ms}
+.poly .face .shade{position:absolute;inset:0;pointer-events:none;background:rgb(0 0 0 / calc(var(--sh,0) * var(--shk)))}
+.poly .face .fh{position:absolute;display:flex;align-items:center;gap:7px;padding:0 10px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;border:0;background:none;white-space:nowrap;overflow:hidden;cursor:pointer;border-radius:8px}
+.poly .face .fh:hover{background:var(--glass2);color:var(--fg)}
+.poly .face .fh .ft{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.poly .face .fh .fdot{width:9px;height:9px;border-radius:50%;background:var(--fc);box-shadow:0 0 10px color-mix(in srgb,var(--fc) 70%,transparent);flex:none}
+.poly .face .fh .cnt{margin-left:auto;letter-spacing:0;text-transform:none;color:var(--dim);font-weight:500;font-size:12px;flex:none}
+.poly .face .fh .pos{letter-spacing:0;text-transform:none;font-weight:600;font-size:11px;color:var(--fg);background:color-mix(in srgb,var(--fc) 30%,transparent);border-radius:999px;padding:1px 7px;flex:none}
+.poly .face .fb{position:absolute;overflow:hidden auto;padding:2px 4px 8px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.poly .face .fb::after{content:"";position:sticky;bottom:-8px;display:block;height:0}
+.poly .face .grp{margin-top:4px}
+.poly .face .gh{font-size:13.5px;padding:5px 7px 3px}
+.poly .face .gh small{font-size:11.5px}
+.poly .face .row{font-size:13px;height:24px;gap:7px;padding:0 7px}
+.poly .face .row .th{width:17px;height:17px}
+.poly .face .fl{position:absolute;display:none;flex-direction:column;gap:5px;padding:4px 6px;overflow:hidden;cursor:pointer}
+.poly .face .lab{display:flex;align-items:baseline;gap:8px;padding:5px 9px;border-radius:8px;border:1px solid var(--line);background:var(--glass);min-height:0}
+.poly .face .lab b{font-size:15px;font-weight:700;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.poly .face .lab small{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.poly .face .lab.none b{color:var(--muted);font-weight:600}
+.poly .face .lab.lit{border-color:color-mix(in srgb,var(--fc) 60%,transparent);background:color-mix(in srgb,var(--fc) 16%,transparent)}
+.poly .face .lab.sel{border-color:color-mix(in srgb,var(--ac) 65%,transparent);background:color-mix(in srgb,var(--ac) 20%,transparent);box-shadow:inset 0 0 0 1px var(--ac)}
+.poly .face .lab.dim{opacity:.35}
+.poly .face .fx{position:absolute;right:10px;top:10px;width:28px;height:28px;display:none;place-items:center;border-radius:8px;color:var(--muted);background:var(--glass2)}
+.poly .face .fx:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 18%,transparent)}
+.poly .face .fh.apex{justify-content:center}
+.poly .face .fh.apex .cnt{display:none}
+.poly .face .fh.narrow .cnt{display:none}
+.poly .face.small .fh .by,.poly .face.small .fh .cnt{display:none}
+.poly .face.small .fh{font-size:12px;letter-spacing:.04em;padding:0 6px;gap:5px}
+.poly .face.small .lab{padding:3px 7px;gap:6px}
+.poly .face.small .lab b{font-size:12.5px}
+.poly .face.small .lab small{font-size:11.5px}
+.poly .face.small .fl{gap:3px;padding:2px 3px}
+.poly .face.small .fh .pos{display:none}
+.poly .face.mini .fb,.poly .face.mini .fl{display:none!important}
+.poly .face.mini .fh{justify-content:center;font-size:12.5px}
+.poly .face .fh .ft{flex:0 1 auto}
+/* modes */
+.poly .face[data-mode="label"] .fb{display:none}
+.poly .face[data-mode="label"] .fl{display:flex}
+.poly .face[data-mode="label"] .fh{font-size:14px}
+.poly .face[data-mode="label"] .fh .cnt{display:none}
+.poly .face[data-mode="back"] .fb,.poly .face[data-mode="back"] .fl{display:none}
+.poly .face[data-mode="back"] .fh{font-size:16px;justify-content:center}
+.poly .face[data-mode="back"] .fh .cnt{display:none}
+.poly .face.focus .fx{display:grid}
+.poly .face.focus .row{font-size:15px;height:28px;gap:8px}
+.poly .face.focus .row .th{width:19px;height:19px}
+.poly .face.focus .gh{font-size:15px;padding:6px 8px 4px}
+.poly .face.focus .gh small{font-size:12px}
+.poly .face.focus .fh{font-size:13px}
+.poly .face.focus .outline polygon{stroke:var(--fc);stroke-width:3}
+.poly .face.gone{pointer-events:none}
+.poly .face .fh .pos{display:none}
+.poly .face.front-most .fh .pos{display:inline-block}
+.poly .face.front-most .fh.tight .pos{display:none}
+/* blank (spare) faces */
+.poly .face.blank{--fc:var(--dim)}
+.poly .face.blank .fin{background:color-mix(in srgb,var(--face) 70%,transparent)}
+.poly .face.blank .fin::before{background:repeating-linear-gradient(135deg,transparent 0 9px,color-mix(in srgb,var(--fg) 4%,transparent) 9px 10px)}
+.poly .face.blank .outline polygon{stroke:var(--line2);stroke-dasharray:6 6}
+.poly .face.blank .fb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--dim);font-size:12.5px;overflow:hidden;padding:8px}
+.poly .face.blank .fb b{color:var(--muted);font-weight:600;font-size:13px;display:block}
+.poly .face.blank .fb .ic{width:22px;height:22px;opacity:.7}
+.poly .face.blank .fb button{color:var(--ac);font-weight:600;font-size:12.5px;padding:4px 8px;border-radius:7px}
+.poly .face.blank .fb button:hover{background:var(--glass2)}
+.poly .face.blank[data-mode="label"] .fb b,.poly .face.blank[data-mode="back"] .fb{visibility:hidden}
+
+/* ---- floating tools ---- */
+.poly-tools{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;z-index:3;padding:6px;border-radius:13px;background:color-mix(in srgb,var(--pop) 90%,transparent);border:1px solid var(--line2);box-shadow:var(--shadow);backdrop-filter:blur(10px);cursor:default;white-space:nowrap}
+.poly-tools .btn .chev{width:12px;height:12px;margin-left:-2px}
+.poly-tools .sep{width:1px;height:20px;background:var(--line)}
+.stage-hint{position:absolute;left:20px;bottom:24px;color:var(--dim);font-size:12.5px;display:inline-flex;align-items:center;gap:7px;pointer-events:none;z-index:2}
+.stage-hint .ic{width:14px;height:14px}
+.chips .solid-chip{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px 0 9px;border-radius:999px;background:color-mix(in srgb,var(--ac) 16%,transparent);border:1px solid color-mix(in srgb,var(--ac) 45%,transparent);color:var(--fg);font-weight:600;font-size:13px}
+.chips .solid-chip .ic{color:var(--ac)}
+.chips .solid-chip small{color:var(--muted);font-weight:500}
+.chips .chip{cursor:pointer}
+.chips .chip small{font-family:var(--mono);font-size:10.5px;min-width:16px;text-align:center}
+.chips .chip.on small{background:color-mix(in srgb,var(--c) 45%,transparent)}
+.chips .chip .fmt{font-size:11px;color:var(--fg);background:color-mix(in srgb,var(--c) 45%,transparent);border-radius:999px;padding:0 6px}
+
+/* ---- sidebar: presets + axis toggles ---- */
+.pre-row{display:flex;flex-wrap:wrap;gap:5px;padding:2px 4px 8px}
+.pre{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:999px;border:1px solid var(--line2);background:var(--glass);color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap;transition:background var(--dur),border-color var(--dur),color var(--dur)}
+.pre:hover{color:var(--fg);border-color:color-mix(in srgb,var(--fg) 30%,transparent)}
+.pre[aria-pressed="true"]{background:color-mix(in srgb,var(--ac) 20%,transparent);border-color:color-mix(in srgb,var(--ac) 60%,transparent);color:var(--fg)}
+.pre .n{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.pre[aria-pressed="true"] .n{color:var(--fg);opacity:.8}
+.nav .axt{padding:6px 8px 6px 10px;min-height:34px;gap:9px}
+.nav .axt .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nav .axt .cnt{margin-left:0;min-width:14px;text-align:right}
+.nav .axt[aria-pressed="true"]{color:var(--fg)}
+.nav .axt[aria-pressed="false"] .dot{background:transparent;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,transparent)}
+.nav .axt[aria-pressed="false"] .lbl{color:var(--dim)}
+.sw{width:28px;height:16px;border-radius:999px;background:var(--line2);position:relative;flex:none;transition:background var(--dur)}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--panel);transition:transform var(--dur) var(--ease),background var(--dur)}
+.axt[aria-pressed="true"] .sw{background:var(--c)}
+.axt[aria-pressed="true"] .sw::after{transform:translateX(12px);background:#fff}
+.axt.front-most .lbl::after{content:"front";margin-left:8px;font-size:10.5px;color:var(--fg);background:color-mix(in srgb,var(--c) 28%,transparent);border-radius:999px;padding:1px 6px;vertical-align:1px}
+.nav-h .hint.count{cursor:default;font-variant-numeric:tabular-nums}
+
+/* ---- inspector ---- */
+.itabs{display:flex;gap:2px;padding:3px;border-radius:9px;background:var(--glass);border:1px solid var(--line);flex:none}
+.itabs button{flex:1;height:28px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.itabs button[aria-selected="true"]{background:var(--pop);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.itabs button .ic{width:14px;height:14px}
+.insp .body{display:flex;flex-direction:column;gap:14px;min-height:0}
+.wl{display:flex;flex-direction:column;gap:2px;margin:0 -6px}
+.wr{display:grid;grid-template-columns:auto 76px 1fr auto;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;font-size:12.5px;color:var(--muted);text-align:left;width:100%;min-height:30px}
+.wr:hover{background:var(--glass2);color:var(--fg)}
+.wr .ax{font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr b{font-weight:500;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.wr .st{font-size:10.5px;padding:1px 7px;border-radius:999px;border:1px solid var(--line2);color:var(--dim);white-space:nowrap}
+.wr .st.front{background:color-mix(in srgb,var(--c) 26%,transparent);border-color:color-mix(in srgb,var(--c) 50%,transparent);color:var(--fg)}
+.wr .st.on{border-color:color-mix(in srgb,var(--c) 45%,transparent);color:var(--muted)}
+.wr[data-off="1"] .ax,.wr[data-off="1"] b{color:var(--dim)}
+.wr[data-off="1"] .dot{background:transparent;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,transparent)}
+.wire{width:100%;aspect-ratio:1.3;border-radius:12px;border:1px solid var(--line);background:radial-gradient(60% 60% at 50% 45%,color-mix(in srgb,var(--ac) 10%,transparent),var(--panel2) 75%);display:block;flex:none}
+.wire polygon{stroke:none}
+.wire line{stroke:var(--fg);stroke-width:1.2;stroke-linecap:round}
+.wire line.back{stroke-opacity:.16;stroke-dasharray:3 3}
+.wire text{font:600 10px var(--sans);fill:var(--fg);text-anchor:middle;pointer-events:none;letter-spacing:.02em}
+.facelist{display:flex;flex-direction:column;gap:2px;margin:0 -6px}
+.facelist .wr{grid-template-columns:auto 1fr auto auto}
+.facelist .z{font-family:var(--mono);font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;min-width:36px;text-align:right}
+.rule{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--glass);font-size:12.5px;color:var(--muted);line-height:1.5}
+.rule b{color:var(--fg);font-weight:600}
+.rule .ladder{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin-top:8px;font-variant-numeric:tabular-nums}
+.rule .ladder span:nth-child(odd){font-family:var(--mono);font-size:11.5px;color:var(--dim);text-align:right}
+.rule .ladder span.cur{color:var(--ac);font-weight:600}
+.insp .prev{background:var(--panel2)}
+.insp .none .tags{justify-content:center}
+
+/* ---- menu additions ---- */
+.menu button .dot{width:8px;height:8px;box-shadow:none}
+.menu button kbd{font-size:10.5px;color:var(--dim);border:1px solid var(--line2);border-radius:4px;padding:0 4px;line-height:1.5;margin-left:auto}
+.menu button small+kbd{margin-left:8px}
+
+/* ---- status bar ---- */
+.sbar .solid{color:var(--fg);font-weight:600}
+
+@media (max-width:1280px){.stage-hint{display:none}}
+@media (max-width:1100px){.pre-row{display:none}.nav .axt .sw{display:none}.nav .axt.front-most .lbl::after{display:none}}
+@media (prefers-reduced-motion:reduce){.poly .face,.poly .face .fin,.poly .face .fin>*{transition:none!important}}

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Facet prototype · Northwind files</title>
+<meta name="description" content="Interactive prototype of Facet, a file manager where one set of files sits on a cube and every face groups them by a different axis, with a Ledger (Miller columns) view of the same files for comparison and a guided tour.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 6l9 5v10l-9 5-9-5V11z%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3Cpath d=%27M7 11l9 5 9-5M16 16v10%27 fill=%27none%27 stroke=%27%2334d399%27 stroke-width=%272%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="../shared/proto-nav.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-cube" viewBox="0 0 16 16"><path d="M8 1.8 14 5v6l-6 3.2L2 11V5z"/><path d="M2 5l6 3 6-3M8 8v6.2"/></symbol>
+    <symbol id="i-cols" viewBox="0 0 16 16"><path d="M2.5 3h11v10h-11zM6.2 3v10M9.8 3v10"/></symbol>
+    <symbol id="i-flat" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M2.5 6.5h11M6 6.5v6"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M3.4 12.6l1.3-1.3M11.3 4.7l1.3-1.3"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 16 16"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z"/></symbol>
+    <symbol id="i-compare" viewBox="0 0 16 16"><path d="M2.5 3h4.5v10h-4.5zM9 3h4.5v10H9z"/><path d="M4.75 6v4M11.25 6v4"/></symbol>
+    <symbol id="i-help" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M6.2 6.3a1.9 1.9 0 0 1 3.7.5c0 1.2-1.9 1.4-1.9 2.6"/><circle cx="8" cy="11.6" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 16 16"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 2.8v2.7h2.7"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 16 16"><path d="M3.5 6.5h6a3 3 0 0 1 0 6H6M3.5 6.5 6 4M3.5 6.5 6 9"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 16 16"><circle cx="5.5" cy="4" r="1" fill="currentColor"/><circle cx="10.5" cy="4" r="1" fill="currentColor"/><circle cx="5.5" cy="8" r="1" fill="currentColor"/><circle cx="10.5" cy="8" r="1" fill="currentColor"/><circle cx="5.5" cy="12" r="1" fill="currentColor"/><circle cx="10.5" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-min" viewBox="0 0 16 16"><path d="M3.5 8h9"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 16 16"><path d="M2 4.5A1.5 1.5 0 0 1 3.5 3h3l1.5 1.5h4.5A1.5 1.5 0 0 1 14 6v6a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 16 16"><path d="M5 3.5v9l7-4.5z"/></symbol>
+    <symbol id="i-sidebar" viewBox="0 0 16 16"><path d="M2.5 3h11v10h-11zM6 3v10"/></symbol>
+    <symbol id="i-external" viewBox="0 0 16 16"><path d="M9 3h4v4M13 3 7.5 8.5M6 4H3.5v8.5H12V10"/></symbol>
+  </defs>
+</svg>
+
+<!-- prototype strip (shared/proto-nav.js fills it; the .app below is shortened by --proto-nav-h) -->
+<nav class="pnav" id="proto-nav" data-proto="facet"></nav>
+<template id="about">
+  <p><b>Facet</b> puts one set of 25 files on a cube. Each face groups them by a different axis (Project, Client, Type, Quarter or Person), so rotating the cube is a different question about the same files, and refiling is changing one fact in the inspector.</p>
+  <ul><li>Drag the cube; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> bring a face square-on, <kbd>0</kbd> resets, <kbd>F</kbd> unfolds the front face.</li><li><kbd>L</kbd> switches to the classic Ledger columns over the same files; <b>Compare</b> lays the two side by side.</li><li><kbd>?</kbd> opens the guided tour.</li></ul>
+  <p>The three prototypes beside it (Tesseract, Polyhedron, Nested) each take one direction from the last step of the tour and build it for real.</p>
+</template>
+
+<div class="app" id="app" data-view="facet">
+  <!-- ============ sidebar ============ -->
+  <aside class="sb" id="sidebar" aria-label="Workspace">
+    <div class="ws"><span class="logo" aria-hidden="true"></span><b>Northwind</b><a class="back-link" href="../../index.html" title="Back to the design portfolio"><svg class="ic"><use href="#i-external"/></svg><span class="sr">Portfolio</span></a></div>
+    <label class="search" for="search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Search files" autocomplete="off" aria-label="Search files across every face"><kbd class="kbd" aria-hidden="true">/</kbd></label>
+    <nav class="nav" aria-label="Views">
+      <a href="#" class="on" id="nav-all"><svg class="ic"><use href="#i-cube"/></svg><span>All files</span><span class="cnt" id="nav-all-count">25</span></a>
+      <a href="#"><svg class="ic"><use href="#i-inbox"/></svg><span>Inbox</span><span class="cnt">3</span></a>
+      <a href="#"><svg class="ic"><use href="#i-clock"/></svg><span>Recent</span></a>
+      <a href="#"><svg class="ic"><use href="#i-star"/></svg><span>Starred</span></a>
+    </nav>
+    <div class="nav-h">Axes <span class="hint" title="Three axes are on the cube at once; click one to choose where it shows">5</span></div>
+    <nav class="nav axes-nav" id="axes-nav" aria-label="Axes"></nav>
+    <div class="nav-h">Saved angles</div>
+    <nav class="nav" aria-label="Saved angles">
+      <a href="#" data-angle="legal"><svg class="ic"><use href="#i-layers"/></svg><span>Legal review</span></a>
+      <a href="#" data-angle="client-quarter"><svg class="ic"><use href="#i-layers"/></svg><span>By client, this quarter</span></a>
+      <a href="#" data-angle="people"><svg class="ic"><use href="#i-layers"/></svg><span>Who owns what</span></a>
+    </nav>
+    <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div><b>Priya Shah</b><small>Northwind · Pro</small></div><button class="ib" type="button" title="Workspace settings" aria-label="Workspace settings"><svg class="ic"><use href="#i-gear"/></svg></button></div>
+  </aside>
+
+  <!-- ============ main ============ -->
+  <main class="mn">
+    <header class="tb">
+      <button class="ib only-narrow" id="sb-toggle" type="button" title="Show or hide the sidebar" aria-label="Toggle sidebar"><svg class="ic"><use href="#i-sidebar"/></svg></button>
+      <div class="seg views" role="tablist" aria-label="View" id="view-seg">
+        <button role="tab" type="button" data-view="facet" aria-selected="true" title="Facet: one set of files on a cube (L toggles)"><svg class="ic"><use href="#i-cube"/></svg>Facet</button>
+        <button role="tab" type="button" data-view="ledger" aria-selected="false" title="Ledger: classic Miller columns (L toggles)"><svg class="ic"><use href="#i-cols"/></svg>Ledger</button>
+      </div>
+
+
+      <div class="tb-center ledger-only crumbs" id="ledger-crumbs" aria-label="Location"></div>
+
+      <div class="tb-r">
+        <button class="btn" id="compare-btn" type="button" aria-expanded="false" aria-controls="compare" title="Compare Ledger and Facet side by side"><svg class="ic"><use href="#i-compare"/></svg>Compare</button>
+        <button class="btn" id="tour-btn" type="button" title="Open the guided tour (?)"><svg class="ic"><use href="#i-help"/></svg>Tour</button>
+        <button class="ib" id="theme-btn" type="button" title="Switch to light theme" aria-label="Switch to light theme"><svg class="ic"><use href="#i-sun"/></svg></button>
+        <div class="avs" title="Priya Shah, Justin Mehta and Rosa Delgado are here"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+        <button class="btn" type="button" title="Share this view"><svg class="ic"><use href="#i-share"/></svg>Share</button>
+      </div>
+    </header>
+
+    <!-- ---- Facet stage ---- -->
+    <section class="stage facet-only" id="facet-stage" aria-label="Facet cube">
+      <div class="chips" id="chips">
+        <span class="chips-l">On the cube</span>
+        <div class="chip-row" id="chips-shown"></div>
+        <span class="chips-l">Hidden</span>
+        <div class="chip-row" id="chips-hidden"></div>
+        <span class="chips-hint"><svg class="ic"><use href="#i-hand"/></svg>Drag the cube to rotate · drag a hidden axis onto a face to show it</span>
+      </div>
+      <div class="cube-stage" id="cube-stage">
+        <div class="cube-wrap" id="cube-wrap"><div class="cube" id="cube">
+          <section class="face front" data-face="front" aria-label="Front face"></section>
+          <section class="face right" data-face="right" aria-label="Right face"></section>
+          <section class="face top" data-face="top" aria-label="Top face"></section>
+        </div></div>
+        <svg class="connectors" id="connectors" aria-hidden="true"></svg>
+      <div class="cube-tools" id="cube-controls" role="toolbar" aria-label="Cube controls">
+        <div class="seg snaps">
+          <button type="button" data-snap="front" title="Bring the front face square-on (1)">Front<kbd>1</kbd></button>
+          <button type="button" data-snap="right" title="Bring the right face square-on (2)">Right<kbd>2</kbd></button>
+          <button type="button" data-snap="top" title="Bring the top face square-on (3)">Top<kbd>3</kbd></button>
+          <button type="button" data-snap="iso" title="Back to the three-face view (0)"><svg class="ic"><use href="#i-reset"/></svg>Reset<kbd>0</kbd></button>
+        </div>
+        <button class="btn tog" id="flat-btn" type="button" aria-pressed="false" title="Unfold the front face into a flat list (F)"><svg class="ic"><use href="#i-flat"/></svg>Flat<kbd>F</kbd></button>
+      </div>
+        <div class="flat" id="flat" hidden></div>
+        <div class="callout" id="callout" hidden></div>
+      </div>
+      <div class="toast" id="toast" hidden role="status"></div>
+    </section>
+
+    <!-- ---- Ledger stage ---- -->
+    <section class="stage ledger-only" id="ledger-stage" aria-label="Ledger columns" hidden>
+      <div class="cols" id="cols"></div>
+      <div class="pathbar" id="pathbar"></div>
+      <div class="callout" id="ledger-callout" hidden></div>
+    </section>
+
+    <footer class="sbar" id="sbar"></footer>
+  </main>
+
+  <!-- ============ inspector ============ -->
+  <aside class="insp" id="inspector" aria-label="Inspector"></aside>
+</div>
+
+<!-- axis menu popover (filled by app.js) -->
+<div class="menu" id="menu" hidden role="menu"></div>
+
+<!-- compare drawer -->
+<section class="drawer" id="compare" hidden aria-label="Compare Ledger and Facet">
+  <header class="drawer-h">
+    <div><b>Ledger vs Facet</b><span>Same 25 files, two ways of finding them. Neither is wrong; they are good at different things.</span></div>
+    <button class="ib" id="compare-close" type="button" title="Close (Esc)" aria-label="Close comparison"><svg class="ic"><use href="#i-x"/></svg></button>
+  </header>
+  <div class="drawer-b">
+    <table class="cmp">
+      <thead><tr><th scope="col"></th><th scope="col" class="c-ledger"><svg class="ic"><use href="#i-cols"/></svg>Ledger <small>classic columns</small></th><th scope="col" class="c-facet"><svg class="ic"><use href="#i-cube"/></svg>Facet <small>faces of one cube</small></th></tr></thead>
+      <tbody>
+        <tr class="demo"><th scope="row">Live demo<br><small>Find every Acme document</small></th>
+          <td><button class="btn pri-ledger" type="button" data-demo="ledger"><svg class="ic"><use href="#i-play"/></svg>Show me in Ledger</button><p>Opens <b>Clients › Acme</b>. Two files are there; the other six Acme files sit in Legal › Acme and Projects › Atlas, each a separate trip.</p></td>
+          <td><button class="btn pri-facet" type="button" data-demo="facet"><svg class="ic"><use href="#i-play"/></svg>Show me in Facet</button><p>Turns the cube to the <b>Client</b> face. All eight Acme files are one group, whatever folder they were saved in.</p></td></tr>
+        <tr><th scope="row">Finding a file by a different attribute</th><td>You have to know the folder. A contract filed under a client is not under Legal, and search is the fallback.</td><td>Rotate to the axis you remember. The same file is under its project, its client and its type at once.</td></tr>
+        <tr><th scope="row">Files that belong to several groups</th><td>Pick one home. Everything else is a shortcut, a tag or a copy that drifts out of date.</td><td>Native. A file has a value on each axis, and every face lists it under that value.</td></tr>
+        <tr><th scope="row">Learning curve</th><td><b>Minutes.</b> Everyone has used a folder tree; columns just show more of it.</td><td>An hour. The cube needs one aha moment (three faces, one set), then it is chips and lists.</td></tr>
+        <tr><th scope="row">Keyboard speed</th><td><b>Excellent.</b> Arrow keys walk the tree, type-ahead jumps, Space previews. Nothing leaves the list.</td><td>Good. 1 2 3 snap faces, / searches, arrows nudge. Choosing a face is one keystroke; browsing inside it is a list again.</td></tr>
+        <tr><th scope="row">Predictability</th><td><b>Very high.</b> The path is the address. It is on screen, in the URL and in every dialog.</td><td>High once axes are stable. Swapping an axis changes what a face shows, so the chips have to stay visible.</td></tr>
+        <tr><th scope="row">Duplicates</th><td>Common. The same PDF ends up in Clients and Legal, and nobody knows which is current.</td><td>Structurally unnecessary. One file, several values. The inspector shows every place it appears.</td></tr>
+        <tr><th scope="row">Best for</th><td>Dense archives, well-known structures, people who file as they go, anything a script or a sync client must address by path.</td><td>Cross-cutting work: client × project × time. Teams that argue about folder names, and anyone who remembers files by a different attribute than the person who filed them.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- tutorial panel (filled by tutorial.js) -->
+<aside class="tut" id="tut" hidden aria-label="Guided tour" role="dialog" aria-modal="false"></aside>
+<div class="tut-ring" id="tut-ring" hidden aria-hidden="true"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="tutorial.js"></script>
+<script src="../shared/proto-nav.js"></script>
+</body>
+</html>

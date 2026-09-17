@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tesseract prototype · Northwind files</title>
+<meta name="description" content="Time as a fourth axis: a scrubber under the Facet cube slides the whole workspace through 2026 Q1 to Q4, with ghost cubes for the neighbouring quarters and world lines that show where a file was and where it goes.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Cpath d=%27M16 6l9 5v10l-9 5-9-5V11z%27 fill=%27none%27 stroke=%27%2322d3ee%27 stroke-width=%272%27/%3E%3Cpath d=%27M7 11l9 5 9-5M16 16v10%27 fill=%27none%27 stroke=%27%2322d3ee%27 stroke-width=%272%27/%3E%3C/svg%3E">
+<!-- shared chrome first, then the cube engine styles, then the strip, then this prototype's own CSS -->
+<link rel="stylesheet" href="../shared/chrome.css">
+<link rel="stylesheet" href="../shared/cube.css">
+<link rel="stylesheet" href="../shared/proto-nav.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<!-- prototype strip (../shared/proto-nav.js fills it; the .app below is shortened by --proto-nav-h) -->
+<nav class="pnav" id="proto-nav" data-proto="tesseract"></nav>
+<template id="about">
+  <p><b>Tesseract</b> gives the Facet cube a fourth axis: <b>time</b>. The three faces still show Project × Client × Type, but the scrubber under the cube slides the whole workspace through 2026, quarter by quarter. Files glide between groups as their history changes, files that do not exist yet are simply absent, and archived ones fade to a ghost.</p>
+  <ul>
+    <li><b>Ghost cubes</b> for the previous and next quarter recede behind the live cube, turning with it. Select a file and thin <b>world lines</b> join its row on the live cube to its rows in the ghosts, labelled with what changed.</li>
+    <li><b>Diff</b> (<kbd>D</kbd>) lists everything Added, Changed and Archived between any two quarters; every row selects that file.</li>
+    <li><b>Pin this moment</b> (<kbd>P</kbd>) freezes a ghost of the current quarter so you can scrub away and compare against it.</li>
+    <li>The inspector gains a <b>Timeline</b>: dots for every quarter the file changed; click one to scrub there.</li>
+  </ul>
+  <p><kbd>←</kbd> <kbd>→</kbd> step quarters, <kbd>Space</kbd> plays, <kbd>G</kbd> toggles ghosts, <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>0</kbd> snap faces, <kbd>?</kbd> opens the tour.</p>
+</template>
+
+<div class="app" id="app" style="--ac:#22d3ee">
+  <!-- ============ sidebar ============ -->
+  <aside class="sb" id="sidebar" aria-label="Workspace">
+    <div class="ws"><span class="logo" aria-hidden="true"></span><b>Northwind</b><a class="back-link" href="../../index.html" title="Back to the design portfolio"><svg class="ic"><use href="#i-external"/></svg><span class="sr">Portfolio</span></a></div>
+    <label class="search" for="search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Search files" autocomplete="off" aria-label="Search files on every face"><kbd class="kbd" aria-hidden="true">/</kbd></label>
+    <nav class="nav" aria-label="Views">
+      <a href="#" class="on" id="nav-all"><svg class="ic"><use href="#i-time"/></svg><span>All files</span><span class="cnt" id="nav-all-count">25</span></a>
+      <a href="#"><svg class="ic"><use href="#i-inbox"/></svg><span>Inbox</span><span class="cnt">3</span></a>
+      <a href="#"><svg class="ic"><use href="#i-clock"/></svg><span>Recent</span></a>
+      <a href="#"><svg class="ic"><use href="#i-star"/></svg><span>Starred</span></a>
+    </nav>
+    <div class="nav-h">Moments <span class="hint" title="The four quarters of 2026; click one to scrub there">4</span></div>
+    <nav class="nav moments" id="moments" aria-label="Quarters"></nav>
+    <div class="nav-h">Axes <span class="hint" id="axes-count" title="Three axes are on the cube at once; click a hidden one to put it on the top face">12</span></div>
+    <nav class="nav axes-nav" id="axes-nav" aria-label="Axes"></nav>
+    <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div><b>Priya Shah</b><small>Northwind · Pro</small></div><button class="ib" type="button" title="Workspace settings" aria-label="Workspace settings"><svg class="ic"><use href="#i-gear"/></svg></button></div>
+  </aside>
+
+  <!-- ============ main ============ -->
+  <main class="mn">
+    <header class="tb">
+      <button class="ib only-narrow" id="sb-toggle" type="button" title="Show or hide the sidebar" aria-label="Toggle sidebar"><svg class="ic"><use href="#i-sidebar"/></svg></button>
+      <div class="seg views" role="tablist" aria-label="View" id="view-seg">
+        <button role="tab" type="button" data-view="tesseract" aria-selected="true" title="Tesseract: the Facet cube with time as a fourth axis"><svg class="ic"><use href="#i-time"/></svg>Tesseract</button>
+      </div>
+      <div class="tb-center" id="tb-center"><span class="tb-when" id="tb-when"></span></div>
+      <div class="tb-r">
+        <button class="btn tog" id="diff-btn" type="button" aria-pressed="false" title="Show what changed between two quarters (D)"><svg class="ic"><use href="#i-compare"/></svg>Diff<kbd>D</kbd></button>
+        <button class="btn" id="tour-btn" type="button" title="Open the guided tour (?)"><svg class="ic"><use href="#i-help"/></svg>Tour</button>
+        <button class="ib" id="theme-btn" type="button" title="Switch to light theme" aria-label="Switch to light theme"><svg class="ic"><use href="#i-sun"/></svg></button>
+        <div class="avs" title="Priya Shah, Justin Mehta and Rosa Delgado are here"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+        <button class="btn" id="share-btn" type="button" title="Copy a link to this moment"><svg class="ic"><use href="#i-share"/></svg>Share</button>
+      </div>
+    </header>
+
+    <!-- ---- stage ---- -->
+    <section class="stage" id="stage" aria-label="Tesseract">
+      <div class="chips" id="chips">
+        <span class="chips-l">On the cube</span>
+        <div class="chip-row" id="chips-shown"></div>
+        <span class="chips-l">Hidden</span>
+        <div class="chip-row" id="chips-hidden"></div>
+        <span class="chips-hint"><svg class="ic"><use href="#i-hand"/></svg>Drag the cube to rotate · drag the scrubber to move through time</span>
+      </div>
+      <div class="tstage" id="tstage" data-snap="iso">
+        <div class="cube-stage ghost" id="ghost-l" aria-hidden="true"></div>
+        <div class="cube-stage ghost" id="ghost-r" aria-hidden="true"></div>
+        <div class="cube-stage live" id="cube-stage"></div>
+        <div class="caps" id="caps" aria-hidden="true"></div>
+        <div class="callout" id="callout" hidden></div>
+        <div class="toast" id="toast" hidden role="status"></div>
+      </div>
+
+      <!-- ---- the fourth axis ---- -->
+      <div class="tbar" id="timebar" role="group" aria-label="Time">
+        <button class="ib play" id="play-btn" type="button" aria-pressed="false" title="Play through the quarters (Space)" aria-label="Play through the quarters">
+          <svg class="ic pl"><use href="#i-play"/></svg><svg class="ic pa" viewBox="0 0 16 16"><path d="M5 3.5v9M11 3.5v9"/></svg>
+        </button>
+        <div class="scrub" id="scrub">
+          <div class="track" id="track">
+            <div class="rail"></div>
+            <div class="fill" id="fill"></div>
+            <div class="nowmark" id="nowmark" title="Now: Q3 2026"><i></i><span>Now</span></div>
+            <div class="ticks" id="ticks"></div>
+            <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Quarter" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2" aria-valuetext="Q3 2026" title="Drag through time, or press ← →"></div>
+          </div>
+        </div>
+        <div class="tnow" id="tnow"></div>
+      </div>
+    </section>
+
+    <footer class="sbar" id="sbar"></footer>
+  </main>
+
+  <!-- ============ inspector ============ -->
+  <aside class="insp" id="inspector" aria-label="Inspector"></aside>
+</div>
+
+<!-- the shared tour fills these -->
+<aside class="tut" id="tut" hidden aria-label="Guided tour" role="dialog" aria-modal="false"></aside>
+<div class="tut-ring" id="tut-ring" hidden aria-hidden="true"></div>
+
+<script type="module" src="app.js"></script>
+<script src="../shared/proto-nav.js"></script>
+</body>
+</html>

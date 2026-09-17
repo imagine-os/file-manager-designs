@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en" data-slug="rooms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rooms and Portals · File Manager Design Portfolio</title>
+<meta name="description" content="An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%238b7cf6%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- Rooms and Portals: CSS used only by this screen ---- */
+.room{position:absolute;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.025)}
+.room .rh{display:flex;align-items:center;gap:8px;padding:0 14px;height:42px;font-weight:600;font-size:13px}
+.room .rh .cnt{color:var(--dim);font-weight:400;font-size:12px}
+.room .rh .avs{margin-left:auto}
+.portal{position:absolute;left:-6px;top:-6px;width:22px;height:22px;border-radius:6px;background:var(--ac);color:#0b0c10;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.portal svg{width:13px;height:13px;stroke:#0b0c10;fill:none;stroke-width:2}
+.dots{background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:22px 22px}
+.mm{position:relative;height:70px}
+.mm span{position:absolute;border-radius:3px}
+</style>
+</head>
+<body class="design" style="--ac:#fb7185">
+<!-- Icon sprite (identical copy of assets/icons.svg, inlined so <use href="#i-…"> works over file://) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h10"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2.5 3.5h11l-4.3 5v4l-2.4 1v-5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c0-2.4 1.9-3.8 4.2-3.8s4.2 1.4 4.2 3.8M10.5 9.4c2 0 3.7 1.3 3.7 3.6M10 3.4a2.2 2.2 0 0 1 0 4.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 16 16"><path d="M4 14V7a4 4 0 0 1 8 0v7M2.5 14h11"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><path d="M2.5 2.5h5.5l5.5 5.5-5.5 5.5-5.5-5.5z"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 16 16"><path d="m11.5 2.5 2 2-8 8-3 1 1-3z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 2.5 13 7.5 8.7 8.7 7.5 13z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M3 5.5h9l-2.5-2.5M13 10.5H4l2.5 2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 13.5a1.5 1.5 0 0 0 3 0"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><ellipse cx="8" cy="8" rx="6.5" ry="3.2" transform="rotate(-30 8 8)"/></symbol>
+    <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4H6.5a2 2 0 0 1 0-4H11"/></symbol>
+    <symbol id="cursor" viewBox="0 0 20 24"><path d="M3 2v17l4.6-4.2L10.8 22l2.6-1.1-3.2-7.2H17z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Shared nav bar. Static hrefs are filled in so the page works without JS;
+     assets/nav.js re-derives them (and the Jump-to menu) from designs/manifest.json. -->
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="true">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="false">Classic</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <a class="pn" data-nav="prev" rel="prev" href="facet.html" title="Previous: Facet"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span class="lbl">Prev</span><span class="pn-name">Facet</span></a>
+  <span class="pos" aria-label="Position in collection"><b>5</b> / 10</span>
+  <a class="pn" data-nav="next" rel="next" href="shelves.html" title="Next: Shelves"><span class="lbl">Next</span><span class="pn-name">Shelves</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></a>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">←</span><span class="key">→</span></dt><dd>Previous / next design</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="design-head">
+    <span class="num">05</span>
+    <h1>Rooms and Portals</h1>
+    <span class="coll-tag">Innovative</span>
+  </header>
+  <p class="tag">An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.</p>
+
+  <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
+       and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css
+       plus the per-design classes in the <style> block above. -->
+  <div class="frame"><div class="device">
+    <div class="winbar"><i></i><i></i><i></i><span class="url">northwind.rooms.app/canvas/studio</span></div>
+    <div class="viewport"><div class="screen" style="--ac:#fb7185">
+      <aside class="sb">
+        <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Find on canvas<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a class="on"><svg class="ic"><use href="#i-grid"/></svg>Canvas</a><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">3</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <div class="nav-h">Rooms<svg class="ic plus"><use href="#i-plus"/></svg></div>
+        <nav class="nav">
+          <a class="on"><span class="dot" style="--c:#fb7185"></span>Design<span class="cnt">4</span></a>
+          <a><span class="dot" style="--c:#34d399"></span>Finance<span class="cnt">2</span></a>
+          <a><span class="dot" style="--c:#60a5fa"></span>Board Deck<span class="cnt">3</span></a>
+          <a><span class="dot" style="--c:#f5b544"></span>Legal<span class="cnt">4</span></a>
+        </nav>
+        <div class="nav-h">Portals</div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-door"/></svg>All portals<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-door"/></svg>Broken links<span class="cnt">0</span></a></nav>
+        <div class="nav-h">Other canvases</div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-layers"/></svg>Archive<span class="cnt">41</span></a></nav>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+      </aside>
+      <main class="mn">
+        <header class="tb">
+          <div class="crumbs"><span>Canvas</span><span class="sep">/</span><b>Studio</b><span class="pill">4 rooms</span></div>
+          <div class="tb-r">
+            <div class="seg"><span class="on"><svg class="ic"><use href="#i-cursor"/></svg>Select</span><span><svg class="ic"><use href="#i-hand"/></svg>Pan</span><span><svg class="ic"><use href="#i-door"/></svg>Portal</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
+            <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>New room</span>
+          </div>
+        </header>
+        <div class="stage dots">
+          <svg class="ov" viewBox="0 0 880 816" preserveAspectRatio="none">
+            <g fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4 5" opacity=".9" stroke-linejoin="round">
+              <path d="M194 147 H445 V265 H559 V332"/>
+              <path d="M729 222 V332"/>
+            </g>
+            <g fill="#fb7185"><circle cx="194" cy="147" r="2.5"/><circle cx="729" cy="222" r="2.5"/></g>
+          </svg>
+          <div class="room" style="left:20px;top:20px;width:410px;height:360px"><div class="rh"><span class="dot" style="--c:#fb7185"></span>Design<span class="cnt">4 files</span><div class="avs"><span class="av" style="--c:#ec4899">LM</span><span class="av" style="--c:#7c3aed">PS</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
+          <div class="room" style="left:460px;top:20px;width:400px;height:230px"><div class="rh"><span class="dot" style="--c:#34d399"></span>Finance<span class="cnt">2 files</span><div class="avs"><span class="av" style="--c:#10b981">AK</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
+          <div class="room" style="left:460px;top:280px;width:400px;height:360px;border-color:color-mix(in srgb,var(--ac) 50%,transparent)"><div class="rh"><span class="dot" style="--c:#60a5fa"></span>Board Deck<span class="cnt">3 files · 2 portals</span><div class="avs"><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#7c3aed">PS</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
+          <div class="room" style="left:20px;top:410px;width:410px;height:386px"><div class="rh"><span class="dot" style="--c:#f5b544"></span>Legal<span class="cnt">4 files</span><div class="avs"><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f97316">RD</span></div><svg class="ic" style="color:var(--dim)"><use href="#i-dots"/></svg></div></div>
+          <!-- Design files -->
+          <div class="fc sel abs" style="left:44px;top:72px"><span class="th deck"></span><span class="nm">Q3 pricing deck.key</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Yesterday</span><span class="tag pill ac"><svg class="ic" style="width:10px;height:10px"><use href="#i-door"/></svg>2 rooms</span></div>
+          <div class="fc abs" style="left:214px;top:72px"><span class="th fig"></span><span class="nm">Brand refresh.fig</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Fri</span></div>
+          <div class="fc abs" style="left:44px;top:228px"><span class="th img"></span><span class="nm">Hero render 02.png</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Mon</span></div>
+          <div class="fc abs" style="left:214px;top:228px"><span class="th fig2"></span><span class="nm">App icons.fig</span><span class="mt"><span class="av" style="--c:#ec4899">LM</span>Aug 30</span></div>
+          <!-- Finance files -->
+          <div class="fc abs" style="left:484px;top:72px"><span class="th sheet"></span><span class="nm">Launch budget.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Tue</span></div>
+          <div class="fc abs" style="left:654px;top:72px"><span class="th sheet"></span><span class="nm">Q3 P&amp;L.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Today</span><span class="tag pill ac"><svg class="ic" style="width:10px;height:10px"><use href="#i-door"/></svg>2 rooms</span></div>
+          <!-- Board Deck: portals -->
+          <div class="fc hov abs" style="left:484px;top:332px"><span class="portal"><svg><use href="#i-door"/></svg></span><span class="th deck"></span><span class="nm">Q3 pricing deck.key</span><span class="mt"><span class="av" style="--c:#7c3aed">PS</span>Yesterday</span><span class="tag pill ac">Portal</span></div>
+          <div class="fc abs" style="left:654px;top:332px"><span class="portal"><svg><use href="#i-door"/></svg></span><span class="th sheet"></span><span class="nm">Q3 P&amp;L.xlsx</span><span class="mt"><span class="av" style="--c:#10b981">AK</span>Today</span><span class="tag pill ac">Portal</span></div>
+          <div class="fc abs" style="left:654px;top:488px"><span class="th md"></span><span class="nm">Board agenda.md</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Today</span></div>
+          <!-- Legal files -->
+          <div class="fc abs" style="left:44px;top:462px"><span class="th doc sig"></span><span class="nm">Acme MSA v4.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>2h ago</span></div>
+          <div class="fc abs" style="left:214px;top:462px"><span class="th doc"></span><span class="nm">Acme NDA.pdf</span><span class="mt"><span class="av" style="--c:#0ea5e9">JM</span>Aug 30</span></div>
+          <div class="fc abs" style="left:44px;top:618px"><span class="th doc"></span><span class="nm">DPA — Acme.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 14</span></div>
+          <div class="fc abs" style="left:214px;top:618px"><span class="th doc sig"></span><span class="nm">Vendor terms.pdf</span><span class="mt"><span class="av" style="--c:#f97316">RD</span>Aug 28</span></div>
+          <svg class="cur" style="left:560px;top:420px"><use href="#cursor"/></svg>
+          <div class="tip down" style="left:484px;top:496px;--cx:66px;white-space:normal;width:164px;align-items:flex-start;line-height:1.4"><svg class="ic" style="color:var(--ac);margin-top:1px"><use href="#i-door"/></svg><span>Portal of <b>Design</b><br><small>edits sync both ways</small></span></div>
+          <div class="glass abs" style="right:20px;bottom:20px;width:160px;padding:8px">
+            <div class="panel-h" style="margin-bottom:6px">Minimap</div>
+            <div class="mm">
+              <span style="left:4px;top:4px;width:56px;height:30px;background:rgba(251,113,133,.4)"></span>
+              <span style="left:66px;top:4px;width:56px;height:18px;background:rgba(52,211,153,.4)"></span>
+              <span style="left:66px;top:26px;width:56px;height:30px;background:rgba(96,165,250,.4)"></span>
+              <span style="left:4px;top:38px;width:56px;height:30px;background:rgba(245,181,68,.4)"></span>
+              <span style="left:0;top:0;width:128px;height:70px;border:1.5px solid rgba(255,255,255,.85)"></span>
+            </div>
+          </div>
+        </div>
+        <footer class="sbar"><b>Studio</b><span class="sep">·</span>4 rooms<span class="sep">·</span>13 files<span class="sep">·</span>2 portals<span class="r"><span>64% <span style="color:var(--line2)">·</span> Fit</span><span class="sync"><i></i>Synced</span></span></footer>
+      </main>
+      <aside class="insp">
+        <div class="ih"><svg class="ic"><use href="#i-door"/></svg>File<svg class="ic x"><use href="#i-x"/></svg></div>
+        <div class="prev th deck"></div>
+        <h3>Q3 pricing deck.key<span class="pill ac">2 rooms</span></h3>
+        <div class="meta"><span>Type</span><b>Keynote · 42 MB</b><span>Owner</span><b style="display:flex;align-items:center;gap:6px"><span class="av" style="--c:#7c3aed;width:16px;height:16px;font-size:7px">PS</span>Priya Shah</b><span>Modified</span><b>Yesterday, 17:12</b><span>Version</span><b>v14 · synced</b></div>
+        <div class="sec-h">Rooms<span class="cnt">2</span><span class="act">Jump to</span></div>
+        <div class="homes">
+          <div class="home"><span class="dot" style="--c:#fb7185"></span>Design<small>original</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home" style="border-color:color-mix(in srgb,var(--ac) 50%,transparent)"><span class="dot" style="--c:#60a5fa"></span>Board Deck<small>portal · Justin</small><svg class="ic x"><use href="#i-x"/></svg></div>
+          <div class="home add"><svg class="ic plus"><use href="#i-plus"/></svg>Open a portal in another room</div>
+        </div>
+        <div class="sec-h">Activity</div>
+        <div class="act-list">
+          <div><span class="av" style="--c:#7c3aed;width:18px;height:18px;font-size:8px">PS</span><span><b>Priya</b> edited slide 12 from Design</span><time>Yesterday</time></div>
+          <div><span class="av" style="--c:#0ea5e9;width:18px;height:18px;font-size:8px">JM</span><span><b>Justin</b> opened a portal in Board Deck</span><time>Mon</time></div>
+          <div><span class="av" style="--c:#ec4899;width:18px;height:18px;font-size:8px">LM</span><span><b>Lena</b> commented on slide 4</span><time>Aug 29</time></div>
+        </div>
+      </aside>
+    </div></div>
+  </div></div>
+
+  <section class="body" aria-label="About this design">
+      <p>Files are laid out spatially on one boundless canvas, the way papers spread across a desk, and you carve it into rooms by drawing walls. Rooms give the layout memory: Design is always top-left, Finance is always up the hall. When a file that lives in Design is also needed for the board, you open a portal there instead of copying. The portal is a full-fidelity twin marked with a doorway badge; move, rename or edit either end and the other follows. The minimap jumps between rooms.</p>
+      <dl class="homes-note"><dt>How multi-home shows up</dt><dd>One original plus any number of portals, each listed under Rooms in the inspector with who opened it. The doorway badge marks a portal on the canvas and the dashed line traces it back to the room the file was placed in.</dd></dl>
+  </section>
+
+  <nav class="pager" aria-label="Previous and next design">
+    <a class="prev" data-nav="prev" rel="prev" href="facet.html"><small>Previous</small><b>Facet</b></a>
+    <a class="next" data-nav="next" rel="next" href="shelves.html"><small>Next</small><b>Shelves</b></a>
+    <p class="gallery">5 of 10 in the Innovative collection · <a href="../index.html#innovative">Back to the gallery</a></p>
+  </nav>
+</main>
+
+<!-- Inline copy of designs/manifest.json so navigation works over file://.
+     Regenerate with `node tools/sync-manifest.mjs` after editing the manifest. -->
+<script type="application/json" id="manifest">
+[
+  {
+    "slug": "constellation",
+    "number": "01",
+    "name": "Constellation",
+    "collection": "innovative",
+    "accent": "#8b7cf6",
+    "summary": "Files are stars. A collection is the shape you draw between them, and one star can sit in as many shapes as you like.",
+    "shot": "shots/constellation.png"
+  },
+  {
+    "slug": "prism",
+    "number": "02",
+    "name": "Prism",
+    "collection": "innovative",
+    "accent": "#22d3ee",
+    "summary": "Every tag is a translucent lens. Stack them and the files you want are where the colors overlap.",
+    "shot": "shots/prism.png"
+  },
+  {
+    "slug": "loom",
+    "number": "03",
+    "name": "Loom",
+    "collection": "innovative",
+    "accent": "#f5b544",
+    "summary": "Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.",
+    "shot": "shots/loom.png"
+  },
+  {
+    "slug": "facet",
+    "number": "04",
+    "name": "Facet",
+    "collection": "innovative",
+    "accent": "#34d399",
+    "summary": "One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.",
+    "shot": "shots/facet.png"
+  },
+  {
+    "slug": "rooms",
+    "number": "05",
+    "name": "Rooms and Portals",
+    "collection": "innovative",
+    "accent": "#fb7185",
+    "summary": "An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.",
+    "shot": "shots/rooms.png"
+  },
+  {
+    "slug": "shelves",
+    "number": "06",
+    "name": "Shelves",
+    "collection": "innovative",
+    "accent": "#60a5fa",
+    "summary": "Finish a sentence and it becomes a shelf. Files keep landing on every shelf whose sentence is true of them.",
+    "shot": "shots/shelves.png"
+  },
+  {
+    "slug": "transit",
+    "number": "07",
+    "name": "Transit",
+    "collection": "innovative",
+    "accent": "#fb923c",
+    "summary": "Collections are colored lines, files are stations, and a file in several collections is where you change trains.",
+    "shot": "shots/transit.png"
+  },
+  {
+    "slug": "columns",
+    "number": "08",
+    "name": "Columns of Context",
+    "collection": "innovative",
+    "accent": "#a3e635",
+    "summary": "A board where every column is a context, and moving a card never removes it from where it already was.",
+    "shot": "shots/columns.png"
+  },
+  {
+    "slug": "gravity",
+    "number": "09",
+    "name": "Gravity",
+    "collection": "innovative",
+    "accent": "#e879f9",
+    "summary": "Collections pull. Files settle where the pulls on them balance, and how far they sit from a well is how strongly they belong.",
+    "shot": "shots/gravity.png"
+  },
+  {
+    "slug": "orbit",
+    "number": "10",
+    "name": "Orbit",
+    "collection": "innovative",
+    "accent": "#2dd4bf",
+    "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
+    "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
+  }
+]
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

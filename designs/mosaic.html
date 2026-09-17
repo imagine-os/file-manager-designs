@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en" data-slug="mosaic">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mosaic · File Manager Design Portfolio</title>
+<meta name="description" content="A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230e0f14%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%238b7cf6%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/screens.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---- Mosaic: CSS used only by this screen ---- */
+.device .winbar{background:#e9e9ed;border-color:rgba(20,22,30,.08);color:#6b6f7c}
+.device .winbar .url{background:#fff;border-color:rgba(20,22,30,.08);color:#8a8f9c}
+.screen.light{--fg:#1c1e26;--muted:#5f6472;--dim:#8a8f9c;--line:rgba(20,22,30,.08);--line2:rgba(20,22,30,.15);--glass:rgba(20,22,30,.03);--glass2:rgba(20,22,30,.06);--panel:#fff;--pop:#fff;background:#f4f4f7;color:var(--fg)}
+.screen.light::before{background:radial-gradient(50% 45% at 55% 30%,color-mix(in srgb,var(--ac) 7%,transparent),transparent 70%)}
+.light .sb{background:#ebebef}
+.light .nav a.on{background:#fff;box-shadow:0 1px 2px rgba(20,22,30,.08)}
+.light .search,.light .seg,.light .btn:not(.pri),.light .insp{background:#fff}
+.light .btn.pri{color:#fff}
+.light .avs .av{border-color:#f4f4f7}
+.light .kbd{color:var(--dim)}
+.light .pill{color:var(--muted)}
+.light .tip{box-shadow:0 12px 32px rgba(20,22,30,.16)}
+.filters{position:absolute;left:20px;right:20px;top:0;height:56px;display:flex;align-items:center;gap:8px}
+.fchip{display:inline-flex;align-items:center;gap:6px;padding:6px 8px 6px 11px;border-radius:999px;border:1px solid var(--line2);background:#fff;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.fchip b{color:var(--fg);font-weight:500}
+.fchip svg.ic{width:14px;height:14px;color:var(--dim)}
+.fchip.on{background:color-mix(in srgb,var(--ac) 10%,#fff);border-color:color-mix(in srgb,var(--ac) 55%,transparent);color:var(--ac)}
+.fchip.on b{color:var(--ac);font-weight:600}
+.fchip.on svg.ic{color:var(--ac)}
+.filters .cnt{margin-left:auto;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.tile{position:absolute;width:272px;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(20,22,30,.1),0 0 0 1px rgba(20,22,30,.05)}
+.tile .th{position:absolute;inset:0;border-radius:0}
+.tile.sel{box-shadow:0 0 0 3px var(--ac),0 8px 24px color-mix(in srgb,var(--ac) 25%,transparent)}
+.tile .chk{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--ac);display:grid;place-items:center;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.tile .chk svg.ic{width:14px;height:14px;stroke-width:2.2}
+.tile .badge{position:absolute;left:10px;top:10px;font-size:10px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:5px;background:rgba(17,18,24,.55);color:#fff;backdrop-filter:blur(6px)}
+.tile.lightbg .badge{background:rgba(20,22,30,.08);color:var(--muted)}
+.tile.hov{box-shadow:0 12px 32px rgba(20,22,30,.22),0 0 0 1px rgba(20,22,30,.08)}
+.tile .ovl{position:absolute;left:0;right:0;bottom:0;padding:44px 12px 10px;background:linear-gradient(180deg,transparent,rgba(10,10,14,.7) 40%,rgba(10,10,14,.88));color:#fff;display:flex;flex-direction:column;gap:2px}
+.tile .ovl .nm{color:#fff;font-size:12.5px}
+.tile .ovl .mt{color:rgba(255,255,255,.75)}
+.tile .qa{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.tile .qa span{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:#1c1e26;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.tile .qa span.on{color:var(--ac)}
+.tile .qa svg.ic{width:14px;height:14px}
+.sphere{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.9),rgba(255,255,255,.35) 25%,rgba(255,255,255,.05) 55%,rgba(0,0,0,.35) 100%);box-shadow:0 20px 40px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;background:#15161d;padding:38px 24px 18px;color:#fff;display:flex;flex-direction:column;gap:10px}
+.slide .st{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.slide .ss{font-size:8px;color:rgba(255,255,255,.55);letter-spacing:.1em;text-transform:uppercase}
+.slide .cols3{display:flex;gap:8px;margin-top:auto}
+.slide .cols3 i{flex:1;height:34px;border-radius:4px;background:rgba(255,255,255,.1);border-top:3px solid var(--ac)}
+.slide .cols3 i:nth-child(2){border-top-color:#f5b544}.slide .cols3 i:nth-child(3){border-top-color:#60a5fa}
+.slide.two{background:#f7f2ee;color:#1c1e26}
+.slide.two .ss{color:#8a8f9c}.slide.two .cols3 i{background:rgba(20,22,30,.06)}
+.canvas{position:absolute;inset:0;background:#e6e7ec;background-image:radial-gradient(rgba(20,22,30,.12) 1px,transparent 1px);background-size:12px 12px}
+.ab{position:absolute;background:#fff;border-radius:3px;box-shadow:0 1px 3px rgba(20,22,30,.15);overflow:hidden}
+.ab::before{content:attr(data-l);position:absolute;top:-14px;left:0;font-size:8px;color:#6b6f7c;white-space:nowrap}
+.canvas .ab{overflow:visible}
+.ab .bar{height:8px;background:#f1f1f4;border-radius:0;flex:none}
+.ab .hero{margin:6px;height:30%;border-radius:3px;background:linear-gradient(135deg,var(--ac),#fda4af)}
+.ab .ln{margin:0 6px 4px;height:3px;border-radius:2px;background:#d6d7de}
+.ab .ln.s{width:40%}
+.ab .cta{margin:6px;width:34%;height:8px;border-radius:2px;background:#1c1e26}
+.iconset{position:absolute;inset:0;background:#fff;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:26px 22px 14px;place-items:center;color:#3b3f4c}
+.iconset svg.ic{width:22px;height:22px;stroke-width:1.3}
+.fab{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:6px 8px 6px 14px;border-radius:14px;background:#1c1e26;color:#fff;box-shadow:0 16px 40px rgba(20,22,30,.35);white-space:nowrap;z-index:6}
+.fab .n{font-size:12.5px;font-weight:600;padding-right:12px;margin-right:6px;border-right:1px solid rgba(255,255,255,.15)}
+.fab .a{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:8px;font-size:12.5px;color:#fff}
+.fab .a.on{background:rgba(255,255,255,.12)}
+.fab .a svg.ic{width:15px;height:15px}
+.fab .x{margin-left:6px;padding:7px;border-radius:8px;color:rgba(255,255,255,.6)}
+.stack{position:relative;height:150px}
+.stack .th{position:absolute;width:150px;height:110px;border-radius:8px;box-shadow:0 6px 18px rgba(20,22,30,.18),0 0 0 1px rgba(20,22,30,.06)}
+.figmini{background:#e6e7ec}
+.figmini::after{content:"";position:absolute;left:14%;right:14%;top:16%;bottom:16%;background:#fff;border-top:4px solid var(--ac);box-shadow:0 1px 2px rgba(20,22,30,.15)}
+.figmini.sm::after{left:20%;right:20%;top:20%;bottom:20%;border-top-width:3px}
+.light .homes .home{background:#fff}
+</style>
+</head>
+<body class="design" style="--ac:#fb7185">
+<!-- Icon sprite (identical copy of assets/icons.svg, inlined so <use href="#i-…"> works over file://) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 16 16"><path d="M3 7.5 8 3l5 4.5V13H3z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9h3l1 2h4l1-2h3M2 9v4h12V9l-2-6H4z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 16 16"><path d="m8 2 1.8 3.8 4.2.6-3 2.9.7 4.2L8 11.5l-3.7 2 .7-4.2-3-2.9 4.2-.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3.3 3.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 2.5 14 5.5 8 8.5 2 5.5zM2 8.5l6 3 6-3M2 11.5l6 3 6-3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 16 16"><path d="M4 8v5.5h8V8M8 2.5v7.5M5.2 5.3 8 2.5l2.8 2.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h10"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2.5 3.5h11l-4.3 5v4l-2.4 1v-5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13c0-2.4 1.9-3.8 4.2-3.8s4.2 1.4 4.2 3.8M10.5 9.4c2 0 3.7 1.3 3.7 3.6M10 3.4a2.2 2.2 0 0 1 0 4.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M3.6 12.4l1.3-1.3M11.1 4.9l1.3-1.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 16 16"><path d="M4 14V7a4 4 0 0 1 8 0v7M2.5 14h11"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><path d="M2.5 2.5h5.5l5.5 5.5-5.5 5.5-5.5-5.5z"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7M11.5 4.5l-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 16 16"><path d="m11.5 2.5 2 2-8 8-3 1 1-3z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 2.5 13 7.5 8.7 8.7 7.5 13z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 16 16"><path d="M5 8V3.5a1 1 0 0 1 2 0V7M7 3.5V3a1 1 0 0 1 2 0v4M9 4a1 1 0 0 1 2 0v3.5M11 6a1 1 0 0 1 2 0v3.5c0 2.5-1.8 4-4.3 4S5.2 12.3 4.3 11L2.6 8.8a1 1 0 0 1 1.6-1.2L5 8.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M3 5.5h9l-2.5-2.5M13 10.5H4l2.5 2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 13.5a1.5 1.5 0 0 0 3 0"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><ellipse cx="8" cy="8" rx="6.5" ry="3.2" transform="rotate(-30 8 8)"/></symbol>
+    <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4H6.5a2 2 0 0 1 0-4H11"/></symbol>
+    <symbol id="cursor" viewBox="0 0 20 24"><path d="M3 2v17l4.6-4.2L10.8 22l2.6-1.1-3.2-7.2H17z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Shared nav bar. Static hrefs are filled in so the page works without JS;
+     assets/nav.js re-derives them (and the Jump-to menu) from designs/manifest.json. -->
+<header class="topnav">
+  <a class="brand" href="../index.html"><i></i>File Manager <span>Design Portfolio</span></a>
+  <nav class="coll" aria-label="Collections">
+    <a href="../index.html#innovative" data-collection="innovative" aria-current="false">Innovative</a>
+    <a href="../index.html#classic" data-collection="classic" aria-current="true">Classic</a>
+  </nav>
+  <span class="grow"></span>
+  <label class="visually-hidden" for="jump">Jump to a design</label>
+  <select class="jump" id="jump"><option value="" disabled selected>Jump to…</option></select>
+  <a class="pn" data-nav="prev" rel="prev" href="ledger.html" title="Previous: Ledger"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span class="lbl">Prev</span><span class="pn-name">Ledger</span></a>
+  <span class="pos" aria-label="Position in collection"><b>2</b> / 5</span>
+  <a class="pn" data-nav="next" rel="next" href="twin.html" title="Next: Twin"><span class="lbl">Next</span><span class="pn-name">Twin</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></a>
+  <button class="hint-btn" type="button" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts (?)">?</button>
+</header>
+<aside class="shortcuts" hidden aria-label="Keyboard shortcuts">
+  <h2>Shortcuts</h2>
+  <dl>
+    <dt><span class="key">←</span><span class="key">→</span></dt><dd>Previous / next design</dd>
+    <dt><span class="key">Esc</span><span class="key">G</span></dt><dd>Back to the gallery</dd>
+    <dt><span class="key">?</span></dt><dd>Toggle this hint</dd>
+  </dl>
+</aside>
+
+<main class="wrap">
+  <header class="design-head">
+    <span class="num">12</span>
+    <h1>Mosaic</h1>
+    <span class="coll-tag">Classic</span>
+  </header>
+  <p class="tag">A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.</p>
+
+  <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
+       and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css
+       plus the per-design classes in the <style> block above. -->
+  <div class="frame"><div class="device">
+    <div class="winbar"><i></i><i></i><i></i><span class="url">northwind.app/library/q3-launch?type=image,deck&date=30d</span></div>
+    <div class="viewport"><div class="screen light" style="--ac:#fb7185">
+<aside class="sb">
+        <div class="ws"><span class="logo"></span><b>Northwind</b><svg class="ic chev"><use href="#i-chev"/></svg></div>
+        <div class="search"><svg class="ic"><use href="#i-search"/></svg>Search library<span class="kbd">⌘K</span></div>
+        <nav class="nav"><a><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="cnt">2</span></a><a><svg class="ic"><use href="#i-clock"/></svg>Recent</a><a><svg class="ic"><use href="#i-star"/></svg>Starred</a></nav>
+        <div class="nav-h">Smart albums</div>
+        <nav class="nav">
+          <a><svg class="ic"><use href="#i-grid"/></svg>Screenshots<span class="cnt">128</span></a>
+          <a><svg class="ic"><use href="#i-layers"/></svg>Renders<span class="cnt">46</span></a>
+          <a><svg class="ic" viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="M5 7h6M5 9.5h3.5"/></svg>Decks<span class="cnt">19</span></a>
+          <a><svg class="ic"><use href="#i-tag"/></svg>Brand assets<span class="cnt">212</span></a>
+          <a><svg class="ic"><use href="#i-users"/></svg>Shared with me<span class="cnt">57</span></a>
+        </nav>
+        <div class="nav-h">Albums<svg class="ic plus"><use href="#i-plus"/></svg></div>
+        <nav class="nav">
+          <a class="on"><span class="dot" style="--c:#fb7185"></span>Q3 launch<span class="cnt">46</span></a>
+          <a><span class="dot" style="--c:#8b7cf6"></span>Brand refresh<span class="cnt">88</span></a>
+          <a><span class="dot" style="--c:#60a5fa"></span>Website v3<span class="cnt">31</span></a>
+          <a><span class="dot" style="--c:#f5b544"></span>Board pack<span class="cnt">12</span></a>
+        </nav>
+        <div class="sb-foot"><span class="av" style="--c:#7c3aed">PS</span><div>Priya Shah<small>Northwind · Pro</small></div><svg class="ic" style="margin-left:auto;color:var(--dim)"><use href="#i-gear"/></svg></div>
+      </aside>
+      <main class="mn">
+        <header class="tb">
+          <div class="crumbs"><span>Library</span><svg class="ic sep"><use href="#i-chevr"/></svg><b>Q3 launch</b><span class="pill" style="margin-left:6px">46 items</span></div>
+          <div class="tb-r">
+            <div class="seg"><span class="on"><svg class="ic"><use href="#i-grid"/></svg>Mosaic</span><span><svg class="ic"><use href="#i-list"/></svg>List</span></div>
+            <div class="avs"><span class="av" style="--c:#7c3aed">PS</span><span class="av" style="--c:#0ea5e9">JM</span><span class="av" style="--c:#f59e0b">RD</span></div>
+            <span class="btn"><svg class="ic"><use href="#i-share"/></svg>Share</span>
+            <span class="btn pri"><svg class="ic"><use href="#i-plus"/></svg>Upload</span>
+          </div>
+        </header>
+        <div class="stage">
+          <div class="filters">
+            <span class="fchip on"><b>Type</b>· Images, Decks<svg class="ic"><use href="#i-x"/></svg></span>
+            <span class="fchip">People<svg class="ic"><use href="#i-chev"/></svg></span>
+            <span class="fchip on"><b>Date</b>· Last 30 days<svg class="ic"><use href="#i-x"/></svg></span>
+            <span class="fchip">Tag<svg class="ic"><use href="#i-chev"/></svg></span>
+            <span class="cnt">Showing 12 of 46</span>
+            <span class="fchip" style="margin-left:4px">Sort · Newest<svg class="ic"><use href="#i-chev"/></svg></span>
+          </div>
+
+          <div class="tile sel" style="left:20px;top:64px;height:204px"><span class="th img"></span><span class="sphere" style="width:120px;height:120px;left:76px;top:42px"></span><span class="badge">PNG</span><span class="chk"><svg class="ic"><use href="#i-check"/></svg></span></div>
+          <div class="tile hov" style="left:20px;top:280px;height:153px"><span class="slide"><span class="ss">Q3 pricing · 02</span><span class="st">Pricing that scales with the team</span><span class="cols3"><i></i><i></i><i></i></span></span><span class="badge">KEY</span><span class="qa"><span class="on"><svg class="ic"><use href="#i-star"/></svg></span><span><svg class="ic"><use href="#i-share"/></svg></span><span><svg class="ic"><use href="#i-dots"/></svg></span></span><span class="ovl"><span class="nm">Q3 pricing deck.key</span><span class="mt">38.2 MB · 24 slides · Edited Sep 12 by RD</span></span></div>
+          <div class="tile" style="left:20px;top:445px;height:340px"><span class="th img3"></span><span class="sphere" style="width:90px;height:90px;left:30px;top:200px;opacity:.85"></span><span class="badge">PSD</span></div>
+
+          <div class="tile sel" style="left:304px;top:64px;height:260px"><span class="canvas"></span><span class="ab" data-l="Desktop · 1440" style="left:22px;top:34px;width:150px;height:150px;display:flex;flex-direction:column"><span class="bar"></span><span class="hero"></span><span class="ln"></span><span class="ln s"></span><span class="cta"></span></span><span class="ab" data-l="Mobile · 390" style="left:190px;top:34px;width:60px;height:200px;display:flex;flex-direction:column"><span class="bar"></span><span class="hero" style="height:22%"></span><span class="ln"></span><span class="ln s"></span><span class="ln"></span><span class="cta" style="width:50%"></span></span><span class="badge lightbg" style="background:rgba(20,22,30,.08);color:#5f6472">FIG</span><span class="chk"><svg class="ic"><use href="#i-check"/></svg></span></div>
+          <div class="tile" style="left:304px;top:336px;height:272px"><span class="th img2"></span><span class="sphere" style="width:150px;height:150px;left:61px;top:61px;opacity:.9"></span><span class="badge">PNG</span></div>
+          <div class="tile" style="left:304px;top:620px;height:153px"><span class="slide two"><span class="ss">Storyboard v2 · 07</span><span class="st">Launch day, hour by hour</span><span class="cols3"><i></i><i></i><i></i></span></span><span class="badge" style="background:rgba(20,22,30,.08);color:#5f6472">KEY</span></div>
+
+          <div class="tile sel" style="left:588px;top:64px;height:340px"><span class="th" style="background:linear-gradient(160deg,#0f172a,#1e3a8a 45%,#fb7185)"></span><span class="sphere" style="width:170px;height:170px;left:51px;top:110px"></span><span class="badge">PNG</span><span class="chk"><svg class="ic"><use href="#i-check"/></svg></span></div>
+          <div class="tile" style="left:588px;top:416px;height:180px"><span class="canvas"></span><span class="ab" data-l="Wordmark" style="left:22px;top:34px;width:110px;height:60px;display:grid;place-items:center;font-size:14px;font-weight:700;letter-spacing:-.02em;color:#1c1e26">northwind</span><span class="ab" data-l="Mark" style="left:150px;top:34px;width:60px;height:60px;display:grid;place-items:center"><span style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--ac),#fda4af)"></span></span><span class="ab" data-l="Colors" style="left:22px;top:124px;width:188px;height:30px;display:flex;gap:4px;padding:5px"><i style="flex:1;border-radius:3px;background:#fb7185"></i><i style="flex:1;border-radius:3px;background:#1c1e26"></i><i style="flex:1;border-radius:3px;background:#f5b544"></i><i style="flex:1;border-radius:3px;background:#60a5fa"></i><i style="flex:1;border-radius:3px;background:#f4f4f7"></i></span><span class="badge" style="background:rgba(20,22,30,.08);color:#5f6472">FIG</span></div>
+          <div class="tile" style="left:588px;top:608px;height:200px"><span class="iconset"><svg class="ic"><use href="#i-home"/></svg><svg class="ic"><use href="#i-inbox"/></svg><svg class="ic"><use href="#i-clock"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-search"/></svg><svg class="ic"><use href="#i-share"/></svg><svg class="ic"><use href="#i-users"/></svg><svg class="ic"><use href="#i-gear"/></svg><svg class="ic"><use href="#i-tag"/></svg><svg class="ic"><use href="#i-bell"/></svg><svg class="ic"><use href="#i-layers"/></svg><svg class="ic"><use href="#i-filter"/></svg></span><span class="badge" style="background:rgba(20,22,30,.08);color:#5f6472">SVG</span></div>
+
+          <svg class="cur" style="left:238px;top:372px"><use href="#cursor"/></svg>
+
+          <div class="fab"><span class="n">3 selected</span><span class="a"><svg class="ic" viewBox="0 0 16 16"><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/><path d="M8 8v3M6.5 9.5 8 11l1.5-1.5"/></svg>Move</span><span class="a"><svg class="ic"><use href="#i-share"/></svg>Share</span><span class="a on"><svg class="ic"><use href="#i-tag"/></svg>Tag</span><span class="a"><svg class="ic" viewBox="0 0 16 16"><path d="M8 2.5v8M5 7.5l3 3 3-3M3 11.5v2h10v-2"/></svg>Download</span><span class="x"><svg class="ic"><use href="#i-x"/></svg></span></div>
+        </div>
+      </main>
+      <aside class="insp">
+        <div class="ih"><svg class="ic"><use href="#i-layers"/></svg>Selection<svg class="ic x"><use href="#i-x"/></svg></div>
+        <div class="stack"><span class="th" style="left:60px;top:22px;background:linear-gradient(160deg,#0f172a,#1e3a8a 45%,#fb7185);transform:rotate(4deg)"></span><span class="th figmini" style="left:34px;top:14px;transform:rotate(-3deg)"></span><span class="th img" style="left:12px;top:6px"></span></div>
+        <h3>3 items<span class="pill ac">143.4 MB</span></h3>
+        <div class="meta"><span>Types</span><b>2 images · 1 Figma file</b><span>Album</span><b>Q3 launch</b><span>Modified</span><b>Sep 12 – Sep 15</b><span>Shared with</span><b style="display:flex;align-items:center;gap:6px"><span class="avs"><span class="av" style="--c:#0ea5e9;width:20px;height:20px;font-size:8px">JM</span><span class="av" style="--c:#f59e0b;width:20px;height:20px;font-size:8px">RD</span></span>+ 4 people</b></div>
+        <div class="sec-h">Files<span class="cnt">3</span></div>
+        <div class="homes">
+          <div class="home"><span class="th img" style="width:20px;height:20px;border-radius:4px"></span>Hero render 02.png<small>60.5 MB</small></div>
+          <div class="home"><span class="th figmini sm" style="width:20px;height:20px;border-radius:4px"></span>Launch landing.fig<small>24.8 MB</small></div>
+          <div class="home"><span class="th" style="width:20px;height:20px;border-radius:4px;background:linear-gradient(160deg,#0f172a,#1e3a8a 45%,#fb7185)"></span>Hero render 03.png<small>58.1 MB</small></div>
+        </div>
+        <div class="sec-h">Tags<span class="cnt">2 shared</span><span class="act">Edit</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="pill c" style="--c:#fb7185">Hero</span><span class="pill c" style="--c:#8b7cf6">Launch</span><span class="pill" style="border-style:dashed;color:var(--dim)">+ Tag</span></div>
+        <div style="display:flex;gap:8px;margin-top:auto"><span class="btn pri" style="flex:1;justify-content:center"><svg class="ic"><use href="#i-plus"/></svg>Add to album</span><span class="btn">Download</span></div>
+      </aside>
+    </div></div>
+  </div></div>
+
+  <section class="body" aria-label="About this design">
+      <p>Mosaic is for the people whose files are pictures. Thumbnails come first and come big, laid out as a masonry so a portrait render, a 16:9 slide and a Figma canvas each keep their own shape. Names stay out of the way until you hover, when a single tile lifts to show its name, size, slide count and the three actions you actually use. Filters are chips across the top rather than a form, and here two are active: only images and decks from the last 30 days. Three tiles are selected, so a dark floating bar collects the bulk actions (Move, Share, Tag, Download) and the inspector totals them up instead of describing one. The light theme is the one designers already work in.</p>
+      <dl class="homes-note"><dt>Why it works</dt><dd>Visual people scan shapes and colors faster than file names, so the layout spends its pixels on thumbnails and moves text into hover, chips and the inspector, where it is read only when asked for.</dd></dl>
+  </section>
+
+  <nav class="pager" aria-label="Previous and next design">
+    <a class="prev" data-nav="prev" rel="prev" href="ledger.html"><small>Previous</small><b>Ledger</b></a>
+    <a class="next" data-nav="next" rel="next" href="twin.html"><small>Next</small><b>Twin</b></a>
+    <p class="gallery">2 of 5 in the Classic collection · <a href="../index.html#classic">Back to the gallery</a></p>
+  </nav>
+</main>
+
+<!-- Inline copy of designs/manifest.json so navigation works over file://.
+     Regenerate with `node tools/sync-manifest.mjs` after editing the manifest. -->
+<script type="application/json" id="manifest">
+[
+  {
+    "slug": "constellation",
+    "number": "01",
+    "name": "Constellation",
+    "collection": "innovative",
+    "accent": "#8b7cf6",
+    "summary": "Files are stars. A collection is the shape you draw between them, and one star can sit in as many shapes as you like.",
+    "shot": "shots/constellation.png"
+  },
+  {
+    "slug": "prism",
+    "number": "02",
+    "name": "Prism",
+    "collection": "innovative",
+    "accent": "#22d3ee",
+    "summary": "Every tag is a translucent lens. Stack them and the files you want are where the colors overlap.",
+    "shot": "shots/prism.png"
+  },
+  {
+    "slug": "loom",
+    "number": "03",
+    "name": "Loom",
+    "collection": "innovative",
+    "accent": "#f5b544",
+    "summary": "Time runs left to right, projects are threads, and a file is a bead that can be strung on several threads at once.",
+    "shot": "shots/loom.png"
+  },
+  {
+    "slug": "facet",
+    "number": "04",
+    "name": "Facet",
+    "collection": "innovative",
+    "accent": "#34d399",
+    "summary": "One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.",
+    "shot": "shots/facet.png"
+  },
+  {
+    "slug": "rooms",
+    "number": "05",
+    "name": "Rooms and Portals",
+    "collection": "innovative",
+    "accent": "#fb7185",
+    "summary": "An infinite canvas carved into rooms. A file placed in one room can open a portal into any other, and both ends are the same file.",
+    "shot": "shots/rooms.png"
+  },
+  {
+    "slug": "shelves",
+    "number": "06",
+    "name": "Shelves",
+    "collection": "innovative",
+    "accent": "#60a5fa",
+    "summary": "Finish a sentence and it becomes a shelf. Files keep landing on every shelf whose sentence is true of them.",
+    "shot": "shots/shelves.png"
+  },
+  {
+    "slug": "transit",
+    "number": "07",
+    "name": "Transit",
+    "collection": "innovative",
+    "accent": "#fb923c",
+    "summary": "Collections are colored lines, files are stations, and a file in several collections is where you change trains.",
+    "shot": "shots/transit.png"
+  },
+  {
+    "slug": "columns",
+    "number": "08",
+    "name": "Columns of Context",
+    "collection": "innovative",
+    "accent": "#a3e635",
+    "summary": "A board where every column is a context, and moving a card never removes it from where it already was.",
+    "shot": "shots/columns.png"
+  },
+  {
+    "slug": "gravity",
+    "number": "09",
+    "name": "Gravity",
+    "collection": "innovative",
+    "accent": "#e879f9",
+    "summary": "Collections pull. Files settle where the pulls on them balance, and how far they sit from a well is how strongly they belong.",
+    "shot": "shots/gravity.png"
+  },
+  {
+    "slug": "orbit",
+    "number": "10",
+    "name": "Orbit",
+    "collection": "innovative",
+    "accent": "#2dd4bf",
+    "summary": "Center anything and everything it belongs to orbits it. Click a satellite and it becomes the center.",
+    "shot": "shots/orbit.png"
+  },
+  {
+    "slug": "ledger",
+    "number": "11",
+    "name": "Ledger",
+    "collection": "classic",
+    "accent": "#60a5fa",
+    "summary": "Three cascading columns and a Quick Look pane. Where a file lives is always on screen, and the keyboard never leaves the list.",
+    "shot": "shots/ledger.png"
+  },
+  {
+    "slug": "mosaic",
+    "number": "12",
+    "name": "Mosaic",
+    "collection": "classic",
+    "accent": "#fb7185",
+    "summary": "A visual-first grid for creative teams. Big thumbnails, filters as chips, and a floating bar for whatever you have selected.",
+    "shot": "shots/mosaic.png"
+  },
+  {
+    "slug": "twin",
+    "number": "13",
+    "name": "Twin",
+    "collection": "classic",
+    "accent": "#34d399",
+    "summary": "A dual-pane commander for power users. Local on the left, team drive on the right, and a transfer queue that never blocks you.",
+    "shot": "shots/twin.png"
+  },
+  {
+    "slug": "crew",
+    "number": "14",
+    "name": "Crew",
+    "collection": "classic",
+    "accent": "#a78bfa",
+    "summary": "A shared drive built for people, not paths. Who is in a file, who can see it and what changed sit right on the row.",
+    "shot": "shots/crew.png"
+  },
+  {
+    "slug": "lens",
+    "number": "15",
+    "name": "Lens",
+    "collection": "classic",
+    "accent": "#fbbf24",
+    "summary": "Search first. Type what you remember, the palette turns it into filters, and the top result is one keystroke from open.",
+    "shot": "shots/lens.png"
+  }
+]
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>
