@@ -27,9 +27,22 @@ shots/<slug>.png         2× capture of the device frame (2880 px wide)
 shots/thumb-<slug>.png   720 px thumbnail used by the gallery cards
 tools/screenshot.mjs     regenerates shots/ and thumbnails with Playwright
 tools/check.mjs          site checker (console errors, 404s, links, nav, overflow, phone width)
+tools/proto-check.mjs    drives the Facet prototype end to end, records the walkthrough video and shots
+prototype/facet/         interactive Facet + Ledger prototype (index.html, app.css, app.js, data.js, tutorial.js)
 tools/sync-manifest.mjs  copies manifest.json into every page's inline fallback
 .github/workflows/pages.yml  publishes the site to the gh-pages branch on push to main
 ```
+
+## Prototype
+
+`prototype/facet/` is an interactive build of the Facet concept with the classic Ledger
+browser beside it: a real CSS 3D cube over one shared dataset (`data.js`), a Miller-column
+Ledger of the same files, a Compare drawer with live demos, and a draggable, never-modal
+tutorial. Vanilla HTML/CSS/JS, relative paths only. Live at
+<https://imagine-os.github.io/file-manager-designs/prototype/facet/>; see
+`prototype/facet/README.md` for the feature list and the three "beyond the cube" directions.
+`node tools/proto-check.mjs` drives every feature with Playwright, records
+`prototype/facet/walkthrough.webm` and writes `shots/facet-proto-*.png`.
 
 ## Adding a design
 
@@ -107,4 +120,5 @@ repository sub-path.
 
 - **v1** 2026-09-16, ten concepts as annotated diagrams (superseded)
 - **v2** 2026-09-16, rebuilt as full product screens
+- **v4** 2026-09-17, interactive Facet prototype with Ledger comparison and guided tutorial (`prototype/facet/`)
 - **v3** 2026-09-16, refined all ten innovative screens (one gesture per screen, reconciled counts, unified product chrome, status bar), added the Classic collection (Ledger, Mosaic, Twin, Crew, Lens), published on GitHub Pages

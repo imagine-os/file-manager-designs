@@ -34,6 +34,13 @@
 .tile .ths .th{width:22px;height:22px;border-radius:4px}
 .tile.hl{border-color:color-mix(in srgb,var(--ac) 60%,transparent);background:color-mix(in srgb,var(--ac) 16%,transparent)}
 .tile.hl .ths .th:first-child{outline:2px solid var(--ac);outline-offset:1px}
+/* link to the interactive prototype */
+.proto-cta{margin:-.6rem 0 1.4rem}
+.proto-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 16px 10px 14px;border-radius:12px;background:var(--ac);color:#062b1f;text-decoration:none;font-weight:600;font-size:14px;box-shadow:0 8px 24px color-mix(in srgb,var(--ac) 35%,transparent);transition:transform .15s,box-shadow .15s}
+.proto-btn:hover{transform:translateY(-1px);box-shadow:0 12px 30px color-mix(in srgb,var(--ac) 45%,transparent)}
+.proto-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.proto-btn span{font-weight:500;opacity:.8;font-size:12.5px;border-left:1px solid rgba(6,43,31,.25);padding-left:10px}
+@media (max-width:560px){.proto-btn span{display:none}}
 </style>
 </head>
 <body class="design" style="--ac:#34d399">
@@ -104,6 +111,7 @@
     <span class="coll-tag">Innovative</span>
   </header>
   <p class="tag">One set of files on a cube. Each face groups them by a different axis, and rotating the cube is how you refile.</p>
+  <p class="proto-cta"><a class="proto-btn" href="../prototype/facet/"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 14 5v6l-6 3.2L2 11V5z"/><path d="M2 5l6 3 6-3M8 8v6.2"/></svg>Open the interactive prototype<span>drag the cube, switch to Ledger, take the tour</span></a></p>
 
   <!-- The screen. .device is the frame; .screen inside .viewport is laid out at 1440×900
        and scaled to fit by nav.js. Everything in here uses the shared classes from screens.css

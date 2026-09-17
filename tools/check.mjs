@@ -38,7 +38,7 @@ async function linkOk(url) {
 }
 
 try {
-  const pages = ['index.html', ...manifest.map((d) => `designs/${d.slug}.html`)];
+  const pages = ['index.html', 'prototype/facet/index.html', ...manifest.map((d) => `designs/${d.slug}.html`)];
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   for (const rel of pages) {
     const page = await context.newPage();
@@ -73,7 +73,7 @@ try {
 
     // --- inline manifest and sprite copies
     const inline = await page.$eval('#manifest', (s) => s.textContent).catch(() => null);
-    if (inline === null) report(rel, 'manifest', 'no inline <script id="manifest">');
+    if (inline === null) { if (!rel.startsWith('prototype/')) report(rel, 'manifest', 'no inline <script id="manifest">'); }
     else { try { if (JSON.stringify(JSON.parse(inline)) !== manifestText) report(rel, 'manifest', 'inline copy differs from designs/manifest.json (run tools/sync-manifest.mjs)'); } catch { report(rel, 'manifest', 'inline manifest is not valid JSON'); } }
 
     if (isDesign) {
